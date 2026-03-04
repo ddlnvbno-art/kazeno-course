@@ -6,47 +6,17 @@
     <title>Kazeno Course App</title>
     
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 15px;
-        }
+        body { font-family: Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 15px; }
         
-        /* --- Login မျက်နှာပြင်အတွက် အလှဆင် CSS --- */
-        #login-screen {
-            text-align: center;
-            margin-top: 50px;
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        #login-screen input {
-            padding: 12px;
-            width: 80%;
-            max-width: 300px;
-            margin: 15px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        #login-screen button {
-            padding: 12px 25px;
-            background-color: #0056b3;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+        /* Login Screen CSS */
+        #login-screen { text-align: center; margin-top: 50px; background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        #login-screen input { padding: 12px; width: 80%; max-width: 300px; margin: 15px 0; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; }
+        #login-screen button { padding: 12px 25px; background-color: #0056b3; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
         
-        /* --- ဗီဒီယိုများကို အစပိုင်းတွင် ဖျောက်ထားရန် --- */
-        #course-content {
-            display: none; 
-        }
+        /* Course Content ကို အစတွင် ဖျောက်ထားရန် */
+        #course-content { display: none; }
 
-        /* --- အရင်က ဗီဒီယိုများအတွက် CSS များ --- */
+        /* Video Cards CSS */
         .header { text-align: center; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
         h2 { color: #333333; margin: 0; }
         .video-card { background-color: #ffffff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 15px; }
@@ -68,6 +38,7 @@
     </div>
 
     <div id="course-content">
+        
         <div class="header">
             <h2>Kazeno သင်တန်းမှ ကြိုဆိုပါတယ်</h2>
             <p style="color: #666; margin-top: 5px;">လေ့လာစရာ သင်ခန်းစာများ</p>
@@ -80,32 +51,29 @@
             </div>
             <p class="notes">📌 <b>မှတ်စု:</b> ဒီဗီဒီယိုမှာ အခြေခံအချက်တွေကို ရှင်းပြပေးထားပါတယ်။ မရှင်းလင်းတာရှိရင် ပြန်ရစ်ကြည့်နိုင်ပါတယ်။</p>
         </div>
-        
-            <div class="video-card">
-            <h3 class="video-title">အပိုင်း (၂) - ခေါင်းစဉ်အသစ် ကိုဒီမှာရေးပါ</h3>
-            
-            <div class="iframe-container">
-                <iframe src="https://player.cloudinary.com/embed/?cloud_name=dhcjrybpm&public_id=4_5849296783393426060_qnqjyl" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen frameborder="0"></iframe>
-            </div>
-            
-            <p class="notes">📌 <b>မှတ်စု:</b> အပိုင်း (၂) ငါနင့်ကိုချစ်ပါတယ် ဒါကစမ်းသပ်မှုတစ်ခုပါ။</p>
-            </div>
 
-    <script>
+        <div class="video-card">
+            <h3 class="video-title">အပိုင်း (၂) - ခေါင်းစဉ်အသစ် ကိုဒီမှာရေးပါ</h3>
+            <div class="iframe-container">
+                <iframe src="https://player.cloudinary.com/embed/?cloud_name=dhcjrybpm&public_id=4_5831124961447643861_wulwug" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen frameborder="0"></iframe>
+            </div>
+            <p class="notes">📌 <b>မှတ်စု:</b> အပိုင်း (၂) ငါနှင့်ကိုယ်ချစ်ပါတယ် ဒါကစမ်းသပ်မှုတစ်ခုပါ။</p>
+        </div>
+
+    </div> <script>
         function checkPassword() {
-            // အောက်ပါ 123 နေရာတွင် ကိုယ်ပိုင် Password ကို ပြောင်းလဲ သတ်မှတ်နိုင်ပါသည်
-            var correctPassword = "28122"; 
+            var correctPassword = "123"; 
             var enteredPassword = document.getElementById("password-input").value;
 
             if (enteredPassword === correctPassword) {
-                // မှန်ကန်ပါက Login ကို ဖျောက်ပြီး ဗီဒီယိုများကို ပြမည်
                 document.getElementById("login-screen").style.display = "none";
                 document.getElementById("course-content").style.display = "block";
             } else {
-                // မှားယွင်းပါက အမှားစာသားကို ပြမည်
                 document.getElementById("error-msg").style.display = "block";
             }
         }
     </script>
 </body>
 </html>
+
+
