@@ -1,233 +1,436 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Kazeno+</title>
-
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
 <style>
-body{
-font-family:Arial;
-margin:0;
-background:#0f172a;
-color:white;
-text-align:center;
-}
-
-.container{
-max-width:420px;
-margin:auto;
-padding:20px;
-}
-
-.card{
-background:#1e293b;
-padding:20px;
-border-radius:14px;
-margin-top:20px;
-}
-
-input{
-width:100%;
-padding:12px;
-margin-top:10px;
-border-radius:8px;
-border:none;
-}
-
-button{
-padding:12px;
-margin-top:12px;
-width:100%;
-border:none;
-border-radius:8px;
-font-weight:bold;
-cursor:pointer;
-}
-
-.login{background:#ffb300;color:black;}
-.signup{background:#334155;color:white;}
-.preview{background:#1e293b;color:white;border:1px solid #334155}
-
-.video{
-margin-top:20px;
-background:#1e293b;
-padding:10px;
-border-radius:10px;
-}
-
-iframe{
-width:100%;
-height:200px;
-border:none;
-border-radius:8px;
-}
-
-.error{
-color:#ff4d4d;
-margin-top:10px;
-}
-
+  :root{
+    --bg:#0b1222; --card:#111b33; --card2:#0f172a; --border:rgba(255,255,255,.10);
+    --text:#fff; --muted:rgba(255,255,255,.65);
+    --primary:#ffb300; --danger:#ff4d4d; --ok:#00e676;
+    --r:18px;
+  }
+  body{margin:0; font-family:Poppins,Arial; background:radial-gradient(900px 520px at 20% 10%, rgba(255,179,0,.14), transparent 55%), var(--bg); color:var(--text); padding-bottom:90px;}
+  .wrap{max-width:520px; margin:0 auto; padding:16px;}
+  .top{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 14px; border-radius:22px; background:rgba(255,255,255,.06); border:1px solid var(--border); position:sticky; top:10px; z-index:10; backdrop-filter: blur(14px);}
+  .brand{font-weight:800; letter-spacing:.2px;}
+  .pill{padding:6px 10px; border-radius:999px; font-size:12px; font-weight:800; border:1px solid var(--border); color:var(--muted);}
+  .pill.pro{background:rgba(0,230,118,.12); border-color:rgba(0,230,118,.25); color:#bfffdc;}
+  .pill.free{background:rgba(255,179,0,.12); border-color:rgba(255,179,0,.25); color:#ffe4a3;}
+  .card{background:rgba(255,255,255,.06); border:1px solid var(--border); border-radius:var(--r); padding:14px; margin-top:14px; backdrop-filter: blur(14px);}
+  .title{margin:0 0 8px; font-weight:800; font-size:14px;}
+  .muted{color:var(--muted); font-size:12px; line-height:1.6;}
+  .input{width:100%; padding:12px 12px; border-radius:14px; border:1px solid var(--border); background:rgba(255,255,255,.06); color:var(--text); outline:none;}
+  .btn{width:100%; padding:12px 12px; border-radius:14px; border:none; cursor:pointer; font-weight:800;}
+  .btnP{background:linear-gradient(180deg,#ffb300,#e69500); color:#111;}
+  .btnS{background:rgba(255,255,255,.08); color:var(--text); border:1px solid var(--border);}
+  .btnD{background:var(--danger); color:#fff;}
+  .row{display:flex; gap:10px;}
+  .row > *{flex:1;}
+  .tabs{display:flex; gap:10px;}
+  .tab{flex:1; padding:12px; border-radius:14px; border:1px solid var(--border); background:rgba(255,255,255,.06); color:var(--muted); font-weight:800; cursor:pointer;}
+  .tab.active{background:rgba(255,179,0,.14); color:#ffe4a3; border-color:rgba(255,179,0,.30);}
+  .post{padding:12px; border-radius:16px; border:1px solid var(--border); background:rgba(0,0,0,.18); margin-top:10px;}
+  .post h4{margin:0 0 6px; font-size:14px;}
+  .imgs{display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:10px;}
+  .imgs img{width:100%; border-radius:12px; border:1px solid var(--border); object-fit:cover; height:140px;}
+  .video{position:relative; padding:12px; border-radius:16px; border:1px solid var(--border); background:rgba(0,0,0,.18); margin-top:12px; overflow:hidden;}
+  .iframeWrap{position:relative; width:100%; padding-bottom:56.25%; border-radius:14px; overflow:hidden; border:1px solid var(--border); background:#000;}
+  .iframeWrap iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .vmeta{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-top:10px;}
+  .lock{position:absolute; inset:0; background:rgba(0,0,0,.62); display:flex; align-items:center; justify-content:center; padding:14px;}
+  .lockBox{width:100%; border-radius:16px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08); padding:12px; text-align:center; backdrop-filter: blur(14px);}
+  .lockBox .big{font-weight:900; font-size:16px;}
+  .watermark{position:absolute; right:10px; top:10px; padding:6px 10px; border-radius:999px; font-size:11px; font-weight:900;
+    background:rgba(0,0,0,.45); border:1px solid rgba(255,255,255,.18); color:rgba(255,255,255,.85); pointer-events:none;}
+  .toast{position:fixed; left:50%; transform:translateX(-50%); bottom:84px; background:rgba(0,0,0,.78); border:1px solid rgba(255,255,255,.14);
+    color:#fff; padding:10px 12px; border-radius:999px; font-weight:900; font-size:12px; opacity:0; transition:.2s; z-index:9999;}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(-3px);}
+  .nav{position:fixed; left:16px; right:16px; bottom:14px; display:flex; justify-content:space-around; gap:10px;
+    padding:12px; border-radius:26px; background:rgba(255,255,255,.06); border:1px solid var(--border); backdrop-filter: blur(14px);}
+  .nav button{background:transparent; border:none; color:var(--muted); font-size:18px; cursor:pointer; padding:10px 12px; border-radius:18px; font-weight:900;}
+  .nav button.active{color:#ffe4a3; background:rgba(255,179,0,.14); border:1px solid rgba(255,179,0,.25);}
 </style>
 </head>
 
 <body>
+<div id="toast" class="toast">OK</div>
 
-<div class="container">
+<div class="wrap">
 
-<h1>Kazeno Workspace</h1>
+  <div class="top">
+    <div class="brand">Kazeno+</div>
+    <div id="status" class="pill free">FREE</div>
+  </div>
 
-<div id="authBox" class="card">
+  <div class="tabs card">
+    <button id="tPosts" class="tab active" onclick="showTab('posts')">📝 Posts</button>
+    <button id="tVideos" class="tab" onclick="showTab('videos')">🎬 Premium Videos</button>
+    <button id="tAccount" class="tab" onclick="showTab('account')">👤 Account</button>
+  </div>
 
-<h3>Login / Sign Up</h3>
+  <!-- POSTS (PUBLIC) -->
+  <div id="tab-posts" class="card">
+    <h3 class="title">Public Posts</h3>
+    <div class="muted">ဒီနေရာမှာ ပုံတွေ၊စာတွေ အများမြင်အောင်တင်နိုင်ပါတယ် (Public) ✅</div>
+    <div id="postsFeed" style="margin-top:10px;">Loading...</div>
+  </div>
 
-<input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
+  <!-- VIDEOS (PREMIUM ONLY) -->
+  <div id="tab-videos" class="card" style="display:none;">
+    <h3 class="title">Premium Videos</h3>
+    <div class="muted">Premium video တွေကို ကြည့်ရန် Login + Pro Access လိုပါတယ် 🔒</div>
 
-<button class="login" onclick="login()">Login</button>
-<button class="signup" onclick="signup()">Sign Up</button>
+    <div id="videoFeed" style="margin-top:10px;">Loading...</div>
+  </div>
 
-<button class="preview" onclick="loadVideos()">👀 View Free Preview</button>
+  <!-- ACCOUNT -->
+  <div id="tab-account" class="card" style="display:none;">
+    <h3 class="title">Login / Sign Up</h3>
 
-<div id="error" class="error"></div>
+    <input id="email" class="input" placeholder="Email" autocomplete="email">
+    <div style="height:10px;"></div>
+    <input id="password" class="input" type="password" placeholder="Password (min 6 chars)" autocomplete="current-password">
+
+    <div style="height:10px;"></div>
+    <div class="row">
+      <button class="btn btnP" onclick="login()">Login</button>
+      <button class="btn btnS" onclick="signup()">Sign Up</button>
+    </div>
+
+    <div style="height:10px;"></div>
+    <button class="btn btnD" onclick="logout()">Log Out</button>
+
+    <div id="who" class="muted" style="margin-top:10px;">Not logged in</div>
+
+    <hr style="border:0; border-top:1px solid var(--border); margin:14px 0;">
+
+    <h3 class="title">💳 Buy Pro (KBZPay / WavePay)</h3>
+    <div class="muted">
+      Payment လုပ်ပြီး <b>Transaction ID</b> နဲ့ submit လုပ်ပါ။ Admin အတည်ပြုလိုက်တာနဲ့ Pro Unlock ဖြစ်ပါမယ်။
+    </div>
+
+    <div style="height:10px;"></div>
+    <select id="provider" class="input">
+      <option value="KBZPay">KBZPay</option>
+      <option value="WavePay">WavePay</option>
+    </select>
+
+    <div style="height:10px;"></div>
+    <input id="phone" class="input" placeholder="Phone (example: 09xxxxxxx)">
+
+    <div style="height:10px;"></div>
+    <input id="txRef" class="input" placeholder="Transaction ID / Reference">
+
+    <div style="height:10px;"></div>
+    <button class="btn btnP" onclick="submitPayment()">Submit Payment Request</button>
+
+    <div id="payMsg" class="muted" style="margin-top:10px;"></div>
+  </div>
 
 </div>
 
-<div id="videos"></div>
-
+<div class="nav">
+  <button id="n1" class="active" onclick="showTab('posts')">📝</button>
+  <button id="n2" onclick="showTab('videos')">🎬</button>
+  <button id="n3" onclick="showTab('account')">👤</button>
 </div>
 
 <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import {
+    getFirestore, collection, getDocs, addDoc, query, orderBy,
+    doc, getDoc, setDoc, updateDoc, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+  import {
+    getAuth, onAuthStateChanged,
+    signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut
+  } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyDV8UNUW7CVvJy2k5_6OMrRz197c1A7uKU",
+    authDomain: "kazeno-course.firebaseapp.com",
+    projectId: "kazeno-course",
+    storageBucket: "kazeno-course.firebasestorage.app",
+    messagingSenderId: "356111425732",
+    appId: "1:356111425732:web:fd5b3a7429372ec41da991"
+  };
 
-const firebaseConfig = {
-apiKey: "AIzaSyDV8UNUW7CVvJy2k5_6OMrRz197c1A7uKU",
-authDomain: "kazeno-course.firebaseapp.com",
-projectId: "kazeno-course",
-storageBucket: "kazeno-course.firebasestorage.app",
-messagingSenderId: "356111425732",
-appId: "1:356111425732:web:fd5b3a7429372ec41da991"
-};
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+  let isPro = false;
+  let me = null;
 
-const errorBox = document.getElementById("error");
+  // ---------- UI helpers ----------
+  const toastEl = document.getElementById("toast");
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    setTimeout(()=>toastEl.classList.remove("show"), 1400);
+  }
+  function esc(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;").replaceAll("<","&lt;")
+      .replaceAll(">","&gt;").replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
 
-function showError(msg){
-errorBox.innerText = msg;
-}
+  // ---------- Tabs ----------
+  window.showTab = (name)=>{
+    document.getElementById("tab-posts").style.display = name==="posts" ? "block" : "none";
+    document.getElementById("tab-videos").style.display = name==="videos" ? "block" : "none";
+    document.getElementById("tab-account").style.display = name==="account" ? "block" : "none";
 
-window.signup = async ()=>{
+    document.getElementById("tPosts").classList.toggle("active", name==="posts");
+    document.getElementById("tVideos").classList.toggle("active", name==="videos");
+    document.getElementById("tAccount").classList.toggle("active", name==="account");
 
-const email=document.getElementById("email").value.trim();
-const pass=document.getElementById("password").value;
+    document.getElementById("n1").classList.toggle("active", name==="posts");
+    document.getElementById("n2").classList.toggle("active", name==="videos");
+    document.getElementById("n3").classList.toggle("active", name==="account");
+  };
 
-if(!email.includes("@") || !email.includes(".")){
-showError("Email format မမှန်ပါ");
-return;
-}
+  // ---------- Auth ----------
+  window.signup = async ()=>{
+    const email = document.getElementById("email").value.trim();
+    const pass  = document.getElementById("password").value;
 
-if(pass.length < 6){
-showError("Password အနည်းဆုံး 6 လုံးလိုပါတယ်");
-return;
-}
+    if(!email.includes("@") || !email.includes(".")) return toast("Email format မမှန်ပါ");
+    if(pass.length < 6) return toast("Password အနည်းဆုံး 6 လုံးလိုပါတယ်");
 
-try{
+    try{
+      await createUserWithEmailAndPassword(auth, email, pass);
+      toast("Account created ✅");
+    }catch(e){
+      toast("Signup error: " + (e.code || e.message));
+      alert(e.code || e.message);
+    }
+  };
 
-await createUserWithEmailAndPassword(auth,email,pass);
+  window.login = async ()=>{
+    const email = document.getElementById("email").value.trim();
+    const pass  = document.getElementById("password").value;
 
-showError("Account Created ✅ Login ဝင်နိုင်ပါပြီ");
+    try{
+      await signInWithEmailAndPassword(auth, email, pass);
+      toast("Login success ✅");
+    }catch(e){
+      toast("Login failed: " + (e.code || e.message));
+      alert(e.code || e.message);
+    }
+  };
 
-}catch(e){
+  window.logout = async ()=>{
+    await signOut(auth);
+    toast("Logged out");
+  };
 
-console.log(e);
+  async function refreshPro(){
+    isPro = false;
+    if(!me) return;
+    try{
+      const snap = await getDoc(doc(db, "paidUsers", me.uid));
+      isPro = snap.exists() && snap.data().active === true;
+    }catch{
+      isPro = false;
+    }
+  }
 
-if(e.code=="auth/email-already-in-use"){
-showError("ဒီ email နဲ့ account ရှိပြီးသားပါ");
-}
+  function renderStatus(){
+    const st = document.getElementById("status");
+    if(isPro){
+      st.textContent = "PRO";
+      st.className = "pill pro";
+    }else{
+      st.textContent = "FREE";
+      st.className = "pill free";
+    }
 
-else if(e.code=="auth/weak-password"){
-showError("Password အားနည်းပါတယ်");
-}
+    const who = document.getElementById("who");
+    who.innerHTML = me
+      ? `Logged in as <b>${esc(me.email || "")}</b><br><span class="muted">UID: ${esc(me.uid)}</span>`
+      : "Not logged in";
+  }
 
-else if(e.code=="auth/operation-not-allowed"){
-showError("Firebase Email/Password Enable မလုပ်ရသေးပါ");
-}
+  // ---------- Posts (Public) ----------
+  async function loadPosts(){
+    const feed = document.getElementById("postsFeed");
+    feed.innerHTML = "Loading...";
+    try{
+      const q = query(collection(db, "posts"), orderBy("createdAt","desc"));
+      const snap = await getDocs(q);
+      let html = "";
+      snap.forEach(d=>{
+        const p = d.data();
+        if(p.isPublic !== true) return;
+        html += `
+          <div class="post">
+            <h4>${esc(p.title || "Untitled")}</h4>
+            <div class="muted">${esc(p.body || "")}</div>
+            ${Array.isArray(p.images) && p.images.length ? `
+              <div class="imgs">
+                ${p.images.slice(0,4).map(u=>`<img src="${esc(u)}" alt="">`).join("")}
+              </div>
+            ` : ""}
+          </div>
+        `;
+      });
+      feed.innerHTML = html || `<div class="muted">No posts yet.</div>`;
+    }catch(e){
+      feed.innerHTML = `<div class="muted">Posts load failed.</div>`;
+    }
+  }
 
-else{
-showError(e.message);
-}
+  // ---------- Videos (Premium only) ----------
+  async function loadVideos(){
+    const feed = document.getElementById("videoFeed");
+    feed.innerHTML = "Loading...";
+    try{
+      const q = query(collection(db, "videos"), orderBy("timestamp","desc"));
+      const snap = await getDocs(q);
 
-}
+      let html = "";
+      snap.forEach(d=>{
+        const v = d.data();
+        const id = d.id;
 
-}
+        // watermark text
+        const wm = me ? (me.email || me.uid) : "KAZENO";
 
-window.login = async ()=>{
+        html += `
+          <div class="video" id="v-${id}">
+            <div class="watermark">${esc(wm)}</div>
 
-const email=document.getElementById("email").value.trim();
-const pass=document.getElementById("password").value;
+            <div class="iframeWrap">
+              <iframe src="${esc(v.link || "")}" allowfullscreen></iframe>
+            </div>
 
-try{
+            <div class="vmeta">
+              <div style="min-width:0;">
+                <div style="font-weight:900;">${esc(v.title || "Untitled")}</div>
+                <div class="muted">${esc(v.category || "General")}</div>
+                <div class="muted">${esc(v.notes || "")}</div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px; width:140px;">
+                <button class="btn btnS" onclick="markComplete('${id}')">✅ Complete</button>
+                <button class="btn btnS" onclick="saveLater('${id}','${esc((v.title||"").replaceAll("'",""))}')">🔖 Save</button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
 
-await signInWithEmailAndPassword(auth,email,pass);
+      feed.innerHTML = html || `<div class="muted">No videos.</div>`;
+    }catch(e){
+      feed.innerHTML = `<div class="muted">Load failed. (Check rules/index)</div>`;
+    }
+  }
 
-showError("Login Success ✅");
+  // progress helpers (simple completion + saved)
+  window.markComplete = async (videoId)=>{
+    if(!me) return toast("Login required");
+    try{
+      await setDoc(doc(db, "progress", `${me.uid}_${videoId}`), {
+        uid: me.uid,
+        videoId,
+        completed: true,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+      toast("Completed ✅");
+    }catch(e){
+      toast("Failed");
+    }
+  };
 
-loadVideos();
+  window.saveLater = async (videoId, title)=>{
+    if(!me) return toast("Login required");
+    try{
+      await setDoc(doc(db, "progress", `${me.uid}_${videoId}`), {
+        uid: me.uid,
+        videoId,
+        saved: true,
+        title: title || "",
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+      toast("Saved ✅");
+    }catch(e){
+      toast("Failed");
+    }
+  };
 
-}catch(e){
+  // ---------- Payment request (Manual approve) ----------
+  window.submitPayment = async ()=>{
+    if(!me) return toast("Login required");
+    const provider = document.getElementById("provider").value;
+    const phone = document.getElementById("phone").value.trim();
+    const txRef = document.getElementById("txRef").value.trim();
+    const msg = document.getElementById("payMsg");
 
-showError("Login Failed : "+e.code);
+    if(phone.length < 6) return toast("Phone ထည့်ပါ");
+    if(txRef.length < 4) return toast("Transaction ID ထည့်ပါ");
 
-}
+    try{
+      await addDoc(collection(db, "purchaseRequests"), {
+        uid: me.uid,
+        email: me.email || "",
+        provider,
+        phone,
+        txRef,
+        status: "pending",
+        createdAt: serverTimestamp()
+      });
+      msg.innerHTML = `<span style="color:#bfffdc; font-weight:900;">Submitted ✅</span> Admin approve လုပ်ပြီးတာနဲ့ PRO unlock ဖြစ်ပါမယ်။`;
+      toast("Submitted ✅");
+    }catch(e){
+      msg.innerHTML = `<span style="color:#ffbdbd; font-weight:900;">Submit failed</span>`;
+      toast("Submit failed");
+    }
+  };
 
-}
+  // right-click deterrence
+  document.addEventListener("contextmenu", (e)=> e.preventDefault());
 
-async function loadVideos(){
+  // Auth state
+  onAuthStateChanged(auth, async (user)=>{
+    me = user || null;
+    await refreshPro();
+    renderStatus();
 
-const container=document.getElementById("videos");
+    // Posts always load
+    loadPosts();
 
-container.innerHTML="Loading...";
-
-try{
-
-const q=query(collection(db,"videos"),where("isFree","==",true));
-
-const snap=await getDocs(q);
-
-container.innerHTML="";
-
-snap.forEach(doc=>{
-
-const v=doc.data();
-
-container.innerHTML+=`
-<div class="video">
-<h4>${v.title}</h4>
-<iframe src="${v.link}" allowfullscreen></iframe>
-</div>
-`;
-
-});
-
-if(container.innerHTML==""){
-container.innerHTML="No free videos.";
-}
-
-}catch(e){
-
-container.innerHTML="Load failed.";
-
-}
-
-}
+    // Videos: only show if logged in and pro
+    if(me && isPro){
+      loadVideos();
+    }else{
+      // locked screen message
+      const feed = document.getElementById("videoFeed");
+      feed.innerHTML = `
+        <div class="video">
+          <div class="lock">
+            <div class="lockBox">
+              <div class="big">🔒 Premium Only</div>
+              <div class="muted" style="margin-top:6px;">
+                Video တွေကြည့်ရန် <b>Login + Pro Access</b> လိုပါတယ်။<br>
+                Account tab ထဲမှာ payment request submit လုပ်ပါ။
+              </div>
+              <div style="height:10px;"></div>
+              <button class="btn btnP" onclick="showTab('account')">Go to Account</button>
+            </div>
+          </div>
+          <div class="iframeWrap" style="filter:blur(10px); transform:scale(1.02);">
+            <iframe src="about:blank"></iframe>
+          </div>
+          <div class="muted" style="margin-top:10px;">(Locked)</div>
+        </div>
+      `;
+    }
+  });
 
 </script>
-
 </body>
 </html>
