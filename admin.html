@@ -3,105 +3,102 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Kazeno Admin</title>
+<title>Kazeno Admin Console</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0b1222; --card:#111b33; --border:rgba(255,255,255,.10);
-    --text:#fff; --muted:rgba(255,255,255,.65);
+    --bg:#090e17; --card:#111b33; --border:rgba(255,255,255,.1);
+    --text:#fff; --muted:#8b9bb4;
     --primary:#ffb300; --danger:#ff4d4d; --ok:#00e676;
     --r:16px;
   }
-  body{margin:0; font-family:Arial; background:var(--bg); color:var(--text); padding:16px;}
-  .wrap{max-width:720px; margin:0 auto;}
-  .card{background:rgba(255,255,255,.06); border:1px solid var(--border); border-radius:var(--r); padding:14px; margin-top:14px;}
-  .title{margin:0 0 10px; font-weight:900;}
-  .muted{color:var(--muted); font-size:12px; line-height:1.6;}
+  body{margin:0; font-family:'Poppins', Arial; background:var(--bg); color:var(--text); padding:20px;}
+  .wrap{max-width:900px; margin:0 auto;}
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .card{background:var(--card); border:1px solid var(--border); border-radius:var(--r); padding:24px; margin-bottom:20px;}
+  .title{margin:0 0 16px; font-weight:800; font-size: 18px; color: var(--primary);}
+  .muted{color:var(--muted); font-size:13px; line-height:1.6;}
+  
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media(max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+  
   input,textarea,select{
-    width:100%; padding:12px; border-radius:12px; border:1px solid var(--border);
-    background:rgba(255,255,255,.06); color:var(--text); outline:none;
+    width:100%; padding:14px; border-radius:12px; border:1px solid var(--border);
+    background:rgba(0,0,0,.2); color:var(--text); outline:none; font-family:'Poppins'; box-sizing:border-box; margin-bottom: 12px;
   }
-  textarea{min-height:90px;}
-  .btn{padding:12px; border-radius:12px; border:none; cursor:pointer; font-weight:900;}
-  .btnP{background:linear-gradient(180deg,#ffb300,#e69500); color:#111;}
-  .btnS{background:rgba(255,255,255,.08); color:var(--text); border:1px solid var(--border);}
-  .btnD{background:var(--danger); color:#fff;}
+  input:focus, textarea:focus { border-color: var(--primary); }
+  textarea{min-height:100px; resize: vertical;}
+  
+  .btn{padding:12px 20px; border-radius:12px; border:none; cursor:pointer; font-weight:800; font-family:'Poppins'; transition:0.2s;}
+  .btn:active {transform:scale(0.95);}
+  .btnP{background:var(--primary); color:#000;}
+  .btnS{background:rgba(255,255,255,.1); color:var(--text); border:1px solid var(--border);}
+  .btnD{background:rgba(255,77,77,0.2); color:var(--danger); border:1px solid var(--danger);}
+  .btnOK{background:rgba(0,230,118,0.2); color:var(--ok); border:1px solid var(--ok);}
+  
   .row{display:flex; gap:10px;}
-  .row > *{flex:1;}
-  .item{padding:12px; border-radius:14px; border:1px solid var(--border); background:rgba(0,0,0,.18); margin-top:10px;}
-  .small{font-size:12px; color:var(--muted);}
+  .item{padding:16px; border-radius:14px; border:1px solid var(--border); background:rgba(0,0,0,.3); margin-top:12px;}
+  .item-header { display: flex; justify-content: space-between; margin-bottom: 8px;}
+  .badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; background: rgba(255,255,255,0.1); }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <div class="card" id="loginBox">
-    <h2 class="title">Admin Login</h2>
-    <div class="muted">Admin email/password နဲ့ login ဝင်ပါ။ UID allowlist နဲ့ကာထားပါတယ်။</div>
-    <div style="height:10px;"></div>
-    <input id="email" placeholder="Admin Email">
-    <div style="height:10px;"></div>
+  <div class="card" id="loginBox" style="max-width: 400px; margin: 100px auto;">
+    <h2 class="title" style="text-align:center;">Kazeno Admin</h2>
+    <input id="email" placeholder="Admin Email" type="email">
     <input id="pass" type="password" placeholder="Password">
-    <div style="height:10px;"></div>
-    <button class="btn btnP" onclick="login()">Login</button>
-    <div id="err" class="small" style="color:#ffbdbd; margin-top:10px;"></div>
+    <button class="btn btnP" style="width:100%;" onclick="login()">Enter Console</button>
+    <div id="err" style="color:var(--danger); margin-top:10px; font-size:13px; text-align:center;"></div>
   </div>
 
   <div id="panel" style="display:none;">
-
-    <!-- Videos -->
-    <div class="card">
-      <h2 class="title">🎬 Videos (Premium Only)</h2>
-      <div class="muted">Video တွေကို premium-only အဖြစ်တင်ပါ။ (Cloudinary embed link ထည့်)</div>
-
-      <div style="height:10px;"></div>
-      <input id="vCategory" placeholder="Category (example: Module 1)">
-      <div style="height:10px;"></div>
-      <input id="vTitle" placeholder="Video Title">
-      <div style="height:10px;"></div>
-      <input id="vLink" placeholder="Cloudinary Embed URL (iframe src)">
-      <div style="height:10px;"></div>
-      <textarea id="vNotes" placeholder="Notes"></textarea>
-      <div style="height:10px;"></div>
-
-      <button class="btn btnP" onclick="addVideo()">Upload Video</button>
-
-      <div id="videoList" class="muted" style="margin-top:10px;">Loading...</div>
+    
+    <div class="header">
+        <h2>Dashboard</h2>
+        <button class="btn btnS" onclick="logout()">Log Out</button>
     </div>
 
-    <!-- Posts -->
-    <div class="card">
-      <h2 class="title">📝 Posts (Public)</h2>
-      <div class="muted">Public posts + photos (image URL) တင်နိုင်ပါတယ်။</div>
-
-      <div style="height:10px;"></div>
-      <input id="pTitle" placeholder="Post Title">
-      <div style="height:10px;"></div>
-      <textarea id="pBody" placeholder="Post text"></textarea>
-      <div style="height:10px;"></div>
-      <input id="pImages" placeholder="Image URLs (comma separated)">
-      <div style="height:10px;"></div>
-
-      <button class="btn btnP" onclick="addPost()">Publish Post</button>
-
-      <div id="postList" class="muted" style="margin-top:10px;">Loading...</div>
+    <div class="card" style="border-color: var(--primary);">
+      <h2 class="title">💳 Pending Purchase Requests</h2>
+      <div class="muted" style="margin-bottom: 15px;">Approve users here to unlock PRO access.</div>
+      <div id="reqList">Loading...</div>
     </div>
 
-    <!-- Purchase requests -->
-    <div class="card">
-      <h2 class="title">💳 Purchase Requests</h2>
-      <div class="muted">User တွေ submit လုပ်ထားတဲ့ payment request တွေကို approve လုပ်ပြီး Pro unlock ပေးပါ။</div>
-      <div id="reqList" class="muted" style="margin-top:10px;">Loading...</div>
-    </div>
+    <div class="grid-2">
+        <div class="card">
+          <h2 class="title">🎬 Upload Premium Video</h2>
+          <input id="vCategory" placeholder="Category (e.g. Module 1)">
+          <input id="vTitle" placeholder="Video Title">
+          <input id="vThumbnail" placeholder="Thumbnail Image URL (Optional)">
+          <input id="vLink" placeholder="Cloudinary Embed URL">
+          <textarea id="vNotes" placeholder="Additional Notes or Download Links"></textarea>
+          <button class="btn btnP" onclick="addVideo()">Publish Video</button>
+          
+          <div style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 15px;">
+              <h3 style="font-size: 15px; margin-bottom: 10px;">Manage Videos</h3>
+              <div id="videoList" class="muted">Loading...</div>
+          </div>
+        </div>
 
-    <!-- Progress analytics -->
-    <div class="card">
-      <h2 class="title">📊 Progress (Basic Analytics)</h2>
-      <div class="muted">User completion/saved info ကိုကြည့်နိုင်ပါတယ် (basic)။</div>
-      <div id="progList" class="muted" style="margin-top:10px;">Loading...</div>
+        <div class="card">
+          <h2 class="title">📝 Publish Public Post</h2>
+          <input id="pTitle" placeholder="Post Title">
+          <textarea id="pBody" placeholder="Post content..."></textarea>
+          <input id="pImages" placeholder="Image URLs (comma separated)">
+          <button class="btn btnP" onclick="addPost()">Publish Post</button>
+
+          <div style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 15px;">
+              <h3 style="font-size: 15px; margin-bottom: 10px;">Manage Posts</h3>
+              <div id="postList" class="muted">Loading...</div>
+          </div>
+        </div>
     </div>
 
     <div class="card">
-      <button class="btn btnD" onclick="logout()">Log Out</button>
+      <h2 class="title">📊 User Progress (Logs)</h2>
+      <div id="progList" class="muted">Loading...</div>
     </div>
 
   </div>
@@ -109,13 +106,8 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import {
-    getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, setDoc,
-    query, orderBy, getDocs
-  } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-  import {
-    getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut
-  } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+  import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, setDoc, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDV8UNUW7CVvJy2k5_6OMrRz197c1A7uKU",
@@ -127,208 +119,138 @@
   };
 
   const ADMIN_UID = "4ZPJde1L9uUd6LbRLpQJvw5lYda2";
-
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const auth = getAuth(app);
 
-  const err = document.getElementById("err");
-
   window.login = async ()=>{
-    err.textContent = "";
-    try{
-      await signInWithEmailAndPassword(
-        auth,
-        document.getElementById("email").value.trim(),
-        document.getElementById("pass").value
-      );
-    }catch(e){
-      err.textContent = e.code || e.message;
-    }
+    document.getElementById("err").textContent = "";
+    try{ await signInWithEmailAndPassword(auth, document.getElementById("email").value.trim(), document.getElementById("pass").value); }
+    catch(e){ document.getElementById("err").textContent = "Login Failed"; }
   };
 
   window.logout = async ()=>{ await signOut(auth); };
 
   onAuthStateChanged(auth, async (user)=>{
     if(!user) return;
-    if(user.uid !== ADMIN_UID){
-      alert("Not admin");
-      await signOut(auth);
-      return;
-    }
+    if(user.uid !== ADMIN_UID){ alert("Access Denied: Not an Admin"); await signOut(auth); return; }
     document.getElementById("loginBox").style.display="none";
     document.getElementById("panel").style.display="block";
-    await loadAll();
+    loadAll();
   });
 
-  // ----- Videos -----
+  function esc(s){ return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
+
+  // --- Videos ---
   window.addVideo = async ()=>{
-    const category = document.getElementById("vCategory").value.trim() || "General";
     const title = document.getElementById("vTitle").value.trim();
     const link = document.getElementById("vLink").value.trim();
-    const notes = document.getElementById("vNotes").value.trim();
-
-    if(!title || !link){ alert("Title & Link ထည့်ပါ"); return; }
+    if(!title || !link) return alert("Title & Link required");
 
     await addDoc(collection(db,"videos"), {
-      category, title, link, notes,
-      isFree: false,
-      timestamp: Date.now()
+      category: document.getElementById("vCategory").value.trim() || "General",
+      title, link,
+      thumbnail: document.getElementById("vThumbnail").value.trim(),
+      notes: document.getElementById("vNotes").value.trim(),
+      isFree: false, timestamp: Date.now()
     });
-
-    alert("Uploaded ✅");
-    location.reload();
+    alert("Video Published ✅"); location.reload();
   };
 
   async function loadVideos(){
     const box = document.getElementById("videoList");
-    box.textContent = "Loading...";
     const snap = await getDocs(query(collection(db,"videos"), orderBy("timestamp","desc")));
     let html = "";
     snap.forEach(d=>{
       const v = d.data();
       html += `
-        <div class="item">
-          <div><b>[${esc(v.category||"General")}]</b> ${esc(v.title||"")}</div>
-          <div class="small">${esc((v.notes||"").slice(0,70))}</div>
-          <div class="row" style="margin-top:10px;">
-            <button class="btn btnS" onclick="copyText('${escJS(v.link||"")}')">Copy Link</button>
-            <button class="btn btnD" onclick="delDoc('videos','${d.id}')">Delete</button>
-          </div>
-        </div>
-      `;
+        <div class="item" style="padding: 12px;">
+          <div class="item-header"><b>${esc(v.title)}</b> <span class="badge">${esc(v.category)}</span></div>
+          <button class="btn btnD" style="padding: 6px 12px; font-size:12px;" onclick="delDoc('videos','${d.id}')">Delete</button>
+        </div>`;
     });
-    box.innerHTML = html || `<div class="muted">No videos.</div>`;
+    box.innerHTML = html || "No videos found.";
   }
 
-  // ----- Posts -----
+  // --- Posts ---
   window.addPost = async ()=>{
     const title = document.getElementById("pTitle").value.trim();
-    const body  = document.getElementById("pBody").value.trim();
+    if(!title) return alert("Title required");
     const imagesRaw = document.getElementById("pImages").value.trim();
-    const images = imagesRaw ? imagesRaw.split(",").map(x=>x.trim()).filter(Boolean) : [];
-
-    if(!title){ alert("Title ထည့်ပါ"); return; }
-
+    
     await addDoc(collection(db,"posts"), {
-      title, body, images,
-      isPublic: true,
-      createdAt: new Date()
+      title, body: document.getElementById("pBody").value.trim(),
+      images: imagesRaw ? imagesRaw.split(",").map(x=>x.trim()).filter(Boolean) : [],
+      isPublic: true, createdAt: Date.now() // Changed to Date.now() for universal sorting
     });
-
-    alert("Posted ✅");
-    location.reload();
+    alert("Post Published ✅"); location.reload();
   };
 
   async function loadPosts(){
     const box = document.getElementById("postList");
-    box.textContent = "Loading...";
     const snap = await getDocs(query(collection(db,"posts"), orderBy("createdAt","desc")));
     let html = "";
     snap.forEach(d=>{
-      const p = d.data();
       html += `
-        <div class="item">
-          <div><b>${esc(p.title||"")}</b></div>
-          <div class="small">${esc((p.body||"").slice(0,90))}</div>
-          <div class="row" style="margin-top:10px;">
-            <button class="btn btnD" onclick="delDoc('posts','${d.id}')">Delete</button>
-          </div>
-        </div>
-      `;
+        <div class="item" style="padding: 12px;">
+          <div style="font-weight:bold; margin-bottom:8px;">${esc(d.data().title)}</div>
+          <button class="btn btnD" style="padding: 6px 12px; font-size:12px;" onclick="delDoc('posts','${d.id}')">Delete</button>
+        </div>`;
     });
-    box.innerHTML = html || `<div class="muted">No posts.</div>`;
+    box.innerHTML = html || "No posts found.";
   }
 
-  // ----- Purchase Requests -----
+  // --- Purchase Requests ---
   async function loadRequests(){
     const box = document.getElementById("reqList");
-    box.textContent = "Loading...";
     const snap = await getDocs(query(collection(db,"purchaseRequests"), orderBy("createdAt","desc")));
     let html = "";
     snap.forEach(d=>{
       const r = d.data();
+      if(r.status !== "pending") return; // Only show pending
       html += `
         <div class="item">
-          <div><b>${esc(r.provider||"")}</b> • ${esc(r.phone||"")}</div>
-          <div class="small">UID: ${esc(r.uid||"")}</div>
-          <div class="small">Email: ${esc(r.email||"")}</div>
-          <div class="small">TX: <b>${esc(r.txRef||"")}</b></div>
-          <div class="small">Status: <b>${esc(r.status||"pending")}</b></div>
-          <div class="row" style="margin-top:10px;">
-            <button class="btn btnP" onclick="approve('${escJS(r.uid||"")}','${d.id}')">Approve</button>
+          <div class="item-header">
+            <span>Provider: <b>${esc(r.provider)}</b></span>
+            <span>Phone: <b>${esc(r.phone)}</b></span>
+          </div>
+          <div style="margin: 8px 0; font-family: monospace; font-size: 15px;">TX ID: <b style="color:var(--primary);">${esc(r.txRef)}</b></div>
+          <div class="muted">Email: ${esc(r.email)} | UID: ${esc(r.uid)}</div>
+          <div class="row" style="margin-top:12px;">
+            <button class="btn btnOK" onclick="approve('${r.uid}','${d.id}')">Approve & Grant PRO</button>
             <button class="btn btnD" onclick="reject('${d.id}')">Reject</button>
           </div>
-        </div>
-      `;
+        </div>`;
     });
-    box.innerHTML = html || `<div class="muted">No requests.</div>`;
+    box.innerHTML = html || "No pending requests.";
   }
 
   window.approve = async (uid, reqId)=>{
-    if(!uid) return;
-    await setDoc(doc(db,"paidUsers", uid), {
-      active:true,
-      plan:"lifetime",
-      updatedAt: new Date()
-    }, { merge:true });
-
+    await setDoc(doc(db,"paidUsers", uid), { active:true, plan:"lifetime", updatedAt: Date.now() }, { merge:true });
     await updateDoc(doc(db,"purchaseRequests", reqId), { status:"approved" });
-    alert("Approved ✅");
-    location.reload();
+    alert("Approved ✅"); loadRequests();
   };
 
   window.reject = async (reqId)=>{
     await updateDoc(doc(db,"purchaseRequests", reqId), { status:"rejected" });
-    alert("Rejected");
-    location.reload();
+    alert("Rejected"); loadRequests();
   };
 
-  // ----- Progress -----
+  // --- Progress ---
   async function loadProgress(){
     const box = document.getElementById("progList");
-    box.textContent = "Loading...";
     const snap = await getDocs(query(collection(db,"progress"), orderBy("updatedAt","desc")));
     let html = "";
     snap.forEach(d=>{
       const p = d.data();
-      html += `
-        <div class="item">
-          <div><b>UID:</b> ${esc(p.uid||"")}</div>
-          <div class="small"><b>Video:</b> ${esc(p.videoId||"")}</div>
-          <div class="small">Completed: <b>${p.completed ? "YES" : "NO"}</b> • Saved: <b>${p.saved ? "YES" : "NO"}</b></div>
-        </div>
-      `;
+      html += `<div class="item" style="padding:10px; font-size:12px;">UID: ${esc(p.uid)} | Video: ${esc(p.videoId)} | Done: ${p.completed?"Yes":"No"} | Saved: ${p.saved?"Yes":"No"}</div>`;
     });
-    box.innerHTML = html || `<div class="muted">No progress yet.</div>`;
+    box.innerHTML = html || "No activity yet.";
   }
 
-  // ----- Utils -----
-  window.delDoc = async (col, id)=>{
-    if(!confirm("Delete?")) return;
-    await deleteDoc(doc(db,col,id));
-    location.reload();
-  };
+  window.delDoc = async (col, id)=>{ if(confirm("Delete this item?")){ await deleteDoc(doc(db,col,id)); location.reload(); } };
 
-  window.copyText = async (t)=>{
-    try{ await navigator.clipboard.writeText(t); alert("Copied"); }catch{ alert("Copy failed"); }
-  };
-
-  function esc(s){
-    return String(s ?? "")
-      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;").replaceAll("'","&#039;");
-  }
-  function escJS(s){
-    return String(s ?? "").replaceAll("\\","\\\\").replaceAll("'","\\'");
-  }
-
-  async function loadAll(){
-    await loadVideos();
-    await loadPosts();
-    await loadRequests();
-    await loadProgress();
-  }
+  function loadAll(){ loadVideos(); loadPosts(); loadRequests(); loadProgress(); }
 </script>
 </body>
 </html>
