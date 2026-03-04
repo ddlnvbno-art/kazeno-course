@@ -3,111 +3,158 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Kazeno Admin Console</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<title>Kazeno+ Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#090e17; --card:#111b33; --border:rgba(255,255,255,.1);
-    --text:#fff; --muted:#8b9bb4;
-    --primary:#ffb300; --danger:#ff4d4d; --ok:#00e676;
-    --r:16px;
+    --bg: #090e17; --card: rgba(255, 255, 255, 0.05); --border: rgba(255, 255, 255, 0.08);
+    --text: #ffffff; --muted: #8b9bb4;
+    --primary: #ffb300; --primary-glow: rgba(255, 179, 0, 0.4);
+    --danger: #ff4d4d; --ok: #00e676;
+    --r: 20px;
   }
-  body{margin:0; font-family:'Poppins', Arial; background:var(--bg); color:var(--text); padding:20px;}
-  .wrap{max-width:900px; margin:0 auto;}
-  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-  .card{background:var(--card); border:1px solid var(--border); border-radius:var(--r); padding:24px; margin-bottom:20px;}
-  .title{margin:0 0 16px; font-weight:800; font-size: 18px; color: var(--primary);}
+  body{margin:0; font-family:'Poppins', sans-serif; background:var(--bg); color:var(--text); padding-bottom:90px; overflow-x: hidden;}
+  body::before { content:''; position:fixed; top:-20%; left:-10%; width:50%; height:50%; background: radial-gradient(circle, var(--primary-glow) 0%, transparent 60%); filter:blur(80px); z-index:-1;}
+  
+  .wrap{max-width:520px; margin:0 auto; padding:16px;}
+  .top{display:flex; align-items:center; justify-content:space-between; padding:16px; border-radius:24px; background:rgba(15, 23, 42, 0.6); border:1px solid var(--border); position:sticky; top:10px; z-index:10; backdrop-filter: blur(16px); box-shadow: 0 4px 30px rgba(0,0,0,0.5);}
+  .brand{font-weight:800; font-size: 18px; letter-spacing: 0.5px; display:flex; align-items:center; gap:8px;}
+  .brand::before {content: ''; width: 12px; height: 12px; background: var(--primary); border-radius: 50%; display:inline-block; box-shadow: 0 0 10px var(--primary);}
+  
+  .pill{padding:6px 14px; border-radius:999px; font-size:12px; font-weight:800; border:1px solid var(--border); color:var(--muted); text-transform: uppercase;}
+  .pill.pro{background:rgba(0,230,118,.15); border-color:rgba(0,230,118,.3); color:#00e676; box-shadow: 0 0 15px rgba(0,230,118,.2);}
+  .pill.free{background:rgba(255,179,0,.15); border-color:rgba(255,179,0,.3); color:var(--primary);}
+  
+  .card{background:var(--card); border:1px solid var(--border); border-radius:var(--r); padding:20px; margin-top:16px; backdrop-filter: blur(12px);}
+  .title{margin:0 0 12px; font-weight:800; font-size:16px;}
   .muted{color:var(--muted); font-size:13px; line-height:1.6;}
   
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  @media(max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+  .input{width:100%; padding:14px; border-radius:14px; border:1px solid var(--border); background:rgba(0,0,0,0.2); color:var(--text); outline:none; font-family: 'Poppins'; box-sizing: border-box; transition: 0.3s;}
+  .input:focus{border-color: var(--primary); box-shadow: 0 0 0 2px rgba(255,179,0,0.2);}
   
-  input,textarea,select{
-    width:100%; padding:14px; border-radius:12px; border:1px solid var(--border);
-    background:rgba(0,0,0,.2); color:var(--text); outline:none; font-family:'Poppins'; box-sizing:border-box; margin-bottom: 12px;
-  }
-  input:focus, textarea:focus { border-color: var(--primary); }
-  textarea{min-height:100px; resize: vertical;}
-  
-  .btn{padding:12px 20px; border-radius:12px; border:none; cursor:pointer; font-weight:800; font-family:'Poppins'; transition:0.2s;}
-  .btn:active {transform:scale(0.95);}
-  .btnP{background:var(--primary); color:#000;}
-  .btnS{background:rgba(255,255,255,.1); color:var(--text); border:1px solid var(--border);}
-  .btnD{background:rgba(255,77,77,0.2); color:var(--danger); border:1px solid var(--danger);}
-  .btnOK{background:rgba(0,230,118,0.2); color:var(--ok); border:1px solid var(--ok);}
+  .btn{width:100%; padding:14px; border-radius:14px; border:none; cursor:pointer; font-weight:800; font-family: 'Poppins'; transition: 0.2s; box-sizing: border-box;}
+  .btn:active {transform: scale(0.97);}
+  .btnP{background:linear-gradient(135deg, #ffb300, #ff9100); color:#000; box-shadow: 0 4px 15px rgba(255,179,0,0.3);}
+  .btnS{background:rgba(255,255,255,.05); color:var(--text); border:1px solid var(--border);}
+  .btnD{background:rgba(255, 77, 77, 0.15); color:var(--danger); border: 1px solid rgba(255, 77, 77, 0.3);}
   
   .row{display:flex; gap:10px;}
-  .item{padding:16px; border-radius:14px; border:1px solid var(--border); background:rgba(0,0,0,.3); margin-top:12px;}
-  .item-header { display: flex; justify-content: space-between; margin-bottom: 8px;}
-  .badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; background: rgba(255,255,255,0.1); }
+  .row > *{flex:1;}
+  
+  .tabs{display:flex; gap:10px; padding: 5px;}
+  .tab{flex:1; padding:12px; border-radius:16px; border:1px solid transparent; background:transparent; color:var(--muted); font-weight:800; cursor:pointer; transition:0.3s;}
+  .tab.active{background:rgba(255,179,0,.1); color:var(--primary); border-color:var(--border);}
+  
+  .post{padding:16px; border-radius:20px; border:1px solid var(--border); background:rgba(0,0,0,.3); margin-top:16px;}
+  .post h4{margin:0 0 8px; font-size:15px; font-weight: 800;}
+  .imgs{display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:10px; margin-top:12px;}
+  .imgs img{width:100%; border-radius:14px; border:1px solid var(--border); object-fit:cover; height:120px;}
+  
+  .video{position:relative; padding:16px; border-radius:20px; border:1px solid var(--border); background:rgba(0,0,0,.3); margin-top:16px;}
+  .iframeWrap{position:relative; width:100%; padding-bottom:56.25%; border-radius:14px; overflow:hidden; border:1px solid var(--border); background:#000;}
+  .iframeWrap iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  
+  /* Thumbnail Styles */
+  .thumb-box {position:absolute; inset:0; z-index:2; cursor:pointer; background:#111;}
+  .thumb-box img {width:100%; height:100%; object-fit:cover; opacity:0.8;}
+  .play-btn {position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:50px; height:50px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 0 20px rgba(255,179,0,0.5); color:#000;}
+  
+  .vmeta{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-top:16px;}
+  
+  /* Lock UI */
+  .lock{position:absolute; inset:0; background:rgba(9, 14, 23, 0.85); display:flex; align-items:center; justify-content:center; padding:20px; z-index:5; border-radius: 14px; backdrop-filter: blur(5px);}
+  .lockBox{width:100%; max-width: 300px; border-radius:20px; border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.05); padding:20px; text-align:center;}
+  .lockBox .icon {font-size: 32px; margin-bottom: 10px;}
+  
+  .toast{position:fixed; left:50%; transform:translateX(-50%); bottom:84px; background:var(--text); color:var(--bg); padding:12px 24px; border-radius:999px; font-weight:800; font-size:13px; opacity:0; transition:.3s; z-index:9999; box-shadow: 0 5px 20px rgba(0,0,0,0.3);}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(-10px);}
+  
+  .nav{position:fixed; left:50%; transform:translateX(-50%); bottom:16px; display:flex; justify-content:space-around; gap:10px; padding:10px; border-radius:999px; background:rgba(15, 23, 42, 0.85); border:1px solid var(--border); backdrop-filter: blur(20px); width: 90%; max-width: 400px; z-index: 100;}
+  .nav button{background:transparent; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:12px 24px; border-radius:999px; font-weight:900; transition:0.3s;}
+  .nav button.active{color:var(--primary); background:rgba(255,179,0,.1);}
 </style>
 </head>
+
 <body>
+<div id="toast" class="toast">OK</div>
+
 <div class="wrap">
 
-  <div class="card" id="loginBox" style="max-width: 400px; margin: 100px auto;">
-    <h2 class="title" style="text-align:center;">Kazeno Admin</h2>
-    <input id="email" placeholder="Admin Email" type="email">
-    <input id="pass" type="password" placeholder="Password">
-    <button class="btn btnP" style="width:100%;" onclick="login()">Enter Console</button>
-    <div id="err" style="color:var(--danger); margin-top:10px; font-size:13px; text-align:center;"></div>
+  <div class="top">
+    <div class="brand">Kazeno+</div>
+    <div id="status" class="pill free">FREE</div>
   </div>
 
-  <div id="panel" style="display:none;">
-    
-    <div class="header">
-        <h2>Dashboard</h2>
-        <button class="btn btnS" onclick="logout()">Log Out</button>
+  <div class="tabs card">
+    <button id="tPosts" class="tab active" onclick="showTab('posts')">📝 Feed</button>
+    <button id="tVideos" class="tab" onclick="showTab('videos')">🎬 Premium</button>
+    <button id="tAccount" class="tab" onclick="showTab('account')">👤 Account</button>
+  </div>
+
+  <div id="tab-posts">
+    <div class="card">
+      <h3 class="title">Public Community</h3>
+      <div class="muted">Free အနေနဲ့ ကြည့်ရှုလေ့လာနိုင်သော Post များ</div>
     </div>
+    <div id="postsFeed"></div>
+  </div>
 
-    <div class="card" style="border-color: var(--primary);">
-      <h2 class="title">💳 Pending Purchase Requests</h2>
-      <div class="muted" style="margin-bottom: 15px;">Approve users here to unlock PRO access.</div>
-      <div id="reqList">Loading...</div>
+  <div id="tab-videos" style="display:none;">
+    <div class="card">
+      <h3 class="title">Exclusive Courses</h3>
+      <div class="muted">Pro Member များသာ ကြည့်ရှုနိုင်သော ဗီဒီယိုများ</div>
     </div>
+    <div id="videoFeed"></div>
+  </div>
 
-    <div class="grid-2">
-        <div class="card">
-          <h2 class="title">🎬 Upload Premium Video</h2>
-          <input id="vCategory" placeholder="Category (e.g. Module 1)">
-          <input id="vTitle" placeholder="Video Title">
-          <input id="vThumbnail" placeholder="Thumbnail Image URL (Optional)">
-          <input id="vLink" placeholder="Cloudinary Embed URL">
-          <textarea id="vNotes" placeholder="Additional Notes or Download Links"></textarea>
-          <button class="btn btnP" onclick="addVideo()">Publish Video</button>
-          
-          <div style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 15px;">
-              <h3 style="font-size: 15px; margin-bottom: 10px;">Manage Videos</h3>
-              <div id="videoList" class="muted">Loading...</div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2 class="title">📝 Publish Public Post</h2>
-          <input id="pTitle" placeholder="Post Title">
-          <textarea id="pBody" placeholder="Post content..."></textarea>
-          <input id="pImages" placeholder="Image URLs (comma separated)">
-          <button class="btn btnP" onclick="addPost()">Publish Post</button>
-
-          <div style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 15px;">
-              <h3 style="font-size: 15px; margin-bottom: 10px;">Manage Posts</h3>
-              <div id="postList" class="muted">Loading...</div>
-          </div>
-        </div>
+  <div id="tab-account" style="display:none;">
+    <div class="card">
+      <h3 class="title">Authentication</h3>
+      <input id="email" class="input" placeholder="Email Address" autocomplete="email">
+      <div style="height:12px;"></div>
+      <input id="password" class="input" type="password" placeholder="Password (min 6 chars)" autocomplete="current-password">
+      <div style="height:16px;"></div>
+      <div class="row">
+        <button class="btn btnP" onclick="login()">Log In</button>
+        <button class="btn btnS" onclick="signup()">Sign Up</button>
+      </div>
+      <div id="who" class="muted" style="margin-top:16px; text-align: center;">Not logged in</div>
+      <div id="logoutBtn" style="display:none; margin-top:12px;">
+         <button class="btn btnD" onclick="logout()">Log Out</button>
+      </div>
     </div>
 
     <div class="card">
-      <h2 class="title">📊 User Progress (Logs)</h2>
-      <div id="progList" class="muted">Loading...</div>
+      <h3 class="title" style="color:var(--primary);">🌟 Upgrade to PRO</h3>
+      <div class="muted" style="margin-bottom: 16px;">
+        KBZPay သို့ WavePay ဖြင့် ငွေလွှဲပြီးပါက အောက်ပါ Form တွင် <b>လုပ်ငန်းစဉ်အမှတ် (Transaction ID)</b> ကို ဖြည့်သွင်းပါ။
+      </div>
+      <select id="provider" class="input">
+        <option value="KBZPay">KBZPay</option>
+        <option value="WavePay">WavePay</option>
+      </select>
+      <div style="height:12px;"></div>
+      <input id="phone" class="input" placeholder="Phone Number (e.g. 0912345678)">
+      <div style="height:12px;"></div>
+      <input id="txRef" class="input" placeholder="Transaction ID (e.g. 0214xxxx)">
+      <div style="height:16px;"></div>
+      <button class="btn btnP" onclick="submitPayment()">Submit Request</button>
+      <div id="payMsg" class="muted" style="margin-top:12px; text-align: center;"></div>
     </div>
-
   </div>
+
+</div>
+
+<div class="nav">
+  <button id="n1" class="active" onclick="showTab('posts')">📝</button>
+  <button id="n2" onclick="showTab('videos')">🎬</button>
+  <button id="n3" onclick="showTab('account')">👤</button>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, setDoc, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+  import { getFirestore, collection, getDocs, addDoc, query, orderBy, where, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDV8UNUW7CVvJy2k5_6OMrRz197c1A7uKU",
@@ -118,140 +165,208 @@
     appId: "1:356111425732:web:fd5b3a7429372ec41da991"
   };
 
-  const ADMIN_UID = "4ZPJde1L9uUd6LbRLpQJvw5lYda2";
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const auth = getAuth(app);
 
-  window.login = async ()=>{
-    document.getElementById("err").textContent = "";
-    try{ await signInWithEmailAndPassword(auth, document.getElementById("email").value.trim(), document.getElementById("pass").value); }
-    catch(e){ document.getElementById("err").textContent = "Login Failed"; }
-  };
+  let isPro = false;
+  let me = null;
 
-  window.logout = async ()=>{ await signOut(auth); };
-
-  onAuthStateChanged(auth, async (user)=>{
-    if(!user) return;
-    if(user.uid !== ADMIN_UID){ alert("Access Denied: Not an Admin"); await signOut(auth); return; }
-    document.getElementById("loginBox").style.display="none";
-    document.getElementById("panel").style.display="block";
-    loadAll();
-  });
+  const toastEl = document.getElementById("toast");
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    setTimeout(()=>toastEl.classList.remove("show"), 2000);
+  }
 
   function esc(s){ return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
 
-  // --- Videos ---
-  window.addVideo = async ()=>{
-    const title = document.getElementById("vTitle").value.trim();
-    const link = document.getElementById("vLink").value.trim();
-    if(!title || !link) return alert("Title & Link required");
+  window.showTab = (name)=>{
+    document.getElementById("tab-posts").style.display = name==="posts" ? "block" : "none";
+    document.getElementById("tab-videos").style.display = name==="videos" ? "block" : "none";
+    document.getElementById("tab-account").style.display = name==="account" ? "block" : "none";
 
-    await addDoc(collection(db,"videos"), {
-      category: document.getElementById("vCategory").value.trim() || "General",
-      title, link,
-      thumbnail: document.getElementById("vThumbnail").value.trim(),
-      notes: document.getElementById("vNotes").value.trim(),
-      isFree: false, timestamp: Date.now()
-    });
-    alert("Video Published ✅"); location.reload();
+    ["tPosts", "tVideos", "tAccount"].forEach(id => document.getElementById(id).classList.remove("active"));
+    ["n1", "n2", "n3"].forEach(id => document.getElementById(id).classList.remove("active"));
+
+    if(name==="posts") { document.getElementById("tPosts").classList.add("active"); document.getElementById("n1").classList.add("active"); loadPosts(); }
+    if(name==="videos") { document.getElementById("tVideos").classList.add("active"); document.getElementById("n2").classList.add("active"); loadVideos(); }
+    if(name==="account") { document.getElementById("tAccount").classList.add("active"); document.getElementById("n3").classList.add("active"); }
   };
+
+  window.signup = async ()=>{
+    const email = document.getElementById("email").value.trim();
+    const pass  = document.getElementById("password").value;
+    if(!email || pass.length < 6) return toast("Email မှန်ကန်စွာနှင့် Password အနည်းဆုံး ၆ လုံး ထည့်ပါ။");
+    try{ await createUserWithEmailAndPassword(auth, email, pass); toast("Account Created ✅"); document.getElementById("password").value=""; }
+    catch(e){ toast("Error: " + e.message); }
+  };
+
+  window.login = async ()=>{
+    const email = document.getElementById("email").value.trim();
+    const pass  = document.getElementById("password").value;
+    try{ await signInWithEmailAndPassword(auth, email, pass); toast("Logged In ✅"); document.getElementById("password").value=""; }
+    catch(e){ toast("Login Failed!"); }
+  };
+
+  window.logout = async ()=>{ await signOut(auth); toast("Logged Out"); };
+
+  async function refreshPro(){
+    isPro = false;
+    if(!me) return;
+    try{
+      const snap = await getDoc(doc(db, "paidUsers", me.uid));
+      isPro = snap.exists() && snap.data().active === true;
+    }catch(e){ isPro = false; }
+  }
+
+  function renderStatus(){
+    const st = document.getElementById("status");
+    st.textContent = isPro ? "PRO" : "FREE";
+    st.className = isPro ? "pill pro" : "pill free";
+
+    const who = document.getElementById("who");
+    document.getElementById("logoutBtn").style.display = me ? "block" : "none";
+    who.innerHTML = me ? `Logged in as <b>${esc(me.email)}</b>` : "Not logged in";
+  }
+
+  // FIXED: Firestore queries now use where("isPublic", "==", true) to respect security rules.
+  async function loadPosts(){
+    const feed = document.getElementById("postsFeed");
+    feed.innerHTML = "<div class='muted' style='text-align:center; padding: 20px;'>Loading posts...</div>";
+    try{
+      const q = query(collection(db, "posts"), where("isPublic", "==", true));
+      const snap = await getDocs(q);
+      let posts = [];
+      snap.forEach(d => posts.push({id: d.id, ...d.data()}));
+      
+      // Sort in memory to avoid needing composite index in Firestore
+      posts.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+      let html = "";
+      posts.forEach(p => {
+        html += `
+          <div class="post">
+            <h4>${esc(p.title || "Untitled")}</h4>
+            <div class="muted">${esc(p.body || "")}</div>
+            ${Array.isArray(p.images) && p.images.length ? `
+              <div class="imgs">
+                ${p.images.slice(0,4).map(u=>`<img src="${esc(u)}" alt="img">`).join("")}
+              </div>
+            ` : ""}
+          </div>
+        `;
+      });
+      feed.innerHTML = html || `<div class="muted" style="text-align:center;">No public posts yet.</div>`;
+    }catch(e){ feed.innerHTML = `<div class="muted" style="text-align:center; color: var(--danger);">Failed to load posts.</div>`; }
+  }
 
   async function loadVideos(){
-    const box = document.getElementById("videoList");
-    const snap = await getDocs(query(collection(db,"videos"), orderBy("timestamp","desc")));
-    let html = "";
-    snap.forEach(d=>{
-      const v = d.data();
-      html += `
-        <div class="item" style="padding: 12px;">
-          <div class="item-header"><b>${esc(v.title)}</b> <span class="badge">${esc(v.category)}</span></div>
-          <button class="btn btnD" style="padding: 6px 12px; font-size:12px;" onclick="delDoc('videos','${d.id}')">Delete</button>
-        </div>`;
-    });
-    box.innerHTML = html || "No videos found.";
-  }
-
-  // --- Posts ---
-  window.addPost = async ()=>{
-    const title = document.getElementById("pTitle").value.trim();
-    if(!title) return alert("Title required");
-    const imagesRaw = document.getElementById("pImages").value.trim();
-    
-    await addDoc(collection(db,"posts"), {
-      title, body: document.getElementById("pBody").value.trim(),
-      images: imagesRaw ? imagesRaw.split(",").map(x=>x.trim()).filter(Boolean) : [],
-      isPublic: true, createdAt: Date.now() // Changed to Date.now() for universal sorting
-    });
-    alert("Post Published ✅"); location.reload();
-  };
-
-  async function loadPosts(){
-    const box = document.getElementById("postList");
-    const snap = await getDocs(query(collection(db,"posts"), orderBy("createdAt","desc")));
-    let html = "";
-    snap.forEach(d=>{
-      html += `
-        <div class="item" style="padding: 12px;">
-          <div style="font-weight:bold; margin-bottom:8px;">${esc(d.data().title)}</div>
-          <button class="btn btnD" style="padding: 6px 12px; font-size:12px;" onclick="delDoc('posts','${d.id}')">Delete</button>
-        </div>`;
-    });
-    box.innerHTML = html || "No posts found.";
-  }
-
-  // --- Purchase Requests ---
-  async function loadRequests(){
-    const box = document.getElementById("reqList");
-    const snap = await getDocs(query(collection(db,"purchaseRequests"), orderBy("createdAt","desc")));
-    let html = "";
-    snap.forEach(d=>{
-      const r = d.data();
-      if(r.status !== "pending") return; // Only show pending
-      html += `
-        <div class="item">
-          <div class="item-header">
-            <span>Provider: <b>${esc(r.provider)}</b></span>
-            <span>Phone: <b>${esc(r.phone)}</b></span>
+    const feed = document.getElementById("videoFeed");
+    if(!me || !isPro){
+      feed.innerHTML = `
+        <div class="video">
+          <div class="iframeWrap">
+            <div class="lock">
+              <div class="lockBox">
+                <div class="icon">🔒</div>
+                <div style="font-weight:900; color:var(--primary); font-size: 18px;">Premium Content</div>
+                <div class="muted" style="margin-top:8px;">
+                  ဤသင်ခန်းစာများကို ကြည့်ရှုရန် Account စာမျက်နှာတွင် ငွေသွင်းအကြောင်းကြားပါ။
+                </div>
+                <button class="btn btnP" style="margin-top:16px;" onclick="showTab('account')">Go to Account</button>
+              </div>
+            </div>
           </div>
-          <div style="margin: 8px 0; font-family: monospace; font-size: 15px;">TX ID: <b style="color:var(--primary);">${esc(r.txRef)}</b></div>
-          <div class="muted">Email: ${esc(r.email)} | UID: ${esc(r.uid)}</div>
-          <div class="row" style="margin-top:12px;">
-            <button class="btn btnOK" onclick="approve('${r.uid}','${d.id}')">Approve & Grant PRO</button>
-            <button class="btn btnD" onclick="reject('${d.id}')">Reject</button>
+        </div>
+      `;
+      return;
+    }
+
+    feed.innerHTML = "<div class='muted' style='text-align:center; padding: 20px;'>Loading videos...</div>";
+    try{
+      const q = query(collection(db, "videos"), orderBy("timestamp","desc"));
+      const snap = await getDocs(q);
+      let html = "";
+      
+      snap.forEach(d=>{
+        const v = d.data();
+        const id = d.id;
+        const thumb = v.thumbnail || 'https://via.placeholder.com/600x337/111b33/ffb300?text=Kazeno+Premium';
+        
+        html += `
+          <div class="video" id="v-${id}">
+            <div class="iframeWrap">
+              <div class="thumb-box" id="thumb-${id}" onclick="document.getElementById('thumb-${id}').style.display='none'">
+                 <img src="${thumb}" alt="Thumbnail">
+                 <div class="play-btn">▶</div>
+              </div>
+              <iframe src="${esc(v.link || "")}" allowfullscreen></iframe>
+            </div>
+            <div class="vmeta">
+              <div style="min-width:0;">
+                <div style="font-weight:800; font-size:15px; color:var(--primary);">${esc(v.title || "Untitled")}</div>
+                <div class="pill free" style="display:inline-block; padding: 4px 8px; font-size:10px; margin: 5px 0;">${esc(v.category || "General")}</div>
+                <div class="muted">${esc(v.notes || "")}</div>
+              </div>
+            </div>
+            <div class="row" style="margin-top: 12px;">
+                <button class="btn btnS" onclick="markComplete('${id}')">✅ Mark Complete</button>
+                <button class="btn btnS" onclick="saveLater('${id}','${esc((v.title||"").replaceAll("'",""))}')">🔖 Save</button>
+            </div>
           </div>
-        </div>`;
-    });
-    box.innerHTML = html || "No pending requests.";
+        `;
+      });
+      feed.innerHTML = html || `<div class="muted" style="text-align:center;">No premium videos available.</div>`;
+    }catch(e){ feed.innerHTML = `<div class="muted" style="text-align:center; color: var(--danger);">Failed to load videos.</div>`; }
   }
 
-  window.approve = async (uid, reqId)=>{
-    await setDoc(doc(db,"paidUsers", uid), { active:true, plan:"lifetime", updatedAt: Date.now() }, { merge:true });
-    await updateDoc(doc(db,"purchaseRequests", reqId), { status:"approved" });
-    alert("Approved ✅"); loadRequests();
+  window.markComplete = async (videoId)=>{
+    if(!me) return toast("Login required");
+    try{
+      await setDoc(doc(db, "progress", `${me.uid}_${videoId}`), { uid: me.uid, videoId, completed: true, updatedAt: serverTimestamp() }, { merge: true });
+      toast("Marked as Completed ✅");
+    }catch(e){ toast("Action failed"); }
   };
 
-  window.reject = async (reqId)=>{
-    await updateDoc(doc(db,"purchaseRequests", reqId), { status:"rejected" });
-    alert("Rejected"); loadRequests();
+  window.saveLater = async (videoId, title)=>{
+    if(!me) return toast("Login required");
+    try{
+      await setDoc(doc(db, "progress", `${me.uid}_${videoId}`), { uid: me.uid, videoId, saved: true, title: title || "", updatedAt: serverTimestamp() }, { merge: true });
+      toast("Saved to List 🔖");
+    }catch(e){ toast("Action failed"); }
   };
 
-  // --- Progress ---
-  async function loadProgress(){
-    const box = document.getElementById("progList");
-    const snap = await getDocs(query(collection(db,"progress"), orderBy("updatedAt","desc")));
-    let html = "";
-    snap.forEach(d=>{
-      const p = d.data();
-      html += `<div class="item" style="padding:10px; font-size:12px;">UID: ${esc(p.uid)} | Video: ${esc(p.videoId)} | Done: ${p.completed?"Yes":"No"} | Saved: ${p.saved?"Yes":"No"}</div>`;
-    });
-    box.innerHTML = html || "No activity yet.";
-  }
+  window.submitPayment = async ()=>{
+    if(!me) return toast("Please Login First!");
+    const provider = document.getElementById("provider").value;
+    const phone = document.getElementById("phone").value.trim();
+    const txRef = document.getElementById("txRef").value.trim();
+    const msg = document.getElementById("payMsg");
 
-  window.delDoc = async (col, id)=>{ if(confirm("Delete this item?")){ await deleteDoc(doc(db,col,id)); location.reload(); } };
+    if(phone.length < 6 || txRef.length < 4) return toast("အချက်အလက်များကို ပြည့်စုံစွာ ဖြည့်ပါ။");
+    msg.innerHTML = "Submitting...";
 
-  function loadAll(){ loadVideos(); loadPosts(); loadRequests(); loadProgress(); }
+    try{
+      await addDoc(collection(db, "purchaseRequests"), {
+        uid: me.uid, email: me.email || "", provider, phone, txRef, status: "pending", createdAt: serverTimestamp()
+      });
+      msg.innerHTML = `<span style="color:var(--ok); font-weight:800;">Request Submitted ✅</span><br> Admin အတည်ပြုပြီးပါက PRO ပွင့်ပါမည်။`;
+      document.getElementById("txRef").value = "";
+    }catch(e){ msg.innerHTML = `<span style="color:var(--danger);">Submit Failed. Please try again.</span>`; }
+  };
+
+  document.addEventListener("contextmenu", (e)=> e.preventDefault());
+
+  onAuthStateChanged(auth, async (user)=>{
+    me = user || null;
+    await refreshPro();
+    renderStatus();
+    loadPosts();
+    if(document.getElementById("tVideos").classList.contains("active")) loadVideos();
+  });
+
+  loadPosts(); // Initial load
 </script>
 </body>
 </html>
-
