@@ -7,35 +7,28 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    /* Liquid Glass Theme: Blue & Purple */
     --bg: #050510; 
     --glass-bg: linear-gradient(135deg, rgba(80, 100, 255, 0.1), rgba(160, 80, 255, 0.05));
     --border: rgba(255, 255, 255, 0.1);
     --text: #ffffff; 
     --muted: #a0b0c0;
-    --primary: #8a2be2; /* Purple */
-    --accent: #4facfe; /* Light Blue */
+    --primary: #8a2be2; 
+    --accent: #4facfe; 
     --danger: #ff4d4d; 
     --ok: #00e676;
     --r: 20px;
   }
   
+  /* Remove Blue Tap Highlight */
+  * { -webkit-tap-highlight-color: transparent; outline: none; }
+
   body{margin:0; font-family:'Poppins', sans-serif; background:var(--bg); color:var(--text); padding-bottom:90px; overflow-x: hidden;}
-  /* Background glowing effect */
   body::before { content:''; position:fixed; top:-20%; left:-10%; width:60%; height:60%; background: radial-gradient(circle, rgba(138,43,226,0.3) 0%, transparent 60%); filter:blur(80px); z-index:-1;}
   body::after { content:''; position:fixed; bottom:-20%; right:-10%; width:60%; height:60%; background: radial-gradient(circle, rgba(79,172,254,0.2) 0%, transparent 60%); filter:blur(80px); z-index:-1;}
   
   .wrap{max-width:520px; margin:0 auto; padding:16px;}
   
-  /* Glassmorphism Class */
-  .glass {
-    background: var(--glass-bg);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-  }
+  .glass { background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: var(--r); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
 
   .top{display:flex; align-items:center; justify-content:space-between; padding:16px; position:sticky; top:10px; z-index:10;}
   .brand{font-weight:800; font-size: 18px; letter-spacing: 0.5px; display:flex; align-items:center; gap:8px;}
@@ -49,7 +42,7 @@
   .title{margin:0 0 12px; font-weight:800; font-size:16px; background: linear-gradient(45deg, var(--accent), #d8b4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
   .muted{color:var(--muted); font-size:13px; line-height:1.6;}
   
-  .input{width:100%; padding:14px; border-radius:14px; border:1px solid var(--border); background:rgba(0,0,0,0.3); color:var(--text); outline:none; font-family: 'Poppins'; box-sizing: border-box; transition: 0.3s;}
+  .input{width:100%; padding:14px; border-radius:14px; border:1px solid var(--border); background:rgba(0,0,0,0.3); color:var(--text); font-family: 'Poppins'; box-sizing: border-box; transition: 0.3s;}
   .input:focus{border-color: var(--accent); box-shadow: 0 0 0 2px rgba(79,172,254,0.3);}
   
   .btn{width:100%; padding:14px; border-radius:14px; border:none; cursor:pointer; font-weight:800; font-family: 'Poppins'; transition: 0.2s; box-sizing: border-box;}
@@ -70,7 +63,6 @@
   .imgs{display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:10px; margin-top:12px;}
   .imgs img{width:100%; border-radius:14px; border:1px solid var(--border); object-fit:cover; height:120px;}
   
-  /* Category Filter Scroll */
   .cat-scroll { display: flex; overflow-x: auto; gap: 10px; padding: 10px 0; scrollbar-width: none; margin-bottom: 5px; }
   .cat-scroll::-webkit-scrollbar { display: none; }
   .cat-pill { padding: 8px 18px; background: rgba(0,0,0,0.3); border-radius: 20px; font-size: 12px; white-space: nowrap; border: 1px solid var(--border); cursor: pointer; font-weight: 600; color: var(--muted); transition: 0.3s;}
@@ -80,7 +72,6 @@
   .iframeWrap{position:relative; width:100%; padding-bottom:56.25%; border-radius:14px; overflow:hidden; border:1px solid var(--border); background:#000;}
   .iframeWrap iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
   
-  /* Thumbnail Styles */
   .thumb-box {position:absolute; inset:0; z-index:2; cursor:pointer; background:#111;}
   .thumb-box img {width:100%; height:100%; object-fit:cover; opacity:0.6; transition: 0.3s;}
   .thumb-box:hover img {opacity: 0.8;}
@@ -88,7 +79,6 @@
   
   .vmeta{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-top:16px;}
   
-  /* Lock UI */
   .lock{position:absolute; inset:0; background:rgba(5, 5, 16, 0.85); display:flex; align-items:center; justify-content:center; padding:20px; z-index:5; border-radius: 14px; backdrop-filter: blur(8px);}
   .lockBox{width:100%; max-width: 300px; border-radius:20px; border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.05); padding:20px; text-align:center;}
   .lockBox .icon {font-size: 32px; margin-bottom: 10px;}
@@ -106,7 +96,6 @@
 <div id="toast" class="toast">OK</div>
 
 <div class="wrap">
-
   <div class="top glass">
     <div class="brand">Kazeno+</div>
     <div id="status" class="pill free">FREE</div>
@@ -132,7 +121,6 @@
   </div>
 
   <div id="tab-account" style="display:none;">
-    
     <div class="card glass" id="auth-form">
       <h3 class="title">Authentication</h3>
       <input id="email" class="input" placeholder="Email Address" autocomplete="email">
@@ -156,19 +144,9 @@
     <div class="card glass">
       <h3 class="title">🌟 Upgrade to PRO</h3>
       <div class="muted" style="margin-bottom: 16px;">
-        KBZPay သို့ WavePay ဖြင့် ငွေလွှဲပြီးပါက အောက်ပါ Form တွင် <b>လုပ်ငန်းစဉ်အမှတ် (Transaction ID)</b> ကို ဖြည့်သွင်းပါ။
+        Premium Video များကြည့်ရှုနိုင်ရန် Telegram တွင် Admin နှင့် ဆက်သွယ်ပြီး PRO အကောင့် ဝယ်ယူနိုင်ပါသည်။
       </div>
-      <select id="provider" class="input">
-        <option value="KBZPay">KBZPay</option>
-        <option value="WavePay">WavePay</option>
-      </select>
-      <div style="height:12px;"></div>
-      <input id="phone" class="input" placeholder="Phone Number (e.g. 0912345678)">
-      <div style="height:12px;"></div>
-      <input id="txRef" class="input" placeholder="Transaction ID (e.g. 0214xxxx)">
-      <div style="height:16px;"></div>
-      <button class="btn btnP" onclick="submitPayment()">Submit Request</button>
-      <div id="payMsg" class="muted" style="margin-top:12px; text-align: center;"></div>
+      <button class="btn btnP" onclick="window.open('https://t.me/m/9v6d11GuZWY9', '_blank')">📱 Contact on Telegram</button>
     </div>
   </div>
 
@@ -200,7 +178,7 @@
 
   let isPro = false;
   let me = null;
-  let allVideosData = []; // Store fetched videos globally for categories
+  let allVideosData = []; 
 
   const toastEl = document.getElementById("toast");
   function toast(msg){
@@ -224,7 +202,6 @@
     if(name==="account") { document.getElementById("tAccount").classList.add("active"); document.getElementById("n3").classList.add("active"); }
   };
 
-  // Login UI Control
   function updateAuthUI() {
       if(me) {
           document.getElementById('auth-form').style.display = 'none';
@@ -275,10 +252,9 @@
     }
   }
 
-  // --- Posts ---
   async function loadPosts(){
     const feed = document.getElementById("postsFeed");
-    if(feed.innerHTML.includes("class=\"post\"")) return; // Don't reload if already loaded
+    if(feed.innerHTML.includes("class=\"post\"")) return; 
     feed.innerHTML = "<div class='muted' style='text-align:center; padding: 20px;'>Loading posts...</div>";
     try{
       const q = query(collection(db, "posts"), where("isPublic", "==", true));
@@ -305,37 +281,29 @@
     }catch(e){ feed.innerHTML = `<div class="muted" style="text-align:center; color: var(--danger);">Failed to load posts.</div>`; }
   }
 
-  // --- Videos & Auto Pause ---
-  
-  // Intersection Observer for Auto-Pause (Facebook style)
   const videoObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (!entry.isIntersecting) {
-            // Video went out of view -> Pause it by removing src
             const iframe = entry.target.querySelector('.v-iframe');
             const thumb = entry.target.querySelector('.thumb-box');
             if(iframe && iframe.src && iframe.src !== window.location.href) {
-                iframe.dataset.src = iframe.src; // Remember link
-                iframe.src = ''; // Stop video
-                if(thumb) thumb.style.display = 'block'; // Show cover again
+                iframe.dataset.src = iframe.src; 
+                iframe.src = ''; 
+                if(thumb) thumb.style.display = 'block'; 
             }
         }
     });
   }, { threshold: 0.2 });
 
-  // Play Video Function (Ensures only one plays at a time)
   window.playVideo = (id, link) => {
-      // 1. Stop all other videos
       document.querySelectorAll('.v-iframe').forEach(ifr => {
           if(ifr.id !== `ifr-${id}` && ifr.src) {
-              ifr.src = ''; // Stop Audio
+              ifr.src = ''; 
               const thumbId = ifr.id.replace('ifr-', 'thumb-');
               const thumb = document.getElementById(thumbId);
               if(thumb) thumb.style.display = 'block';
           }
       });
-      
-      // 2. Play clicked video
       const thumb = document.getElementById(`thumb-${id}`);
       const iframe = document.getElementById(`ifr-${id}`);
       thumb.style.display = 'none';
@@ -356,7 +324,7 @@
                 <div class="icon">🔒</div>
                 <div style="font-weight:900; color:var(--primary); font-size: 18px;">Premium Content</div>
                 <div class="muted" style="margin-top:8px;">
-                  ဤသင်ခန်းစာများကို ကြည့်ရှုရန် Account စာမျက်နှာတွင် ငွေသွင်းအကြောင်းကြားပါ။
+                  ဤသင်ခန်းစာများကို ကြည့်ရှုရန် Account စာမျက်နှာမှတဆင့် Admin ထံ ဆက်သွယ်ပါ။
                 </div>
                 <button class="btn btnP" style="margin-top:16px;" onclick="showTab('account')">Go to Account</button>
               </div>
@@ -379,19 +347,16 @@
           renderVideoFeed("All");
         }catch(e){ feed.innerHTML = `<div class="muted" style="text-align:center; color: var(--danger);">Failed to load videos.</div>`; }
     } else {
-        renderVideoFeed("All"); // Already loaded, just render
+        renderVideoFeed("All"); 
     }
   }
 
-  // Categories Setup
   function renderCategories() {
       const catList = document.getElementById("cat-list");
       const cats = [...new Set(allVideosData.map(v => v.category || "General"))];
       
       let html = `<div class="cat-pill active" onclick="filterVideos('All', this)">All Modules</div>`;
-      cats.forEach(c => {
-          html += `<div class="cat-pill" onclick="filterVideos('${esc(c)}', this)">${esc(c)}</div>`;
-      });
+      cats.forEach(c => { html += `<div class="cat-pill" onclick="filterVideos('${esc(c)}', this)">${esc(c)}</div>`; });
       catList.innerHTML = html;
   }
 
@@ -401,7 +366,6 @@
       renderVideoFeed(cat);
   };
 
-  // Render Video Feed based on Category
   function renderVideoFeed(category) {
       const feed = document.getElementById("videoFeed");
       let filtered = category === "All" ? allVideosData : allVideosData.filter(v => (v.category || "General") === category);
@@ -434,12 +398,9 @@
         `;
       });
       feed.innerHTML = html || `<div class="muted" style="text-align:center;">No videos in this category.</div>`;
-      
-      // Attach Observer to new videos
       document.querySelectorAll('.v-container').forEach(v => videoObserver.observe(v));
   }
 
-  // --- Utilities ---
   window.markComplete = async (videoId)=>{
     if(!me) return toast("Login required");
     try{
@@ -448,37 +409,20 @@
     }catch(e){ toast("Action failed"); }
   };
 
-  window.submitPayment = async ()=>{
-    if(!me) return toast("Please Login First!");
-    const provider = document.getElementById("provider").value;
-    const phone = document.getElementById("phone").value.trim();
-    const txRef = document.getElementById("txRef").value.trim();
-    const msg = document.getElementById("payMsg");
-
-    if(phone.length < 6 || txRef.length < 4) return toast("အချက်အလက်များကို ပြည့်စုံစွာ ဖြည့်ပါ။");
-    msg.innerHTML = "Submitting...";
-
-    try{
-      await addDoc(collection(db, "purchaseRequests"), {
-        uid: me.uid, email: me.email || "", provider, phone, txRef, status: "pending", createdAt: serverTimestamp()
-      });
-      msg.innerHTML = `<span style="color:var(--ok); font-weight:800;">Request Submitted ✅</span><br> Admin အတည်ပြုပြီးပါက PRO ပွင့်ပါမည်။`;
-      document.getElementById("txRef").value = "";
-    }catch(e){ msg.innerHTML = `<span style="color:var(--danger);">Submit Failed. Please try again.</span>`; }
-  };
-
   document.addEventListener("contextmenu", (e)=> e.preventDefault());
 
   onAuthStateChanged(auth, async (user)=>{
     me = user || null;
-    updateAuthUI(); // Show/hide login forms
+    if(me) {
+        // IMPORTANT: Save user email to DB so Admin can search for them
+        try { await setDoc(doc(db, "users", me.uid), { email: me.email, uid: me.uid }, { merge: true }); } catch(e){}
+    }
+    updateAuthUI(); 
     await refreshPro();
     renderStatus();
     loadPosts();
     if(document.getElementById("tVideos").classList.contains("active")) loadVideos();
   });
-
-  loadPosts(); // Initial load
 </script>
 </body>
 </html>
