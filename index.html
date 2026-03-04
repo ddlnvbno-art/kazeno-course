@@ -29,10 +29,21 @@
   
   .glass { background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: var(--r); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
 
-  /* --- TOP HEADER WITH SHRINK ANIMATION --- */
+  /* --- TOP HEADER (Clear Liquid Glass Animation) --- */
   .top-wrapper { position:sticky; top:10px; z-index:20; transition: transform 0.3s ease; }
-  .top { display:flex; align-items:center; justify-content:space-between; padding:16px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-  .top.compact { padding: 8px 16px; border-radius: 16px; background: rgba(5, 5, 16, 0.95); box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+  .top { display:flex; align-items:center; justify-content:space-between; padding:16px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); background: rgba(5,5,16,0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 20px; border: 1px solid var(--border);}
+  
+  /* Compact state when scrolling down - Clear Glass Look */
+  .top.compact { 
+      padding: 8px 16px; 
+      border-radius: 20px; 
+      background: rgba(255, 255, 255, 0.03); /* More transparent */
+      backdrop-filter: blur(12px); 
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15); 
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15); 
+  }
+  
   .brand { font-weight:800; font-size: 18px; letter-spacing: 0.5px; display:flex; align-items:center; gap:8px; transition: 0.3s; }
   .top.compact .brand { font-size: 15px; }
   .brand::before { content: ''; width: 12px; height: 12px; background: linear-gradient(45deg, var(--accent), var(--primary)); border-radius: 50%; display:inline-block; box-shadow: 0 0 10px var(--primary); transition: 0.3s; }
@@ -47,7 +58,7 @@
   .title{margin:0 0 12px; font-weight:800; font-size:16px; background: linear-gradient(45deg, var(--accent), #d8b4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
   .muted{color:var(--muted); font-size:13px; line-height:1.6;}
   
-  .input{width:100%; padding:14px; border-radius:14px; border:1px solid var(--border); background:rgba(0,0,0,0.3); color:var(--text); font-family: 'Poppins'; transition: 0.3s;}
+  .input{width:100%; padding:14px; border-radius:14px; border:1px solid var(--border); background:rgba(0,0,0,0.3); color:var(--text); font-family: 'Poppins'; transition: 0.3s; font-size: 16px;}
   .input:focus{border-color: var(--accent); box-shadow: 0 0 0 2px rgba(79,172,254,0.3);}
   
   .btn{width:100%; padding:14px; border-radius:14px; border:none; cursor:pointer; font-weight:800; font-family: 'Poppins'; transition: 0.2s;}
@@ -104,16 +115,26 @@
   .react-popover span { font-size: 24px; cursor: pointer; transition: 0.2s; }
   .react-popover span:active { transform: scale(1.3); }
 
-  /* Videos */
-  .video{position:relative; padding:16px; margin-top:16px;}
-  .videoWrap{position:relative; width:100%; padding-bottom:56.25%; border-radius:14px; overflow:hidden; border:1px solid var(--border); background:#000;}
-  .videoWrap video{position:absolute; inset:0; width:100%; height:100%; border:0; object-fit: cover;}
-  .thumb-box {position:absolute; inset:0; z-index:2; cursor:pointer; background:#111;}
-  .thumb-box img {width:100%; height:100%; object-fit:cover; opacity:0.6; transition: 0.3s;}
-  .thumb-box:hover img {opacity: 0.8;}
-  .play-btn {position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:50px; height:50px; background:rgba(255,255,255,0.2); backdrop-filter:blur(5px); border: 2px solid #fff; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size: 20px;}
-  .vmeta{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-top:16px;}
+  /* --- NEW VIDEO LIST UI (YouTube Style List) --- */
+  .v-list-item { display: flex; gap: 12px; padding: 12px; margin-top: 12px; align-items: stretch; transition: all 0.3s ease; }
+  .v-list-item.playing { flex-direction: column; }
   
+  .v-thumb-wrap { width: 150px; flex-shrink: 0; position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 16/9; background: #000; transition: all 0.3s ease; }
+  .v-list-item.playing .v-thumb-wrap { width: 100%; }
+  
+  .thumb-image { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s; }
+  .v-thumb-wrap:hover .thumb-image { opacity: 1; }
+  .play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 36px; height: 36px; background: rgba(255,255,255,0.2); backdrop-filter: blur(4px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; border: 1px solid rgba(255,255,255,0.5); }
+  .v-list-item.playing .play-btn { width: 50px; height: 50px; font-size: 20px; display: none; }
+  
+  .v-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; z-index: 10; display: none; }
+  .v-list-item.playing .v-video { display: block; }
+  
+  .v-info { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; min-width: 0; }
+  .v-title { font-weight: 700; font-size: 14px; color: #fff; margin-bottom: 4px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .v-cat { font-size: 10px; padding: 3px 8px; background: rgba(138,43,226,0.15); color: #d4a5ff; border: 1px solid rgba(138,43,226,0.3); border-radius: 6px; align-self: flex-start; margin-bottom: 4px;}
+  .v-notes { font-size: 11px; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
   .lock{position:absolute; inset:0; background:rgba(5, 5, 16, 0.5); display:flex; align-items:center; justify-content:center; padding:20px; z-index:5; border-radius: 14px;}
   .lockBox{width:100%; max-width: 280px; padding:20px; text-align:center; background: rgba(10, 15, 30, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
   .lockBox .icon {font-size: 32px; margin-bottom: 5px;}
@@ -145,7 +166,6 @@
   .replying-indicator.active { display: flex; }
   
   .c-input-row { display: flex; gap: 10px; width: 100%; align-items: center; }
-  /* Font size 16px to prevent iOS input zoom which breaks layout */
   .c-input { flex: 1; padding: 12px 18px; border-radius: 24px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: #fff; font-family: 'Poppins'; font-size: 16px; outline: none; }
   .c-input:focus { border-color: var(--primary); }
   .c-send { background: linear-gradient(135deg, var(--accent), var(--primary)); border: none; border-radius: 50%; width: 42px; height: 42px; color: #fff; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 16px; flex-shrink:0;}
@@ -183,7 +203,7 @@
 
 <div class="wrap" id="main-wrap">
   <div class="top-wrapper" id="top-wrapper">
-      <div class="top glass" id="top-header">
+      <div class="top" id="top-header">
         <div class="brand">Kazeno+</div>
         <div id="status" class="pill free">FREE</div>
       </div>
@@ -311,7 +331,6 @@
   let currentActivePostForComment = null;
   let activeReplyParentId = null; 
 
-  const TABS = ['home', 'posts', 'videos', 'account'];
   let activeTabName = 'home';
 
   function toast(msg){
@@ -340,11 +359,9 @@
       const postCat = document.getElementById('post-cat-container');
       const vidCat = document.getElementById('vid-cat-container');
       
-      // Top Box Shrink
-      if (window.scrollY > 40) { topHeader.classList.add('compact'); } 
+      if (window.scrollY > 30) { topHeader.classList.add('compact'); } 
       else { topHeader.classList.remove('compact'); }
 
-      // Category Bar Fade Out/In
       if (window.scrollY > lastScrollY && window.scrollY > 80) {
           if(postCat) postCat.classList.add('hidden');
           if(vidCat) vidCat.classList.add('hidden');
@@ -355,28 +372,40 @@
       lastScrollY = window.scrollY;
   }, {passive: true});
 
-  // --- Global Swipe to Change Tabs ---
-  let gTouchStartX = 0;
-  let gTouchEndX = 0;
+  // --- INNER Category Swipe Logic ---
+  let swipeStartX = 0;
   document.addEventListener('touchstart', e => { 
       if(e.target.closest('.cat-scroll') || e.target.closest('.comment-modal') || e.target.closest('.carousel-track')) return;
-      gTouchStartX = e.changedTouches[0].screenX; 
+      swipeStartX = e.changedTouches[0].screenX; 
   }, {passive: true});
   
   document.addEventListener('touchend', e => {
       if(e.target.closest('.cat-scroll') || e.target.closest('.comment-modal') || e.target.closest('.carousel-track')) return;
-      gTouchEndX = e.changedTouches[0].screenX;
-      handleGlobalSwipe();
+      let swipeEndX = e.changedTouches[0].screenX;
+      let diff = swipeStartX - swipeEndX;
+      
+      if (Math.abs(diff) > 60) {
+          if (diff > 0) shiftInnerCategory(1); // Left swipe -> Next
+          else shiftInnerCategory(-1); // Right swipe -> Prev
+      }
   }, {passive: true});
 
-  function handleGlobalSwipe() {
-      const threshold = 80;
-      let idx = TABS.indexOf(activeTabName);
-      if (gTouchEndX < gTouchStartX - threshold) {
-          if(idx < TABS.length - 1) showTab(TABS[idx + 1]);
-      }
-      if (gTouchEndX > gTouchStartX + threshold) {
-          if(idx > 0) showTab(TABS[idx - 1]);
+  function shiftInnerCategory(direction) {
+      let listId = '';
+      if (activeTabName === 'posts') listId = '#post-cat-list';
+      else if (activeTabName === 'videos') listId = '#vid-cat-list';
+      else return;
+
+      const pills = Array.from(document.querySelectorAll(`${listId} .cat-pill`));
+      if(pills.length === 0) return;
+      const currentIndex = pills.findIndex(p => p.classList.contains('active'));
+      let nextIndex = currentIndex + direction;
+      if(nextIndex < 0) nextIndex = 0;
+      if(nextIndex >= pills.length) nextIndex = pills.length - 1;
+      
+      if(currentIndex !== nextIndex) {
+          pills[nextIndex].click();
+          pills[nextIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
       }
   }
 
@@ -616,7 +645,7 @@
       
       bg.classList.add('active');
       box.style.display = 'flex';
-      void box.offsetWidth; // Trigger reflow for animation
+      void box.offsetWidth; // Trigger reflow
       box.classList.add('active');
       document.body.style.overflow = 'hidden'; 
       
@@ -644,7 +673,7 @@
               let viewRepliesBtn = "";
               
               if(childReplies.length > 0) {
-                  viewRepliesBtn = `<div class="view-replies-btn" onclick="toggleRepliesGroup('${p.id}')">View ${childReplies.length} replies</div>`;
+                  viewRepliesBtn = `<div class="view-replies-btn" onclick="toggleRepliesGroup('${p.id}', this)">View ${childReplies.length} replies</div>`;
                   repliesHtml = `<div id="reply-grp-${p.id}" style="display:none; margin-top: 10px;">`;
                   childReplies.forEach(r => {
                       const rInitial = r.email ? r.email.charAt(0).toUpperCase() : "U";
@@ -684,9 +713,8 @@
       });
   };
 
-  window.toggleRepliesGroup = (parentId) => {
+  window.toggleRepliesGroup = (parentId, btn) => {
       const grp = document.getElementById(`reply-grp-${parentId}`);
-      const btn = event.target;
       if(grp.style.display === "none") {
           grp.style.display = "block";
           btn.innerText = "Hide replies";
@@ -758,29 +786,46 @@
       } catch(e) { toast("Failed to comment"); }
   };
 
-  // --- LOAD VIDEOS (PRO) ---
+  // --- LOAD VIDEOS (PRO - LIST VIEW LIKE YOUTUBE) ---
   const videoObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (!entry.isIntersecting) {
             const videoEl = entry.target.querySelector('.v-video');
-            const thumb = entry.target.querySelector('.thumb-box');
-            if(videoEl && !videoEl.paused) { videoEl.pause(); if(thumb) thumb.style.display = 'block'; }
+            if(videoEl && !videoEl.paused) { 
+                videoEl.pause(); 
+                entry.target.classList.remove('playing');
+                const thumb = entry.target.querySelector('.thumb-image');
+                const btn = entry.target.querySelector('.play-btn');
+                if(thumb) thumb.style.display = 'block'; 
+                if(btn) btn.style.display = 'flex';
+                videoEl.style.display = 'none';
+            }
         }
     });
-  }, { threshold: 0.2 });
+  }, { threshold: 0.1 });
 
   window.playVideo = (id) => {
-      document.querySelectorAll('.v-video').forEach(vid => {
-          if(vid.id !== `vid-${id}` && !vid.paused) {
-              vid.pause();
-              const thumbId = vid.id.replace('vid-', 'thumb-');
-              const thumb = document.getElementById(thumbId);
+      document.querySelectorAll('.v-list-item').forEach(item => {
+          if(item.id !== `v-item-${id}`) {
+              item.classList.remove('playing');
+              const vid = item.querySelector('.v-video');
+              if(vid) { vid.pause(); vid.style.display = 'none'; }
+              const thumb = item.querySelector('.thumb-image');
+              const playBtn = item.querySelector('.play-btn');
               if(thumb) thumb.style.display = 'block';
+              if(playBtn) playBtn.style.display = 'flex';
           }
       });
-      const thumb = document.getElementById(`thumb-${id}`);
+
+      const item = document.getElementById(`v-item-${id}`);
+      item.classList.add('playing');
       const videoEl = document.getElementById(`vid-${id}`);
+      const thumb = document.getElementById(`thumb-img-${id}`);
+      const playBtn = document.getElementById(`play-btn-${id}`);
+      
       thumb.style.display = 'none';
+      playBtn.style.display = 'none';
+      videoEl.style.display = 'block';
       videoEl.play();
   };
 
@@ -791,10 +836,9 @@
       catList.innerHTML = "";
       feed.innerHTML = `
         <div class="video glass">
-          <div class="videoWrap">
-            <img src="https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?q=80&w=2071&auto=format&fit=crop" style="position:absolute; width:100%; height:100%; object-fit:cover; filter:blur(15px); opacity:0.6;">
+          <div class="videoWrap" style="aspect-ratio: 16/9; display:flex; justify-content:center; align-items:center;">
             <div class="lock">
-              <div class="lockBox glass">
+              <div class="lockBox">
                 <div class="icon">🔒</div>
                 <div style="font-weight:900; color:var(--accent); font-size: 18px;">Premium Content</div>
                 <div class="muted" style="margin-top:8px;">ဤသင်ခန်းစာများကို ကြည့်ရှုရန် အကောင့်ဝယ်ယူပါ။</div>
@@ -841,27 +885,25 @@
       filtered.forEach(v => {
         const id = v.id;
         const thumb = v.thumbnail || 'https://via.placeholder.com/600x337/111b33/8a2be2?text=Kazeno+Premium';
+        
+        // NEW LIST LAYOUT
         html += `
-          <div class="video glass v-container" id="v-${id}">
-            <div class="videoWrap">
-              <div class="thumb-box" id="thumb-${id}" onclick="playVideo('${id}')">
-                 <img src="${thumb}" alt="Thumbnail">
-                 <div class="play-btn">▶</div>
+          <div class="glass v-list-item" id="v-item-${id}">
+              <div class="v-thumb-wrap" onclick="playVideo('${id}')">
+                  <img class="thumb-image" id="thumb-img-${id}" src="${thumb}" alt="Thumbnail">
+                  <div class="play-btn" id="play-btn-${id}">▶</div>
+                  <video class="v-video" id="vid-${id}" src="${esc(v.link)}" controls controlsList="nodownload" oncontextmenu="return false;" playsinline></video>
               </div>
-              <video class="v-video" id="vid-${id}" src="${esc(v.link)}" controls controlsList="nodownload" oncontextmenu="return false;" playsinline></video>
-            </div>
-            <div class="vmeta">
-              <div style="min-width:0;">
-                <div style="font-weight:800; font-size:15px; color:#fff;">${esc(v.title || "Untitled")}</div>
-                <div class="pill free" style="display:inline-block; padding: 4px 8px; font-size:10px; margin: 8px 0;">${esc(v.category || "General")}</div>
-                <div class="muted">${esc(v.notes || "")}</div>
+              <div class="v-info">
+                  <div class="v-title">${esc(v.title || "Untitled")}</div>
+                  <div class="v-cat">${esc(v.category || "General")}</div>
+                  <div class="v-notes">${esc(v.notes || "")}</div>
               </div>
-            </div>
           </div>
         `;
       });
       feed.innerHTML = html || `<div class="muted" style="text-align:center;">No videos here.</div>`;
-      document.querySelectorAll('.v-container').forEach(v => videoObserver.observe(v));
+      document.querySelectorAll('.v-list-item').forEach(v => videoObserver.observe(v));
   }
 
   onAuthStateChanged(auth, async (user)=>{
@@ -875,3 +917,4 @@
 </script>
 </body>
 </html>
+
