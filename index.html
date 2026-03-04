@@ -19,10 +19,9 @@
     --r: 20px;
   }
   
-  /* Remove Blue Tap Highlight */
   * { -webkit-tap-highlight-color: transparent; outline: none; }
 
-  body{margin:0; font-family:'Poppins', sans-serif; background:var(--bg); color:var(--text); padding-bottom:90px; overflow-x: hidden;}
+  body{margin:0; font-family:'Poppins', sans-serif; background:var(--bg); color:var(--text); padding-bottom:100px; overflow-x: hidden;}
   body::before { content:''; position:fixed; top:-20%; left:-10%; width:60%; height:60%; background: radial-gradient(circle, rgba(138,43,226,0.3) 0%, transparent 60%); filter:blur(80px); z-index:-1;}
   body::after { content:''; position:fixed; bottom:-20%; right:-10%; width:60%; height:60%; background: radial-gradient(circle, rgba(79,172,254,0.2) 0%, transparent 60%); filter:blur(80px); z-index:-1;}
   
@@ -42,6 +41,20 @@
   .title{margin:0 0 12px; font-weight:800; font-size:16px; background: linear-gradient(45deg, var(--accent), #d8b4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
   .muted{color:var(--muted); font-size:13px; line-height:1.6;}
   
+  /* Scroll Text (Marquee) */
+  .marquee-box { background: rgba(138,43,226,0.15); border: 1px solid rgba(138,43,226,0.3); border-radius: 12px; padding: 10px; overflow: hidden; display: flex; align-items: center; margin-top: 16px; box-shadow: 0 0 15px rgba(138,43,226,0.1); }
+  .marquee-text { white-space: nowrap; font-size: 13px; font-weight: 600; color: #fff; animation: scrollText 15s linear infinite; display: inline-block; padding-left: 100%; }
+  @keyframes scrollText { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+  /* Image Slider (Carousel) */
+  .carousel-container { width: 100%; overflow: hidden; border-radius: 16px; margin-top: 16px; position: relative; border: 1px solid var(--border); background: #000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+  .carousel-track { display: flex; transition: transform 0.5s ease-in-out; }
+  .carousel-slide { min-width: 100%; height: 180px; }
+  .carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
+  .carousel-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); transition: 0.3s; }
+  .dot.active { background: var(--accent); width: 16px; border-radius: 4px; }
+
   .input{width:100%; padding:14px; border-radius:14px; border:1px solid var(--border); background:rgba(0,0,0,0.3); color:var(--text); font-family: 'Poppins'; box-sizing: border-box; transition: 0.3s;}
   .input:focus{border-color: var(--accent); box-shadow: 0 0 0 2px rgba(79,172,254,0.3);}
   
@@ -54,10 +67,6 @@
   .row{display:flex; gap:10px;}
   .row > *{flex:1;}
   
-  .tabs{display:flex; gap:10px; padding: 5px;}
-  .tab{flex:1; padding:12px; border-radius:16px; border:1px solid transparent; background:transparent; color:var(--muted); font-weight:800; cursor:pointer; transition:0.3s;}
-  .tab.active{background:rgba(138,43,226,.15); color:#fff; border-color:var(--border);}
-  
   .post{padding:16px; margin-top:16px;}
   .post h4{margin:0 0 8px; font-size:15px; font-weight: 800; color:#fff;}
   .imgs{display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:10px; margin-top:12px;}
@@ -69,8 +78,8 @@
   .cat-pill.active { background: linear-gradient(45deg, var(--accent), var(--primary)); color: #fff; border-color: transparent;}
   
   .video{position:relative; padding:16px; margin-top:16px;}
-  .iframeWrap{position:relative; width:100%; padding-bottom:56.25%; border-radius:14px; overflow:hidden; border:1px solid var(--border); background:#000;}
-  .iframeWrap iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .videoWrap{position:relative; width:100%; padding-bottom:56.25%; border-radius:14px; overflow:hidden; border:1px solid var(--border); background:#000;}
+  .videoWrap video{position:absolute; inset:0; width:100%; height:100%; border:0; object-fit: cover;}
   
   .thumb-box {position:absolute; inset:0; z-index:2; cursor:pointer; background:#111;}
   .thumb-box img {width:100%; height:100%; object-fit:cover; opacity:0.6; transition: 0.3s;}
@@ -83,12 +92,14 @@
   .lockBox{width:100%; max-width: 300px; border-radius:20px; border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.05); padding:20px; text-align:center;}
   .lockBox .icon {font-size: 32px; margin-bottom: 10px;}
   
-  .toast{position:fixed; left:50%; transform:translateX(-50%); bottom:84px; background:var(--text); color:var(--bg); padding:12px 24px; border-radius:999px; font-weight:800; font-size:13px; opacity:0; transition:.3s; z-index:9999; box-shadow: 0 5px 20px rgba(0,0,0,0.3);}
+  .toast{position:fixed; left:50%; transform:translateX(-50%); bottom:90px; background:var(--text); color:var(--bg); padding:12px 24px; border-radius:999px; font-weight:800; font-size:13px; opacity:0; transition:.3s; z-index:9999; box-shadow: 0 5px 20px rgba(0,0,0,0.3);}
   .toast.show{opacity:1; transform:translateX(-50%) translateY(-10px);}
   
-  .nav{position:fixed; left:50%; transform:translateX(-50%); bottom:16px; display:flex; justify-content:space-around; gap:10px; padding:10px; border-radius:999px; background:rgba(15, 20, 35, 0.85); border:1px solid var(--border); backdrop-filter: blur(20px); width: 90%; max-width: 400px; z-index: 100;}
-  .nav button{background:transparent; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:12px 24px; border-radius:999px; font-weight:900; transition:0.3s;}
+  .nav{position:fixed; left:50%; transform:translateX(-50%); bottom:16px; display:flex; justify-content:space-around; gap:10px; padding:10px; border-radius:999px; background:rgba(15, 20, 35, 0.95); border:1px solid var(--border); backdrop-filter: blur(20px); width: 90%; max-width: 450px; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
+  .nav button{background:transparent; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:12px 20px; border-radius:999px; font-weight:900; transition:0.3s; display: flex; align-items: center; gap: 8px;}
+  .nav button span { font-size: 12px; display: none; }
   .nav button.active{color:#fff; background:rgba(138,43,226,.2); box-shadow: inset 0 0 10px rgba(138,43,226,0.5);}
+  .nav button.active span { display: inline-block; }
 </style>
 </head>
 
@@ -101,13 +112,33 @@
     <div id="status" class="pill free">FREE</div>
   </div>
 
-  <div class="tabs glass">
-    <button id="tPosts" class="tab active" onclick="showTab('posts')">📝 Feed</button>
-    <button id="tVideos" class="tab" onclick="showTab('videos')">🎬 Premium</button>
-    <button id="tAccount" class="tab" onclick="showTab('account')">👤 Account</button>
+  <div id="tab-home">
+    
+    <div class="marquee-box">
+      <div class="marquee-text">
+        🔥 ကြိုဆိုပါတယ်။ Kazeno+ Premium မှ Mobile Legends, PUBG စသည့် ဂိမ်းများအတွက် Top-up နှင့် Phone Optimization လျှို့ဝှက်ချက်များကို လေ့လာနိုင်ပါပြီ။ VIP Code များကို Telegram တွင် ဆက်သွယ်ဝယ်ယူပါ။
+      </div>
+    </div>
+
+    <div class="carousel-container">
+      <div class="carousel-track" id="carousel-track">
+        <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop" alt="Banner 1"></div>
+        <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=2070&auto=format&fit=crop" alt="Banner 2"></div>
+        <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?q=80&w=2071&auto=format&fit=crop" alt="Banner 3"></div>
+      </div>
+      <div class="carousel-dots" id="carousel-dots">
+        <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+    </div>
+
+    <div class="card glass">
+      <h3 class="title">Welcome to Premium Hub</h3>
+      <div class="muted">အောက်ပါ Menu များမှတဆင့် Premium Video များနှင့် Community Post များကို လေ့လာနိုင်ပါသည်။</div>
+      <button class="btn btnP" style="margin-top: 15px;" onclick="showTab('videos')">Start Learning 🎬</button>
+    </div>
   </div>
 
-  <div id="tab-posts">
+  <div id="tab-posts" style="display:none;">
     <div class="card glass">
       <h3 class="title">Public Community</h3>
       <div class="muted">Free အနေနဲ့ ကြည့်ရှုလေ့လာနိုင်သော Post များ</div>
@@ -153,9 +184,10 @@
 </div>
 
 <div class="nav">
-  <button id="n1" class="active" onclick="showTab('posts')">📝</button>
-  <button id="n2" onclick="showTab('videos')">🎬</button>
-  <button id="n3" onclick="showTab('account')">👤</button>
+  <button id="nHome" class="active" onclick="showTab('home')">🏠 <span>Home</span></button>
+  <button id="nVideos" onclick="showTab('videos')">🎬 <span>Pro</span></button>
+  <button id="nPosts" onclick="showTab('posts')">📝 <span>Feed</span></button>
+  <button id="nAccount" onclick="showTab('account')">👤 <span>Me</span></button>
 </div>
 
 <script type="module">
@@ -189,17 +221,26 @@
 
   function esc(s){ return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
 
+  // Banner Carousel Logic
+  let slideIndex = 0;
+  setInterval(() => {
+    const track = document.getElementById('carousel-track');
+    const dots = document.querySelectorAll('.dot');
+    if(!track || dots.length === 0) return;
+    slideIndex = (slideIndex + 1) % dots.length;
+    track.style.transform = `translateX(-${slideIndex * 100}%)`;
+    dots.forEach(d => d.classList.remove('active'));
+    dots[slideIndex].classList.add('active');
+  }, 4000); // Slides every 4 seconds
+
   window.showTab = (name)=>{
-    document.getElementById("tab-posts").style.display = name==="posts" ? "block" : "none";
-    document.getElementById("tab-videos").style.display = name==="videos" ? "block" : "none";
-    document.getElementById("tab-account").style.display = name==="account" ? "block" : "none";
+    ["tab-home", "tab-posts", "tab-videos", "tab-account"].forEach(id => document.getElementById(id).style.display = "none");
+    ["nHome", "nVideos", "nPosts", "nAccount"].forEach(id => document.getElementById(id).classList.remove("active"));
 
-    ["tPosts", "tVideos", "tAccount"].forEach(id => document.getElementById(id).classList.remove("active"));
-    ["n1", "n2", "n3"].forEach(id => document.getElementById(id).classList.remove("active"));
-
-    if(name==="posts") { document.getElementById("tPosts").classList.add("active"); document.getElementById("n1").classList.add("active"); loadPosts(); }
-    if(name==="videos") { document.getElementById("tVideos").classList.add("active"); document.getElementById("n2").classList.add("active"); loadVideos(); }
-    if(name==="account") { document.getElementById("tAccount").classList.add("active"); document.getElementById("n3").classList.add("active"); }
+    if(name==="home") { document.getElementById("tab-home").style.display = "block"; document.getElementById("nHome").classList.add("active"); }
+    if(name==="posts") { document.getElementById("tab-posts").style.display = "block"; document.getElementById("nPosts").classList.add("active"); loadPosts(); }
+    if(name==="videos") { document.getElementById("tab-videos").style.display = "block"; document.getElementById("nVideos").classList.add("active"); loadVideos(); }
+    if(name==="account") { document.getElementById("tab-account").style.display = "block"; document.getElementById("nAccount").classList.add("active"); }
   };
 
   function updateAuthUI() {
@@ -242,10 +283,8 @@
   function renderStatus(){
     const st = document.getElementById("status");
     const pSt = document.getElementById("profile-status");
-    
     st.textContent = isPro ? "PRO" : "FREE";
     st.className = isPro ? "pill pro" : "pill free";
-    
     if(pSt) {
         pSt.textContent = isPro ? "PRO MEMBER" : "FREE MEMBER";
         pSt.className = isPro ? "pill pro" : "pill free";
@@ -281,33 +320,36 @@
     }catch(e){ feed.innerHTML = `<div class="muted" style="text-align:center; color: var(--danger);">Failed to load posts.</div>`; }
   }
 
+  // UPDATED AUTO-PAUSE FOR <VIDEO> TAGS
   const videoObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (!entry.isIntersecting) {
-            const iframe = entry.target.querySelector('.v-iframe');
+            const videoEl = entry.target.querySelector('.v-video');
             const thumb = entry.target.querySelector('.thumb-box');
-            if(iframe && iframe.src && iframe.src !== window.location.href) {
-                iframe.dataset.src = iframe.src; 
-                iframe.src = ''; 
+            if(videoEl && !videoEl.paused) {
+                videoEl.pause(); // Just pause it, no need to remove source
                 if(thumb) thumb.style.display = 'block'; 
             }
         }
     });
   }, { threshold: 0.2 });
 
-  window.playVideo = (id, link) => {
-      document.querySelectorAll('.v-iframe').forEach(ifr => {
-          if(ifr.id !== `ifr-${id}` && ifr.src) {
-              ifr.src = ''; 
-              const thumbId = ifr.id.replace('ifr-', 'thumb-');
+  // Play Video Logic
+  window.playVideo = (id) => {
+      // Pause all other videos
+      document.querySelectorAll('.v-video').forEach(vid => {
+          if(vid.id !== `vid-${id}` && !vid.paused) {
+              vid.pause();
+              const thumbId = vid.id.replace('vid-', 'thumb-');
               const thumb = document.getElementById(thumbId);
               if(thumb) thumb.style.display = 'block';
           }
       });
+      // Play target video
       const thumb = document.getElementById(`thumb-${id}`);
-      const iframe = document.getElementById(`ifr-${id}`);
+      const videoEl = document.getElementById(`vid-${id}`);
       thumb.style.display = 'none';
-      iframe.src = link;
+      videoEl.play();
   };
 
   async function loadVideos(){
@@ -318,7 +360,7 @@
       catList.innerHTML = "";
       feed.innerHTML = `
         <div class="video glass">
-          <div class="iframeWrap">
+          <div class="videoWrap">
             <div class="lock">
               <div class="lockBox">
                 <div class="icon">🔒</div>
@@ -375,14 +417,15 @@
         const id = v.id;
         const thumb = v.thumbnail || 'https://via.placeholder.com/600x337/111b33/8a2be2?text=Kazeno+Premium';
         
+        // IMPORTANT: Replaced iframe with <video> to prevent download
         html += `
           <div class="video glass v-container" id="v-${id}">
-            <div class="iframeWrap">
-              <div class="thumb-box" id="thumb-${id}" onclick="playVideo('${id}', '${esc(v.link)}')">
+            <div class="videoWrap">
+              <div class="thumb-box" id="thumb-${id}" onclick="playVideo('${id}')">
                  <img src="${thumb}" alt="Thumbnail">
                  <div class="play-btn">▶</div>
               </div>
-              <iframe class="v-iframe" id="ifr-${id}" src="" allowfullscreen></iframe>
+              <video class="v-video" id="vid-${id}" src="${esc(v.link)}" controls controlsList="nodownload" oncontextmenu="return false;" playsinline></video>
             </div>
             <div class="vmeta">
               <div style="min-width:0;">
@@ -414,14 +457,13 @@
   onAuthStateChanged(auth, async (user)=>{
     me = user || null;
     if(me) {
-        // IMPORTANT: Save user email to DB so Admin can search for them
         try { await setDoc(doc(db, "users", me.uid), { email: me.email, uid: me.uid }, { merge: true }); } catch(e){}
     }
     updateAuthUI(); 
     await refreshPro();
     renderStatus();
-    loadPosts();
-    if(document.getElementById("tVideos").classList.contains("active")) loadVideos();
+    if(document.getElementById("tab-posts").style.display === "block") loadPosts();
+    if(document.getElementById("tab-videos").style.display === "block") loadVideos();
   });
 </script>
 </body>
