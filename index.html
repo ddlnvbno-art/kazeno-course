@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>Kazeno+ Premium</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;800&display=swap" rel="stylesheet">
 <style>
@@ -20,9 +20,9 @@
   
   * { -webkit-tap-highlight-color: transparent; outline: none; box-sizing: border-box; }
 
-  body{margin:0; font-family:'Poppins', sans-serif; background:var(--bg); color:var(--text); padding-bottom:100px; overflow-x: hidden;}
-  body::before { content:''; position:fixed; top:-20%; left:-10%; width:60%; height:60%; background: radial-gradient(circle, rgba(138,43,226,0.3) 0%, transparent 60%); filter:blur(80px); z-index:-1;}
-  body::after { content:''; position:fixed; bottom:-20%; right:-10%; width:60%; height:60%; background: radial-gradient(circle, rgba(79,172,254,0.2) 0%, transparent 60%); filter:blur(80px); z-index:-1;}
+  body{margin:0; font-family:'Poppins', sans-serif; background:var(--bg); color:var(--text); padding-bottom:100px; overflow-x: hidden; -webkit-font-smoothing: antialiased;}
+  body::before { content:''; position:fixed; top:-20%; left:-10%; width:60%; height:60%; background: radial-gradient(circle, rgba(138,43,226,0.2) 0%, transparent 60%); filter:blur(80px); z-index:-1;}
+  body::after { content:''; position:fixed; bottom:-20%; right:-10%; width:60%; height:60%; background: radial-gradient(circle, rgba(79,172,254,0.15) 0%, transparent 60%); filter:blur(80px); z-index:-1;}
   
   .wrap{max-width:520px; margin:0 auto; padding:16px;}
   
@@ -50,9 +50,22 @@
   .btnD{background:rgba(255, 77, 77, 0.15); color:var(--danger); border: 1px solid rgba(255, 77, 77, 0.3);}
   
   .row{display:flex; gap:10px;}
+
+  /* HOME PAGE STYLES */
+  .marquee-box { background: rgba(138,43,226,0.15); border: 1px solid rgba(138,43,226,0.3); border-radius: 12px; padding: 10px; overflow: hidden; display: flex; align-items: center; margin-top: 16px; box-shadow: 0 0 15px rgba(138,43,226,0.1); }
+  .marquee-text { white-space: nowrap; font-size: 13px; font-weight: 600; color: #fff; animation: scrollText 15s linear infinite; display: inline-block; padding-left: 100%; }
+  @keyframes scrollText { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+  .carousel-container { width: 100%; overflow: hidden; border-radius: 16px; margin-top: 16px; position: relative; border: 1px solid var(--border); background: #000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+  .carousel-track { display: flex; transition: transform 0.5s ease-in-out; }
+  .carousel-slide { min-width: 100%; height: 180px; }
+  .carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
+  .carousel-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); transition: 0.3s; }
+  .dot.active { background: var(--accent); width: 16px; border-radius: 4px; }
   
   /* Auto-hide Category Bar */
-  .cat-wrapper { position: sticky; top: 75px; z-index: 9; transition: transform 0.3s ease-in-out; margin: 0 -16px; padding: 10px 16px; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(10px); }
+  .cat-wrapper { position: sticky; top: 75px; z-index: 9; transition: transform 0.3s ease-in-out; margin: 0 -16px; padding: 10px 16px; background: rgba(5, 5, 16, 0.85); backdrop-filter: blur(15px); }
   .cat-scroll { display: flex; overflow-x: auto; gap: 10px; scrollbar-width: none; }
   .cat-scroll::-webkit-scrollbar { display: none; }
   .cat-pill { padding: 8px 18px; background: rgba(0,0,0,0.4); border-radius: 20px; font-size: 13px; white-space: nowrap; border: 1px solid var(--border); cursor: pointer; font-weight: 500; color: var(--muted); transition: 0.3s;}
@@ -75,6 +88,7 @@
   .reaction-counts { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); margin-top: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
   .post-actions { display: flex; position: relative; gap: 5px; margin-top: 5px; padding-top: 5px;}
   .action-btn { flex: 1; background: transparent; border: none; color: var(--muted); font-size: 14px; font-weight: 600; padding: 10px 0; border-radius: 8px; cursor: pointer; font-family: 'Poppins'; transition: 0.2s;}
+  .action-btn.liked { color: var(--danger); }
   .action-btn:active { background: rgba(255,255,255,0.05); transform: scale(0.95); }
   
   .react-popover { position: absolute; bottom: 45px; left: 0; background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 30px; padding: 8px 15px; display: flex; gap: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); opacity: 0; pointer-events: none; transition: 0.2s; transform: translateY(10px); z-index: 10; }
@@ -92,15 +106,20 @@
   .play-btn {position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:50px; height:50px; background:rgba(255,255,255,0.2); backdrop-filter:blur(5px); border: 2px solid #fff; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size: 20px;}
   .vmeta{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-top:16px;}
   
-  /* Facebook Style Comment Modal */
-  .comment-modal-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; opacity: 0; transition: 0.3s; }
-  .comment-modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 85vh; background: var(--bg); border-radius: 24px 24px 0 0; z-index: 1001; display: flex; flex-direction: column; transition: 0.3s ease-in-out; border-top: 1px solid var(--border); box-shadow: 0 -10px 30px rgba(0,0,0,0.5); }
-  .comment-modal.active { bottom: 0; }
+  /* Lock UI (Restored Premium Look) */
+  .lock{position:absolute; inset:0; background:rgba(5, 5, 16, 0.5); display:flex; align-items:center; justify-content:center; padding:20px; z-index:5; border-radius: 14px;}
+  .lockBox{width:100%; max-width: 280px; padding:20px; text-align:center; background: rgba(10, 15, 30, 0.7); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
+  .lockBox .icon {font-size: 32px; margin-bottom: 5px;}
+  
+  /* Smoother Comment Modal (Optimized for Mobile Keyboard) */
+  .comment-modal-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; display: none; opacity: 0; transition: opacity 0.3s; }
+  .comment-modal { position: fixed; bottom: 0; left: 0; width: 100%; height: 85dvh; background: var(--bg); border-radius: 24px 24px 0 0; z-index: 1001; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); border-top: 1px solid var(--border); box-shadow: 0 -10px 30px rgba(0,0,0,0.5); }
+  .comment-modal.active { transform: translateY(0); }
   .comment-modal-bg.active { display: block; opacity: 1; }
   .cm-header { padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-weight: 800; }
   .cm-close { background: rgba(255,255,255,0.1); border: none; width: 30px; height: 30px; border-radius: 50%; color: #fff; cursor: pointer; font-size: 16px; display:flex; align-items:center; justify-content:center;}
-  .cm-body { flex: 1; overflow-y: auto; padding: 20px; }
-  .cm-footer { padding: 15px 20px; border-top: 1px solid var(--border); background: var(--bg); display: flex; gap: 10px; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
+  .cm-body { flex: 1; overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
+  .cm-footer { padding: 12px 15px; border-top: 1px solid var(--border); background: var(--bg); display: flex; gap: 10px; }
   .c-comment { display: flex; gap: 10px; margin-bottom: 15px; }
   .c-avatar { width: 35px; height: 35px; background: linear-gradient(45deg, var(--accent), var(--primary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; font-size: 14px;}
   .c-text-box { background: rgba(255,255,255,0.08); padding: 10px 14px; border-radius: 4px 18px 18px 18px; font-size: 13px; max-width: 85%; }
@@ -124,12 +143,24 @@
   </div>
 
   <div id="tab-home">
-    <div class="marquee-box" style="background: rgba(138,43,226,0.15); border: 1px solid rgba(138,43,226,0.3); border-radius: 12px; padding: 10px; overflow: hidden; display: flex; align-items: center; margin-top: 16px;">
-      <div class="marquee-text" style="white-space: nowrap; font-size: 13px; font-weight: 600; color: #fff; animation: scrollText 15s linear infinite; display: inline-block; padding-left: 100%;">
+    <div class="marquee-box">
+      <div class="marquee-text">
         🔥 ကြိုဆိုပါတယ်။ Kazeno+ Premium မှ Mobile Legends, PUBG စသည့် ဂိမ်းများအတွက် Top-up နှင့် Phone Optimization လျှို့ဝှက်ချက်များကို လေ့လာနိုင်ပါပြီ။
       </div>
     </div>
-    <div class="card glass" style="margin-top: 16px;">
+    
+    <div class="carousel-container">
+      <div class="carousel-track" id="carousel-track">
+        <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop" alt="Banner 1"></div>
+        <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=2070&auto=format&fit=crop" alt="Banner 2"></div>
+        <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?q=80&w=2071&auto=format&fit=crop" alt="Banner 3"></div>
+      </div>
+      <div class="carousel-dots" id="carousel-dots">
+        <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+    </div>
+    
+    <div class="card glass">
       <h3 class="title">Welcome to Premium Hub</h3>
       <div class="muted">အောက်ပါ Menu များမှတဆင့် Premium Video များနှင့် Community Post များကို လေ့လာနိုင်ပါသည်။</div>
       <button class="btn btnP" style="margin-top: 15px;" onclick="showTab('posts')">Explore Community 📝</button>
@@ -234,12 +265,23 @@
 
   function esc(s){ return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
 
-  // Format Date (e.g., 15 Oct 2026)
   function formatDate(timestamp) {
       if(!timestamp) return "Just now";
       const d = new Date(timestamp);
       return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
   }
+
+  // --- Carousel Logic ---
+  let slideIndex = 0;
+  setInterval(() => {
+    const track = document.getElementById('carousel-track');
+    const dots = document.querySelectorAll('.dot');
+    if(!track || dots.length === 0) return;
+    slideIndex = (slideIndex + 1) % dots.length;
+    track.style.transform = `translateX(-${slideIndex * 100}%)`;
+    dots.forEach(d => d.classList.remove('active'));
+    dots[slideIndex].classList.add('active');
+  }, 4000); 
 
   window.showTab = (name)=>{
     ["tab-home", "tab-videos", "tab-posts", "tab-account"].forEach(id => document.getElementById(id).style.display = "none");
@@ -249,6 +291,7 @@
     if(name==="videos") { document.getElementById("tab-videos").style.display = "block"; document.getElementById("nVideos").classList.add("active"); loadVideos(); }
     if(name==="posts") { document.getElementById("tab-posts").style.display = "block"; document.getElementById("nPosts").classList.add("active"); loadPosts(); }
     if(name==="account") { document.getElementById("tab-account").style.display = "block"; document.getElementById("nAccount").classList.add("active"); }
+    window.scrollTo(0, 0); // Reset scroll on tab change
   };
 
   function updateAuthUI() {
@@ -346,6 +389,8 @@
   // --- Reactions Logic ---
   window.showReactOptions = (postId) => {
       if(!me) return toast("Please Login First!");
+      // Hide others
+      document.querySelectorAll('.react-popover').forEach(p => { if(p.id !== `react-pop-${postId}`) p.classList.remove('show'); });
       const pop = document.getElementById(`react-pop-${postId}`);
       pop.classList.toggle('show');
   };
@@ -372,15 +417,12 @@
   };
 
   function getReactionSummary(reactionsObj) {
-      if(!reactionsObj) return { count: 0, text: "React" };
+      if(!reactionsObj) return { count: 0, text: "🤍 React" };
       const keys = Object.keys(reactionsObj);
-      if(keys.length === 0) return { count: 0, text: "React" };
+      if(keys.length === 0) return { count: 0, text: "🤍 React" };
       
-      // Determine what to show on the button
       const myReact = me && reactionsObj[me.uid] ? reactionsObj[me.uid] : null;
-      
-      // Count unique reaction types to show icons
-      const types = [...new Set(Object.values(reactionsObj))].slice(0, 3).join("");
+      const types = [...new Set(Object.values(reactionsObj))].slice(0, 3).join(""); // unique icons
       
       return { 
           count: keys.length, 
@@ -389,16 +431,16 @@
       };
   }
 
-  // --- Swipe Logic for Feed ---
+  // --- Swipe Logic for Feed Categories ---
   let touchstartX = 0;
   let touchendX = 0;
   const feedArea = document.getElementById('tab-posts');
-  feedArea.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; });
+  feedArea.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; }, {passive: true});
   feedArea.addEventListener('touchend', e => {
       touchendX = e.changedTouches[0].screenX;
-      if (touchendX < touchstartX - 60) shiftCategory(1); // Swipe Left
-      if (touchendX > touchstartX + 60) shiftCategory(-1); // Swipe Right
-  });
+      if (touchendX < touchstartX - 70) shiftCategory(1); // Swipe Left
+      if (touchendX > touchstartX + 70) shiftCategory(-1); // Swipe Right
+  }, {passive: true});
 
   function shiftCategory(direction) {
       const pills = Array.from(document.querySelectorAll('#post-cat-list .cat-pill'));
@@ -414,7 +456,7 @@
       }
   }
 
-  // --- Load Posts ---
+  // --- LOAD POSTS (FEED) ---
   async function loadPosts(){
     const feed = document.getElementById("postsFeed");
     if(allPostsData.length === 0) {
@@ -441,10 +483,9 @@
       let html = `<div class="cat-pill active" onclick="filterPosts('All Updates', this)">All Updates</div>`;
       if(!cats.includes("Kazeno News")) html += `<div class="cat-pill" onclick="filterPosts('Kazeno News', this)">Kazeno News</div>`;
       if(!cats.includes("MLBB News")) html += `<div class="cat-pill" onclick="filterPosts('MLBB News', this)">MLBB News</div>`;
-      if(!cats.includes("Useful Apps")) html += `<div class="cat-pill" onclick="filterPosts('Useful Apps', this)">Useful Apps</div>`;
       
       cats.forEach(c => { 
-          if(!["Kazeno News", "MLBB News", "Useful Apps"].includes(c)) html += `<div class="cat-pill" onclick="filterPosts('${esc(c)}', this)">${esc(c)}</div>`; 
+          if(!["Kazeno News", "MLBB News"].includes(c)) html += `<div class="cat-pill" onclick="filterPosts('${esc(c)}', this)">${esc(c)}</div>`; 
       });
       catList.innerHTML = html;
   }
@@ -453,6 +494,7 @@
       document.querySelectorAll('#post-cat-list .cat-pill').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
       renderPostFeed(cat);
+      window.scrollTo({top: 0, behavior: 'smooth'}); // Scroll to top on category change
   };
 
   function renderPostFeed(category) {
@@ -462,7 +504,7 @@
       let html = "";
       filtered.forEach(p => {
         const reactData = getReactionSummary(p.reactions);
-        const btnText = reactData.myReact ? reactData.myReact : '🤍 React';
+        const btnText = reactData.myReact ? `${reactData.myReact} Reacted` : '🤍 React';
         const btnClass = reactData.myReact ? 'liked' : '';
         const countHtml = reactData.count > 0 ? `<div class="reaction-counts"><span>${reactData.icons}</span> ${reactData.count} interactions</div>` : '';
         
@@ -494,10 +536,10 @@
           </div>
         `;
       });
-      feed.innerHTML = html || `<div class="muted" style="text-align:center; padding:20px;">No posts here.</div>`;
+      feed.innerHTML = html || `<div class="muted" style="text-align:center; padding:20px;">No posts found.</div>`;
   }
 
-  // --- Comment Modal Logic ---
+  // --- Comment Modal Logic (No Keyboard Stuttering) ---
   let commentUnsubscribe = null;
 
   window.openComment = (postId) => {
@@ -505,6 +547,7 @@
       currentActivePostForComment = postId;
       document.getElementById('cm-bg').classList.add('active');
       document.getElementById('cm-box').classList.add('active');
+      document.body.style.overflow = 'hidden'; // Prevent background scrolling
       
       const list = document.getElementById('cm-list');
       list.innerHTML = "<div class='muted' style='text-align:center;'>Loading comments...</div>";
@@ -526,7 +569,6 @@
                   </div>
               `;
           });
-          // Scroll to bottom
           list.scrollTop = list.scrollHeight;
       });
   };
@@ -534,6 +576,7 @@
   window.closeComment = () => {
       document.getElementById('cm-bg').classList.remove('active');
       document.getElementById('cm-box').classList.remove('active');
+      document.body.style.overflow = 'auto';
       currentActivePostForComment = null;
       if(commentUnsubscribe) { commentUnsubscribe(); commentUnsubscribe = null; }
   };
@@ -543,13 +586,13 @@
       const input = document.getElementById('cm-input');
       const text = input.value.trim();
       if(!text) return;
-      input.value = ""; // clear instantly for UX
+      input.value = ""; 
       
       try {
           await addDoc(collection(db, "comments"), {
               postId: currentActivePostForComment, text: text, uid: me.uid, email: me.email, createdAt: serverTimestamp()
           });
-      } catch(e) { toast("Failed to comment"); }
+      } catch(e) { toast("Failed to comment. Make sure rules are updated."); }
   };
 
   // --- LOAD VIDEOS (PRO) ---
@@ -586,11 +629,12 @@
       feed.innerHTML = `
         <div class="video glass">
           <div class="videoWrap">
+            <img src="https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?q=80&w=2071&auto=format&fit=crop" style="position:absolute; width:100%; height:100%; object-fit:cover; filter:blur(15px); opacity:0.6;">
             <div class="lock">
-              <div class="lockBox">
+              <div class="lockBox glass">
                 <div class="icon">🔒</div>
-                <div style="font-weight:900; color:var(--primary); font-size: 18px;">Premium Content</div>
-                <div class="muted" style="margin-top:8px;">Account စာမျက်နှာမှတဆင့် Admin ထံ ဆက်သွယ်ပါ။</div>
+                <div style="font-weight:900; color:var(--accent); font-size: 18px;">Premium Content</div>
+                <div class="muted" style="margin-top:8px;">ဤသင်ခန်းစာများကို ကြည့်ရှုရန် အကောင့်ဝယ်ယူပါ။</div>
                 <button class="btn btnP" style="margin-top:16px;" onclick="showTab('account')">Go to Account</button>
               </div>
             </div>
@@ -609,7 +653,7 @@
           renderVidCategories();
           renderVideoFeed("All");
         }catch(e){ feed.innerHTML = `<div class="muted">Error loading videos.</div>`; }
-    } else { renderVideoFeed("All"); }
+    } else { renderVideoFeed(document.querySelector('#vid-cat-list .active')?.innerText || "All"); }
   }
 
   function renderVidCategories() {
@@ -624,6 +668,7 @@
       document.querySelectorAll('#vid-cat-list .cat-pill').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
       renderVideoFeed(cat);
+      window.scrollTo({top: 0, behavior: 'smooth'});
   };
 
   function renderVideoFeed(category) {
@@ -661,7 +706,6 @@
     if(me) { try { await setDoc(doc(db, "users", me.uid), { email: me.email, uid: me.uid }, { merge: true }); } catch(e){} }
     updateAuthUI(); 
     await refreshPro();
-    renderStatus();
     if(document.getElementById("tab-posts").style.display === "block") loadPosts();
     if(document.getElementById("tab-videos").style.display === "block") loadVideos();
   });
