@@ -29,13 +29,19 @@
   
   .glass { background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: var(--r); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
 
-  .top{display:flex; align-items:center; justify-content:space-between; padding:16px; position:sticky; top:10px; z-index:10;}
-  .brand{font-weight:800; font-size: 18px; letter-spacing: 0.5px; display:flex; align-items:center; gap:8px;}
-  .brand::before {content: ''; width: 12px; height: 12px; background: linear-gradient(45deg, var(--accent), var(--primary)); border-radius: 50%; display:inline-block; box-shadow: 0 0 10px var(--primary);}
+  /* --- TOP HEADER WITH SHRINK ANIMATION --- */
+  .top-wrapper { position:sticky; top:10px; z-index:20; transition: transform 0.3s ease; }
+  .top { display:flex; align-items:center; justify-content:space-between; padding:16px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+  .top.compact { padding: 8px 16px; border-radius: 16px; background: rgba(5, 5, 16, 0.95); box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+  .brand { font-weight:800; font-size: 18px; letter-spacing: 0.5px; display:flex; align-items:center; gap:8px; transition: 0.3s; }
+  .top.compact .brand { font-size: 15px; }
+  .brand::before { content: ''; width: 12px; height: 12px; background: linear-gradient(45deg, var(--accent), var(--primary)); border-radius: 50%; display:inline-block; box-shadow: 0 0 10px var(--primary); transition: 0.3s; }
+  .top.compact .brand::before { width: 8px; height: 8px; }
   
-  .pill{padding:6px 14px; border-radius:999px; font-size:12px; font-weight:800; border:1px solid var(--border); color:var(--muted); text-transform: uppercase;}
-  .pill.pro{background:rgba(0,230,118,.15); border-color:rgba(0,230,118,.3); color:#00e676; box-shadow: 0 0 15px rgba(0,230,118,.2);}
-  .pill.free{background:rgba(138,43,226,.15); border-color:rgba(138,43,226,.3); color:#d4a5ff;}
+  .pill { padding:6px 14px; border-radius:999px; font-size:12px; font-weight:800; border:1px solid var(--border); color:var(--muted); text-transform: uppercase; transition: 0.3s; }
+  .top.compact .pill { font-size: 10px; padding: 4px 10px; }
+  .pill.pro { background:rgba(0,230,118,.15); border-color:rgba(0,230,118,.3); color:#00e676; box-shadow: 0 0 15px rgba(0,230,118,.2); }
+  .pill.free { background:rgba(138,43,226,.15); border-color:rgba(138,43,226,.3); color:#d4a5ff; }
   
   .card{padding:20px; margin-top:16px;}
   .title{margin:0 0 12px; font-weight:800; font-size:16px; background: linear-gradient(45deg, var(--accent), #d8b4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
@@ -65,18 +71,9 @@
   .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); transition: 0.3s; }
   .dot.active { background: var(--accent); width: 16px; border-radius: 4px; }
   
-  /* --- Fade In/Out Category Bar --- */
-  .cat-wrapper { 
-      position: sticky; top: 75px; z-index: 9; margin: 0 -16px; padding: 10px 16px; 
-      background: rgba(5, 5, 16, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; 
-      transform-origin: top;
-      opacity: 1; pointer-events: auto;
-  }
-  .cat-wrapper.hidden {
-      transform: translateY(-20px);
-      opacity: 0; pointer-events: none;
-  }
+  /* Auto-hide Category Bar */
+  .cat-wrapper { position: sticky; top: 65px; z-index: 9; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; margin: 0 -16px; padding: 10px 16px; background: rgba(5, 5, 16, 0.85); backdrop-filter: blur(15px); }
+  .cat-wrapper.hidden { transform: translateY(-150%); opacity: 0; pointer-events: none; }
   .cat-scroll { display: flex; overflow-x: auto; gap: 10px; scrollbar-width: none; }
   .cat-scroll::-webkit-scrollbar { display: none; }
   .cat-pill { padding: 8px 18px; background: rgba(0,0,0,0.4); border-radius: 20px; font-size: 13px; white-space: nowrap; border: 1px solid var(--border); cursor: pointer; font-weight: 500; color: var(--muted); transition: 0.3s;}
@@ -96,13 +93,13 @@
   .imgs img{width:100%; border-radius:14px; border:1px solid var(--border); object-fit:cover; height:180px;}
   
   /* Reactions & Actions */
-  .reaction-counts { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); margin-top: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+  .reaction-counts { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
   .post-actions { display: flex; position: relative; gap: 5px; margin-top: 5px; padding-top: 5px;}
   .action-btn { flex: 1; background: transparent; border: none; color: var(--muted); font-size: 14px; font-weight: 600; padding: 10px 0; border-radius: 8px; cursor: pointer; font-family: 'Poppins'; transition: 0.2s;}
   .action-btn.liked { color: var(--danger); }
   .action-btn:active { background: rgba(255,255,255,0.05); transform: scale(0.95); }
   
-  .react-popover { position: absolute; bottom: 45px; left: 0; background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 30px; padding: 8px 15px; display: flex; gap: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); opacity: 0; pointer-events: none; transition: 0.2s; transform: translateY(10px); z-index: 10; }
+  .react-popover { position: absolute; bottom: 45px; left: 0; background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 30px; padding: 8px 15px; display: flex; gap: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); opacity: 0; pointer-events: none; transition: 0.2s; transform: translateY(10px); z-index: 10; }
   .react-popover.show { opacity: 1; pointer-events: all; transform: translateY(0); }
   .react-popover span { font-size: 24px; cursor: pointer; transition: 0.2s; }
   .react-popover span:active { transform: scale(1.3); }
@@ -117,19 +114,25 @@
   .play-btn {position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:50px; height:50px; background:rgba(255,255,255,0.2); backdrop-filter:blur(5px); border: 2px solid #fff; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size: 20px;}
   .vmeta{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-top:16px;}
   
-  /* Lock UI */
   .lock{position:absolute; inset:0; background:rgba(5, 5, 16, 0.5); display:flex; align-items:center; justify-content:center; padding:20px; z-index:5; border-radius: 14px;}
-  .lockBox{width:100%; max-width: 280px; padding:20px; text-align:center; background: rgba(10, 15, 30, 0.7); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
+  .lockBox{width:100%; max-width: 280px; padding:20px; text-align:center; background: rgba(10, 15, 30, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
   .lockBox .icon {font-size: 32px; margin-bottom: 5px;}
   
-  /* --- ULTRA SMOOTH FULL SCREEN COMMENT MODAL --- */
+  /* --- FIXED & SMOOTH COMMENT MODAL (100dvh) --- */
+  .comment-modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10000; display: none; opacity: 0; transition: opacity 0.3s; }
+  .comment-modal-bg.active { display: block; opacity: 1; }
+  
   .comment-modal { 
-      position: fixed; inset: 0; background: var(--bg); z-index: 10000; 
-      display: flex; flex-direction: column; 
-      transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); 
-      will-change: transform; /* Hardware Acceleration for zero lag */
+      position: fixed; top: 0; left: 0; width: 100%; height: 100dvh; /* Dynamic Viewport Height fixes keyboard */
+      background: var(--bg); z-index: 10001; 
+      display: none; flex-direction: column; 
+      animation: slideUp 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   }
-  .comment-modal.active { transform: translateY(0); }
+  .comment-modal.active { display: flex; }
+  .comment-modal.closing { animation: slideDown 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+  
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  @keyframes slideDown { from { transform: translateY(0); } to { transform: translateY(100%); } }
   
   .cm-header { flex-shrink: 0; padding: 15px 20px; background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 16px;}
   .cm-close { background: rgba(255,255,255,0.1); border: none; width: 32px; height: 32px; border-radius: 50%; color: #fff; cursor: pointer; font-size: 14px; display:flex; align-items:center; justify-content:center;}
@@ -146,7 +149,6 @@
   .c-input:focus { border-color: var(--primary); }
   .c-send { background: linear-gradient(135deg, var(--accent), var(--primary)); border: none; border-radius: 50%; width: 42px; height: 42px; color: #fff; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 16px; flex-shrink:0;}
   
-  /* Nested Comments UI */
   .c-comment { display: flex; gap: 10px; margin-bottom: 18px; }
   .c-comment.is-reply { margin-left: 35px; margin-top: -5px; margin-bottom: 12px; position: relative;}
   .c-comment.is-reply::before { content: ''; position: absolute; left: -22px; top: -15px; width: 15px; height: 30px; border-left: 2px solid var(--border); border-bottom: 2px solid var(--border); border-bottom-left-radius: 8px; }
@@ -160,14 +162,14 @@
   .c-reply-btn { font-size: 11px; color: var(--muted); cursor: pointer; font-weight: 600; transition: 0.2s;}
   .c-reply-btn:active { color: var(--primary); }
   .c-date { font-size: 10px; color: rgba(255,255,255,0.3); }
-  
   .view-replies-btn { font-size: 12px; color: var(--primary); font-weight: 600; cursor: pointer; margin-top: 5px; margin-left: 40px; display: flex; align-items: center; gap: 5px; }
   .view-replies-btn::before { content: '—'; }
 
   .toast{position:fixed; left:50%; transform:translateX(-50%); top:20px; background:var(--ok); color:#000; padding:10px 24px; border-radius:999px; font-weight:800; font-size:13px; opacity:0; transition:.3s; z-index:9999; box-shadow: 0 5px 20px rgba(0,0,0,0.3); pointer-events: none;}
   .toast.show{opacity:1; transform:translateX(-50%) translateY(10px);}
   
-  .nav{position:fixed; left:50%; transform:translateX(-50%); bottom:16px; display:flex; justify-content:space-around; gap:10px; padding:10px; border-radius:999px; background:rgba(15, 20, 35, 0.95); border:1px solid var(--border); backdrop-filter: blur(20px); width: 90%; max-width: 450px; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
+  .nav{position:fixed; left:50%; transform:translateX(-50%); bottom:16px; display:flex; justify-content:space-around; gap:10px; padding:10px; border-radius:999px; background:rgba(15, 20, 35, 0.95); border:1px solid var(--border); backdrop-filter: blur(20px); width: 90%; max-width: 450px; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: transform 0.3s;}
+  .nav.hidden { transform: translate(-50%, 150%); }
   .nav button{background:transparent; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:12px 20px; border-radius:999px; font-weight:900; transition:0.3s; display: flex; align-items: center; gap: 8px;}
   .nav button span { font-size: 12px; display: none; }
   .nav button.active{color:#fff; background:rgba(138,43,226,.2); box-shadow: inset 0 0 10px rgba(138,43,226,0.5);}
@@ -178,10 +180,12 @@
 <body>
 <div id="toast" class="toast">OK</div>
 
-<div class="wrap">
-  <div class="top glass">
-    <div class="brand">Kazeno+</div>
-    <div id="status" class="pill free">FREE</div>
+<div class="wrap" id="main-wrap">
+  <div class="top-wrapper" id="top-wrapper">
+      <div class="top glass" id="top-header">
+        <div class="brand">Kazeno+</div>
+        <div id="status" class="pill free">FREE</div>
+      </div>
   </div>
 
   <div id="tab-home">
@@ -255,6 +259,7 @@
 
 </div>
 
+<div class="comment-modal-bg" id="cm-bg" onclick="closeComment()"></div>
 <div class="comment-modal" id="cm-box">
     <div class="cm-header">
         <span>Comments</span>
@@ -273,7 +278,7 @@
     </div>
 </div>
 
-<div class="nav">
+<div class="nav" id="bottom-nav">
   <button id="nHome" class="active" onclick="showTab('home')">🏠 <span>Home</span></button>
   <button id="nPosts" onclick="showTab('posts')">📝 <span>Feed</span></button>
   <button id="nVideos" onclick="showTab('videos')">🎬 <span>Pro</span></button>
@@ -302,9 +307,11 @@
   let me = null;
   let allVideosData = []; 
   let allPostsData = [];
-  
   let currentActivePostForComment = null;
-  let activeReplyParentId = null; // To track nested replies
+  let activeReplyParentId = null; 
+
+  const TABS = ['home', 'posts', 'videos', 'account'];
+  let activeTabName = 'home';
 
   function toast(msg){
     const t = document.getElementById("toast");
@@ -319,11 +326,57 @@
       const d = new Date(timestamp);
       return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
   }
-  
   function formatTime(timestamp) {
       if(!timestamp) return "Now";
       const d = new Date(timestamp);
       return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  // --- Header Shrink & Auto Hide Bar Logic ---
+  let lastScrollY = window.scrollY;
+  window.addEventListener('scroll', () => {
+      const topHeader = document.getElementById('top-header');
+      const postCat = document.getElementById('post-cat-container');
+      const vidCat = document.getElementById('vid-cat-container');
+      
+      // Top Box Shrink
+      if (window.scrollY > 40) { topHeader.classList.add('compact'); } 
+      else { topHeader.classList.remove('compact'); }
+
+      // Category Bar Fade Out/In
+      if (window.scrollY > lastScrollY && window.scrollY > 80) {
+          if(postCat) postCat.classList.add('hidden');
+          if(vidCat) vidCat.classList.add('hidden');
+      } else {
+          if(postCat) postCat.classList.remove('hidden');
+          if(vidCat) vidCat.classList.remove('hidden');
+      }
+      lastScrollY = window.scrollY;
+  }, {passive: true});
+
+  // --- Global Swipe to Change Tabs ---
+  let gTouchStartX = 0;
+  let gTouchEndX = 0;
+  document.addEventListener('touchstart', e => { 
+      if(e.target.closest('.cat-scroll') || e.target.closest('.comment-modal') || e.target.closest('.carousel-track')) return;
+      gTouchStartX = e.changedTouches[0].screenX; 
+  }, {passive: true});
+  
+  document.addEventListener('touchend', e => {
+      if(e.target.closest('.cat-scroll') || e.target.closest('.comment-modal') || e.target.closest('.carousel-track')) return;
+      gTouchEndX = e.changedTouches[0].screenX;
+      handleGlobalSwipe();
+  }, {passive: true});
+
+  function handleGlobalSwipe() {
+      const threshold = 80;
+      let idx = TABS.indexOf(activeTabName);
+      if (gTouchEndX < gTouchStartX - threshold) {
+          if(idx < TABS.length - 1) showTab(TABS[idx + 1]);
+      }
+      if (gTouchEndX > gTouchStartX + threshold) {
+          if(idx > 0) showTab(TABS[idx - 1]);
+      }
   }
 
   // --- Carousel Logic ---
@@ -339,6 +392,7 @@
   }, 4000); 
 
   window.showTab = (name)=>{
+    activeTabName = name;
     ["tab-home", "tab-videos", "tab-posts", "tab-account"].forEach(id => document.getElementById(id).style.display = "none");
     ["nHome", "nVideos", "nPosts", "nAccount"].forEach(id => document.getElementById(id).classList.remove("active"));
 
@@ -394,24 +448,6 @@
     st.className = isPro ? "pill pro" : "pill free";
     if(pSt) { pSt.textContent = isPro ? "PRO MEMBER" : "FREE MEMBER"; pSt.className = isPro ? "pill pro" : "pill free"; }
   }
-
-  // --- NEW: FADE IN/OUT AUTO HIDE CATEGORY BAR ---
-  let lastScrollY = window.scrollY;
-  window.addEventListener('scroll', () => {
-      const postCat = document.getElementById('post-cat-container');
-      const vidCat = document.getElementById('vid-cat-container');
-      
-      // If scrolled down more than 50px, hide with fade out
-      if (window.scrollY > lastScrollY && window.scrollY > 50) {
-          if(postCat) postCat.classList.add('hidden');
-          if(vidCat) vidCat.classList.add('hidden');
-      } else {
-          // Scrolling up, show with fade in
-          if(postCat) postCat.classList.remove('hidden');
-          if(vidCat) vidCat.classList.remove('hidden');
-      }
-      lastScrollY = window.scrollY;
-  }, {passive: true});
 
   // --- Inline See More Logic ---
   window.toggleText = (id) => {
@@ -472,35 +508,9 @@
       if(!reactionsObj) return { count: 0, text: "🤍 React" };
       const keys = Object.keys(reactionsObj);
       if(keys.length === 0) return { count: 0, text: "🤍 React" };
-      
       const myReact = me && reactionsObj[me.uid] ? reactionsObj[me.uid] : null;
       const types = [...new Set(Object.values(reactionsObj))].slice(0, 3).join(""); 
       return { count: keys.length, icons: types, myReact: myReact };
-  }
-
-  // --- Swipe Logic for Feed Categories ---
-  let touchstartX = 0;
-  let touchendX = 0;
-  const feedArea = document.getElementById('tab-posts');
-  feedArea.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; }, {passive: true});
-  feedArea.addEventListener('touchend', e => {
-      touchendX = e.changedTouches[0].screenX;
-      if (touchendX < touchstartX - 70) shiftCategory(1); 
-      if (touchendX > touchstartX + 70) shiftCategory(-1); 
-  }, {passive: true});
-
-  function shiftCategory(direction) {
-      const pills = Array.from(document.querySelectorAll('#post-cat-list .cat-pill'));
-      if(pills.length === 0) return;
-      const currentIndex = pills.findIndex(p => p.classList.contains('active'));
-      let nextIndex = currentIndex + direction;
-      if(nextIndex < 0) nextIndex = 0;
-      if(nextIndex >= pills.length) nextIndex = pills.length - 1;
-      
-      if(currentIndex !== nextIndex) {
-          pills[nextIndex].click();
-          pills[nextIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      }
   }
 
   // --- LOAD POSTS (FEED) ---
@@ -553,7 +563,6 @@
         const reactData = getReactionSummary(p.reactions);
         const btnText = reactData.myReact ? `${reactData.myReact} Reacted` : '🤍 React';
         const btnClass = reactData.myReact ? 'liked' : '';
-        const countHtml = reactData.count > 0 ? `<div class="reaction-counts"><span>${reactData.icons}</span> ${reactData.count} interactions</div>` : '';
         
         html += `
           <div class="post glass">
@@ -570,7 +579,11 @@
             
             ${Array.isArray(p.images) && p.images.length ? `<div class="imgs">${p.images.slice(0,4).map(u=>`<img src="${esc(u)}" alt="img">`).join("")}</div>` : ""}
             
-            ${countHtml}
+            <div class="reaction-counts" style="margin-top:12px;">
+                <span>${reactData.count > 0 ? reactData.icons + ' ' + reactData.count + ' reactions' : ''}</span>
+                <span id="ccount-${p.id}">0 Comments</span>
+            </div>
+            
             <div class="post-actions">
                 <div class="react-popover" id="react-pop-${p.id}">
                     <span onclick="reactPost('${p.id}', '❤️')">❤️</span>
@@ -582,22 +595,34 @@
             </div>
           </div>
         `;
+        
+        // Fetch comment count asynchronously for each post
+        getDocs(query(collection(db, "comments"), where("postId", "==", p.id))).then(snap => {
+            const cEl = document.getElementById(`ccount-${p.id}`);
+            if(cEl) cEl.innerText = `${snap.size} Comments`;
+        });
       });
       feed.innerHTML = html || `<div class="muted" style="text-align:center; padding:20px;">No posts found.</div>`;
   }
 
-  // --- NESTED COMMENT MODAL LOGIC ---
-  let commentUnsubscribe = null;
-
+  // --- NESTED COMMENT MODAL LOGIC (Jank-Free) ---
   window.openComment = (postId) => {
       if(!me) return toast("Please Login First!");
       currentActivePostForComment = postId;
-      activeReplyParentId = null; // Reset reply state
-      document.getElementById('cm-box').classList.add('active');
+      activeReplyParentId = null; 
+      
+      const bg = document.getElementById('cm-bg');
+      const box = document.getElementById('cm-box');
+      
+      bg.classList.add('active');
+      box.style.display = 'flex';
+      // Trigger reflow for animation
+      void box.offsetWidth; 
+      box.classList.add('active');
       document.body.style.overflow = 'hidden'; 
       
       const list = document.getElementById('cm-list');
-      list.innerHTML = "<div class='muted' style='text-align:center;'>Loading comments...</div>";
+      list.innerHTML = "<div class='muted' style='text-align:center;'>Loading...</div>";
       
       const q = query(collection(db, "comments"), where("postId", "==", postId));
       
@@ -606,7 +631,6 @@
           snap.forEach(doc => comments.push({id: doc.id, ...doc.data()}));
           comments.sort((a,b) => (a.createdAt?.toMillis() || 0) - (b.createdAt?.toMillis() || 0));
           
-          // Separate Parents and Replies
           const parents = comments.filter(c => !c.parentId);
           const replies = comments.filter(c => c.parentId);
           
@@ -616,7 +640,6 @@
               const initial = p.email ? p.email.charAt(0).toUpperCase() : "U";
               const name = p.email ? p.email.split('@')[0] : "User";
               
-              // Get replies for this parent
               const childReplies = replies.filter(r => r.parentId === p.id);
               let repliesHtml = "";
               let viewRepliesBtn = "";
@@ -658,8 +681,6 @@
                   </div>
               `;
           });
-          
-          // Auto scroll only if we aren't replying
           if(!activeReplyParentId) list.scrollTop = list.scrollHeight;
       });
   };
@@ -690,7 +711,16 @@
   };
 
   window.closeComment = () => {
-      document.getElementById('cm-box').classList.remove('active');
+      const box = document.getElementById('cm-box');
+      box.classList.add('closing');
+      box.classList.remove('active');
+      document.getElementById('cm-bg').classList.remove('active');
+      
+      setTimeout(() => {
+          box.classList.remove('closing');
+          box.style.display = 'none';
+      }, 350);
+
       document.body.style.overflow = 'auto';
       currentActivePostForComment = null;
       cancelReply();
@@ -703,9 +733,9 @@
       const text = input.value.trim();
       if(!text) return;
       
-      const parentToSave = activeReplyParentId; // Store before clearing
+      const parentToSave = activeReplyParentId; 
       input.value = ""; 
-      cancelReply(); // Reset UI immediately
+      cancelReply(); 
       
       try {
           await addDoc(collection(db, "comments"), {
@@ -713,14 +743,13 @@
               text: text, 
               uid: me.uid, 
               email: me.email, 
-              parentId: parentToSave, // Will be null for main comments
+              parentId: parentToSave, 
               createdAt: serverTimestamp()
           });
           
-          // If we replied, auto open that group
           if(parentToSave) {
               setTimeout(() => {
-                  const grp = document.getElementById(`reply-grp-${parentToSave}`);
+                  const grp = document.getElementById(reply-grp-${parentToSave});
                   if(grp && grp.style.display === "none") {
                       grp.style.display = "block";
                       grp.previousElementSibling.innerText = "Hide replies";
