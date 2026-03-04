@@ -1,137 +1,639 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kazeno Course App</title>
-    
-    <style>
-        /* ဆွဲဆောင်မှုရှိသော နောက်ခံအရောင် (Liquid Glass ပေါ်လွင်စေရန်) */
-        body { 
-            font-family: Arial, sans-serif; 
-            margin: 0; 
-            padding: 15px; 
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            min-height: 100vh;
-            color: #ffffff;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kazeno App</title>
 
-        /* မှန်သားပြင် (Glassmorphism) Effect အတွက် အခြေခံ CSS */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
+  <style>
+    /* =========================
+       Liquid Glass Theme System
+       ========================= */
+    :root{
+      /* Background */
+      --bg: #f2f3f6;
+      --bg2: #e9ebf1;
 
-        .logo-img { width: 90px; height: auto; margin-bottom: 10px; border-radius: 50%; }
-        
-        /* Login Screen */
-        #login-screen { text-align: center; margin-top: 50px; }
-        #login-screen input { padding: 12px; width: 80%; max-width: 300px; margin: 15px 0; border: none; border-radius: 8px; font-size: 16px; background: rgba(255,255,255,0.9); }
-        #login-screen button { padding: 12px 25px; background-color: #ffb300; color: #333; font-weight: bold; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
-        
-        #course-content { display: none; }
+      /* Text */
+      --text: #101114;
+      --subtext: rgba(16,17,20,0.65);
 
-        /* Header & Video List */
-        .header { text-align: center; }
-        h2 { margin: 0; font-size: 22px; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
-        
-        .video-title { font-size: 18px; color: #ffd700; margin-bottom: 10px; margin-top: 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
-        .iframe-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; background-color: #000; border-radius: 10px; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); }
-        .iframe-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .notes { margin-top: 10px; font-size: 14px; color: #e0e0e0; line-height: 1.5; }
-    </style>
+      /* Accent */
+      --accent: #ffb300;
+
+      /* Glass surfaces */
+      --glass: rgba(255,255,255,0.55);
+      --glass-strong: rgba(255,255,255,0.72);
+      --stroke: rgba(255,255,255,0.60);
+      --stroke2: rgba(16,17,20,0.10);
+
+      /* Shadows */
+      --shadow: 0 10px 30px rgba(0,0,0,0.08);
+      --shadow2: 0 4px 14px rgba(0,0,0,0.08);
+
+      /* Blur */
+      --blur: 18px;
+
+      /* Radius */
+      --r-xl: 22px;
+      --r-lg: 18px;
+      --r-md: 14px;
+
+      /* Safe padding for bottom bar */
+      --bottom-pad: 96px;
+    }
+
+    [data-theme="dark"]{
+      --bg: #0c0d10;
+      --bg2: #14151a;
+
+      --text: #f4f6fb;
+      --subtext: rgba(244,246,251,0.70);
+
+      --accent: #f0a000;
+
+      --glass: rgba(28,29,34,0.55);
+      --glass-strong: rgba(28,29,34,0.72);
+      --stroke: rgba(255,255,255,0.10);
+      --stroke2: rgba(255,255,255,0.08);
+
+      --shadow: 0 10px 30px rgba(0,0,0,0.45);
+      --shadow2: 0 4px 14px rgba(0,0,0,0.35);
+
+      --blur: 20px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(900px 500px at 15% 10%, rgba(255,179,0,0.20), transparent 50%),
+        radial-gradient(800px 500px at 85% 20%, rgba(80,140,255,0.14), transparent 55%),
+        radial-gradient(900px 600px at 50% 100%, rgba(170,90,255,0.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      padding-bottom: var(--bottom-pad);
+      transition: background .35s ease, color .35s ease;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* =========================
+       Liquid Glass Helpers
+       ========================= */
+    .glass{
+      background: var(--glass);
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(var(--blur)) saturate(1.25);
+      -webkit-backdrop-filter: blur(var(--blur)) saturate(1.25);
+    }
+
+    .glass-strong{
+      background: var(--glass-strong);
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(calc(var(--blur) + 6px)) saturate(1.35);
+      -webkit-backdrop-filter: blur(calc(var(--blur) + 6px)) saturate(1.35);
+    }
+
+    .hairline{
+      border: 1px solid var(--stroke2);
+    }
+
+    /* =========================
+       Header + Marquee
+       ========================= */
+    .header{
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 14px 16px;
+      margin: 10px 12px 10px;
+      border-radius: var(--r-xl);
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .header img{
+      width: 40px; height: 40px;
+      border-radius: 14px;
+      border: 1px solid var(--stroke);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+    }
+    .header h2{
+      margin:0;
+      font-size: 18px;
+      letter-spacing: .2px;
+      color: var(--text);
+    }
+    .header .badge{
+      margin-left:auto;
+      font-size:12px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,179,0,0.18);
+      color: var(--text);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      white-space: nowrap;
+    }
+
+    .marquee-bar{
+      margin: 0 12px 12px;
+      padding: 10px 12px;
+      border-radius: var(--r-lg);
+      background: rgba(255,179,0,0.18);
+      border: 1px solid rgba(255,179,0,0.25);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 13px;
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+    }
+    marquee{ opacity:.95; }
+
+    /* =========================
+       Pages
+       ========================= */
+    .page{ display:none; padding: 8px 12px 0; animation: fadeIn .28s ease; }
+    .page.active{ display:block; }
+    @keyframes fadeIn{ from{ opacity:0; transform: translateY(4px);} to{ opacity:1; transform: translateY(0);} }
+
+    /* =========================
+       Card (Liquid Glass)
+       ========================= */
+    .card{
+      border-radius: var(--r-xl);
+      padding: 16px;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card.glass-strong::before{
+      content:"";
+      position:absolute; inset:-40%;
+      background:
+        radial-gradient(closest-side at 25% 20%, rgba(255,255,255,0.45), transparent 60%),
+        radial-gradient(closest-side at 80% 30%, rgba(255,179,0,0.20), transparent 65%),
+        radial-gradient(closest-side at 60% 80%, rgba(120,160,255,0.18), transparent 65%);
+      transform: rotate(12deg);
+      pointer-events:none;
+      opacity: .65;
+    }
+    .card > *{ position: relative; z-index: 1; }
+
+    .card-title{
+      margin: 0 0 10px;
+      font-size: 17px;
+      color: var(--text);
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .title-accent{
+      width: 10px; height: 10px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(255,179,0,0.14);
+      display:inline-block;
+    }
+    .card-text{
+      margin:0;
+      font-size: 14px;
+      color: var(--subtext);
+      line-height: 1.6;
+    }
+
+    /* =========================
+       Buttons (iOS-ish)
+       ========================= */
+    .btn{
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      padding: 14px 14px;
+      border-radius: 16px;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: .2px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: transform .10s ease, filter .18s ease, opacity .18s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active{ transform: scale(.98); }
+
+    .btn-primary{
+      background: linear-gradient(180deg, rgba(255,179,0,1), rgba(230,149,0,1));
+      color: #111;
+      box-shadow: 0 10px 24px rgba(255,179,0,0.25);
+    }
+    .btn-outline{
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border: 1px solid rgba(255,179,0,0.45);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+    }
+    .btn-download{
+      background: linear-gradient(180deg, rgba(0,230,118,1), rgba(0,200,100,1));
+      color:#07140c;
+      box-shadow: 0 10px 24px rgba(0,230,118,0.20);
+    }
+
+    /* =========================
+       Inputs
+       ========================= */
+    .input{
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--stroke2);
+      background: rgba(255,255,255,0.28);
+      color: var(--text);
+      outline: none;
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      transition: border .2s ease, background .2s ease;
+    }
+    [data-theme="dark"] .input{
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+    .input:focus{
+      border-color: rgba(255,179,0,0.55);
+      box-shadow: 0 0 0 6px rgba(255,179,0,0.12);
+    }
+
+    /* =========================
+       Video iframe
+       ========================= */
+    .iframe-container{
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(0,0,0,0.20);
+      border: 1px solid var(--stroke2);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.10);
+      margin: 12px 0 10px;
+    }
+    .iframe-container iframe{
+      position:absolute; inset:0;
+      width: 100%; height: 100%;
+      border:0;
+    }
+
+    /* =========================
+       Category Folder (Glass list item)
+       ========================= */
+    .category-folder{
+      padding: 16px 16px;
+      border-radius: var(--r-xl);
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      margin-bottom: 12px;
+      cursor:pointer;
+      position: relative;
+      overflow:hidden;
+    }
+    .category-folder::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(closest-side at 10% 30%, rgba(255,255,255,0.25), transparent 60%),
+        radial-gradient(closest-side at 90% 20%, rgba(255,179,0,0.16), transparent 65%);
+      opacity:.8;
+      pointer-events:none;
+    }
+    .category-folder > *{ position: relative; z-index: 1; }
+    .folder-icon{
+      width: 44px; height: 44px;
+      border-radius: 16px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(255,255,255,0.20);
+      border: 1px solid var(--stroke);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      font-size: 22px;
+    }
+    .folder-title{
+      margin:0;
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .back-btn{
+      background: transparent;
+      border: 1px solid var(--stroke2);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-weight: 900;
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      cursor:pointer;
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      margin-bottom: 14px;
+    }
+    .back-btn:active{ transform: scale(.98); }
+
+    /* =========================
+       Bottom Nav (Glass Tab Bar)
+       ========================= */
+    .bottom-nav{
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      z-index: 1000;
+      padding: 10px 10px;
+      border-radius: 26px;
+      display:flex;
+      justify-content: space-around;
+      align-items: center;
+      gap: 10px;
+    }
+    .nav-item{
+      flex:1;
+      background: transparent;
+      border: none;
+      color: var(--subtext);
+      padding: 10px 10px;
+      border-radius: 18px;
+      display:flex;
+      flex-direction: column;
+      align-items:center;
+      gap: 4px;
+      cursor:pointer;
+      transition: transform .15s ease, background .2s ease, color .2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .nav-item .nav-icon{ font-size: 20px; }
+    .nav-item span:last-child{ font-size: 11px; font-weight: 800; letter-spacing: .2px; }
+
+    .nav-item.active{
+      color: var(--text);
+      background: rgba(255,179,0,0.18);
+      border: 1px solid rgba(255,179,0,0.22);
+      transform: translateY(-1px);
+    }
+
+    /* Small helpers */
+    .center{ text-align:center; }
+    .muted{ color: var(--subtext); }
+
+  </style>
 </head>
-<body>
 
-    <div id="login-screen" class="glass-panel">
-        <img src="https://res.cloudinary.com/dhcjrybpm/image/upload/v1772618567/anger-512x512_kjj3f7.png" class="logo-img" alt="Logo">
-        <h2>Kazeno သင်တန်း</h2>
-        <p>ဝင်ကြည့်ရန် လျှို့ဝှက်နံပါတ် ထည့်ပါ</p>
-        <input type="password" id="password-input" placeholder="Password ရိုက်ထည့်ပါ">
-        <br>
-        <button onclick="checkPassword()">ဝင်မည်</button>
-        <p id="error-msg" style="color: #ff4d4d; display: none; margin-top: 15px; font-weight: bold;">စကားဝှက် မှားယွင်းနေပါသည်</p>
+<body>
+  <!-- Header -->
+  <div class="header glass-strong">
+    <img src="https://res.cloudinary.com/dhcjrybpm/image/upload/v1772618567/anger-512x512_kjj3f7.png" alt="Logo" />
+    <h2>Kazeno App</h2>
+    <div class="badge">Liquid Glass</div>
+  </div>
+
+  <!-- Marquee -->
+  <div class="marquee-bar glass">
+    <marquee behavior="scroll" direction="left">
+      🔥 ကြိုဆိုပါတယ် ညီအစ်ကိုတို့... သတင်းအချက်အလက်အသစ်များကို ဤနေရာတွင် ဖတ်ရှုနိုင်ပါပြီ ခင်ဗျာ။
+    </marquee>
+  </div>
+
+  <!-- HOME -->
+  <div id="page-home" class="page active">
+    <div class="card glass-strong">
+      <h3 class="card-title"><span class="title-accent"></span>📌 App အသစ်ကို မိတ်ဆက်ခြင်း</h3>
+      <p class="card-text">
+        ညီအစ်ကိုတို့အတွက် ပိုမိုကောင်းမွန်တဲ့ အတွေ့အကြုံရစေဖို့ UI အသစ်နဲ့ App ကို ပြောင်းလဲထားပါတယ်။
+      </p>
+      <button class="btn btn-primary" style="margin-top: 12px;">ဆက်ဖတ်ရန်</button>
+    </div>
+  </div>
+
+  <!-- VIDEOS -->
+  <div id="page-videos" class="page">
+
+    <div id="login-section" class="card glass-strong center" style="margin-top: 8px;">
+      <h3 class="card-title" style="justify-content:center;"><span class="title-accent"></span>သင်ခန်းစာများ ကြည့်ရန်</h3>
+
+      <input
+        type="password"
+        id="app-password"
+        placeholder="စကားဝှက် ရိုက်ထည့်ပါ"
+        class="input"
+        style="max-width: 420px; margin: 8px auto 12px;"
+      />
+
+      <button class="btn btn-primary" onclick="unlockVideos()" style="max-width: 420px; margin: 0 auto;">
+        ဝင်မည်
+      </button>
+
+      <p id="error-text" style="color:#ff4d4f; display:none; margin-top:12px; font-weight:800;">
+        စကားဝှက် မှားနေပါသည်
+      </p>
     </div>
 
-    <div id="course-content">
-        <div class="header glass-panel">
-            <img src="https://res.cloudinary.com/dhcjrybpm/image/upload/v1772618567/anger-512x512_kjj3f7.png" class="logo-img" style="width: 60px;" alt="Logo">
-            <h2>Kazeno သင်တန်း</h2>
-            <p>လေ့လာစရာ သင်ခန်းစာများ</p>
+    <div id="categories-section" style="display:none;">
+      <h3 style="margin: 4px 4px 12px; color: var(--text); font-size: 16px; font-weight: 900;">
+        📚 လေ့လာရန် အပိုင်းများ
+      </h3>
+      <div id="category-list-container"></div>
+    </div>
+
+    <div id="video-content-section" style="display:none;">
+      <button class="back-btn" onclick="backToCategories()">⬅️ အနောက်သို့ ပြန်သွားမည်</button>
+      <h3 id="current-category-title" style="margin: 0 0 12px; color: var(--text); font-size: 16px; font-weight: 1000;"></h3>
+      <div id="video-list-container"></div>
+    </div>
+
+  </div>
+
+  <!-- SETTINGS -->
+  <div id="page-settings" class="page">
+    <div class="card glass-strong">
+      <h3 class="card-title"><span class="title-accent"></span>အပြင်အဆင်များ</h3>
+      <button class="btn btn-outline" onclick="toggleDarkMode()" id="theme-btn">
+        🌙 Dark Mode သို့ ပြောင်းရန်
+      </button>
+    </div>
+
+    <div class="card glass-strong">
+      <h3 class="card-title"><span class="title-accent"></span>Downloads & Links</h3>
+      <a href="#" class="btn btn-primary">📲 Android App ဒေါင်းလုဒ်ဆွဲရန်</a>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav glass-strong">
+    <button class="nav-item active" onclick="changeTab('page-home', this)">
+      <span class="nav-icon">🏠</span><span>Home</span>
+    </button>
+    <button class="nav-item" onclick="changeTab('page-videos', this)">
+      <span class="nav-icon">▶️</span><span>Videos</span>
+    </button>
+    <button class="nav-item" onclick="changeTab('page-settings', this)">
+      <span class="nav-icon">⚙️</span><span>Settings</span>
+    </button>
+  </nav>
+
+  <!-- Firebase / Firestore -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDV8UNUW7CVvJy2k5_6OMrRz197c1A7uKU",
+      authDomain: "kazeno-course.firebaseapp.com",
+      projectId: "kazeno-course",
+      storageBucket: "kazeno-course.firebasestorage.app",
+      messagingSenderId: "356111425732",
+      appId: "1:356111425732:web:fd5b3a7429372ec41da991"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let allVideosData = [];
+
+    window.fetchFirebaseVideos = async function() {
+      const catContainer = document.getElementById("category-list-container");
+      catContainer.innerHTML = `
+        <div class="card glass center">
+          <p class="muted" style="margin:0; font-weight:800;">အချက်အလက်များ ရယူနေပါသည် ခင်ဗျာ...</p>
         </div>
+      `;
 
-        <div id="video-list-container"></div>
-    </div> 
+      try {
+        const q = query(collection(db, "videos"), orderBy("timestamp", "asc"));
+        const querySnapshot = await getDocs(q);
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        allVideosData = [];
+        querySnapshot.forEach((doc) => allVideosData.push(doc.data()));
 
-        // ကိုယ်လူ၏ Firebase Config
-        const firebaseConfig = {
-          apiKey: "AIzaSyDV8UNUW7CVvJy2k5_6OMrRz197c1A7uKU",
-          authDomain: "kazeno-course.firebaseapp.com",
-          projectId: "kazeno-course",
-          storageBucket: "kazeno-course.firebasestorage.app",
-          messagingSenderId: "356111425732",
-          appId: "1:356111425732:web:fd5b3a7429372ec41da991"
-        };
+        renderCategories();
+      } catch (error) {
+        catContainer.innerHTML = `
+          <div class="card glass center">
+            <p style="color:#ff4d4f; margin:0; font-weight:900;">ချိတ်ဆက်မှု အမှားအယွင်း ဖြစ်နေပါသည်။</p>
+          </div>
+        `;
+      }
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    window.renderCategories = function() {
+      const catContainer = document.getElementById("category-list-container");
+      catContainer.innerHTML = "";
 
-        // Firebase မှ ဗီဒီယိုများကို ဆွဲထုတ်မည့် Function
-        async function loadVideos() {
-            const container = document.getElementById("video-list-container");
-            container.innerHTML = "<p style='text-align:center;'>ဗီဒီယိုများ ရယူနေပါသည်... စောင့်ပါ ခင်ဗျာ။</p>";
+      if (allVideosData.length === 0) {
+        catContainer.innerHTML = `
+          <div class="card glass center">
+            <p class="muted" style="margin:0; font-weight:800;">ဗီဒီယို မရှိသေးပါ ခင်ဗျာ။</p>
+          </div>
+        `;
+        return;
+      }
 
-            try {
-                const q = query(collection(db, "videos"), orderBy("timestamp", "asc"));
-                const querySnapshot = await getDocs(q);
+      const categories = [...new Set(allVideosData.map(v => v.category || "အထွေထွေ သင်ခန်းစာများ"))];
 
-                container.innerHTML = ""; // Loading စာသားကို ဖျက်မည်
-                
-                if(querySnapshot.empty) {
-                    container.innerHTML = "<p style='text-align:center;'>လောလောဆယ် ဗီဒီယို မရှိသေးပါ ခင်ဗျာ။</p>";
-                    return;
-                }
+      categories.forEach(cat => {
+        const el = document.createElement("div");
+        el.className = "category-folder glass";
+        el.onclick = () => showVideosByCategory(cat);
+        el.innerHTML = `
+          <span class="folder-icon">📁</span>
+          <h4 class="folder-title">${cat}</h4>
+        `;
+        catContainer.appendChild(el);
+      });
+    };
 
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const videoHTML = `
-                        <div class="video-card glass-panel">
-                            <h3 class="video-title">${data.title}</h3>
-                            <div class="iframe-container">
-                                <iframe src="${data.link}" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen frameborder="0"></iframe>
-                            </div>
-                            <p class="notes">📌 <b>မှတ်စု:</b> ${data.notes}</p>
-                        </div>
-                    `;
-                    container.innerHTML += videoHTML; // ဗီဒီယိုများကို တစ်ခုပြီးတစ်ခု List အနေဖြင့် ဆက်ထည့်မည်
-                });
-            } catch (e) {
-                console.error("Error:", e);
-                container.innerHTML = "<p style='text-align:center; color:#ff4d4d;'>ချိတ်ဆက်မှု အမှားအယွင်းဖြစ်နေပါသည် ခင်ဗျာ။</p>";
-            }
+    window.showVideosByCategory = function(selectedCategory) {
+      document.getElementById("categories-section").style.display = "none";
+      document.getElementById("video-content-section").style.display = "block";
+      document.getElementById("current-category-title").innerText = `📂 ${selectedCategory}`;
+
+      const vidContainer = document.getElementById("video-list-container");
+      vidContainer.innerHTML = "";
+
+      const filteredVideos = allVideosData.filter(v => (v.category || "အထွေထွေ သင်ခန်းစာများ") === selectedCategory);
+
+      filteredVideos.forEach(data => {
+        let downloadBtnHTML = "";
+        if (data.downloadLink && data.downloadLink.trim() !== "") {
+          downloadBtnHTML = `<a href="${data.downloadLink}" target="_blank" class="btn btn-download">📲 APK Download ဆွဲရန်</a>`;
         }
 
-        // Login ဝင်သည့် စနစ် (စကားဝှက် - 123)
-        window.checkPassword = function() {
-            var pass = document.getElementById("password-input").value;
-            if (pass === "123") {
-                document.getElementById("login-screen").style.display = "none";
-                document.getElementById("course-content").style.display = "block";
-                loadVideos(); // မှန်ကန်ပါက ဗီဒီယိုများကို စတင် ဆွဲယူမည်
-            } else {
-                document.getElementById("error-msg").style.display = "block";
-            }
-        }
-    </script>
+        const card = document.createElement("div");
+        card.className = "card glass-strong";
+
+        card.innerHTML = `
+          <h3 class="card-title"><span class="title-accent"></span>${data.title}</h3>
+          <div class="iframe-container">
+            <iframe src="${data.link}" allowfullscreen></iframe>
+          </div>
+          <p class="card-text">📌 <b style="color: var(--text);">မှတ်စု:</b> ${data.notes}</p>
+          ${downloadBtnHTML}
+        `;
+
+        vidContainer.appendChild(card);
+      });
+    };
+  </script>
+
+  <!-- App JS -->
+  <script>
+    function changeTab(pageId, element) {
+      document.querySelectorAll(".page").forEach(page => page.classList.remove("active"));
+      document.getElementById(pageId).classList.add("active");
+
+      document.querySelectorAll(".nav-item").forEach(nav => nav.classList.remove("active"));
+      element.classList.add("active");
+    }
+
+    function toggleDarkMode() {
+      const body = document.body;
+      const btn = document.getElementById("theme-btn");
+      if (body.getAttribute("data-theme") === "dark") {
+        body.removeAttribute("data-theme");
+        btn.innerHTML = "🌙 Dark Mode သို့ ပြောင်းရန်";
+      } else {
+        body.setAttribute("data-theme", "dark");
+        btn.innerHTML = "☀️ Light Mode သို့ ပြောင်းရန်";
+      }
+    }
+
+    function unlockVideos() {
+      const pass = document.getElementById("app-password").value;
+      if (pass === "123") {
+        document.getElementById("login-section").style.display = "none";
+        document.getElementById("categories-section").style.display = "block";
+        if (window.fetchFirebaseVideos) window.fetchFirebaseVideos();
+      } else {
+        document.getElementById("error-text").style.display = "block";
+      }
+    }
+
+    function backToCategories() {
+      document.getElementById("video-content-section").style.display = "none";
+      document.getElementById("categories-section").style.display = "block";
+    }
+  </script>
 </body>
 </html>
