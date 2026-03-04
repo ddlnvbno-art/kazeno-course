@@ -65,8 +65,18 @@
   .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); transition: 0.3s; }
   .dot.active { background: var(--accent); width: 16px; border-radius: 4px; }
   
-  /* Auto-hide Category Bar */
-  .cat-wrapper { position: sticky; top: 75px; z-index: 9; transition: transform 0.3s ease-in-out; margin: 0 -16px; padding: 10px 16px; background: rgba(5, 5, 16, 0.85); backdrop-filter: blur(15px); }
+  /* --- Fade In/Out Category Bar --- */
+  .cat-wrapper { 
+      position: sticky; top: 75px; z-index: 9; margin: 0 -16px; padding: 10px 16px; 
+      background: rgba(5, 5, 16, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; 
+      transform-origin: top;
+      opacity: 1; pointer-events: auto;
+  }
+  .cat-wrapper.hidden {
+      transform: translateY(-20px);
+      opacity: 0; pointer-events: none;
+  }
   .cat-scroll { display: flex; overflow-x: auto; gap: 10px; scrollbar-width: none; }
   .cat-scroll::-webkit-scrollbar { display: none; }
   .cat-pill { padding: 8px 18px; background: rgba(0,0,0,0.4); border-radius: 20px; font-size: 13px; white-space: nowrap; border: 1px solid var(--border); cursor: pointer; font-weight: 500; color: var(--muted); transition: 0.3s;}
@@ -112,34 +122,48 @@
   .lockBox{width:100%; max-width: 280px; padding:20px; text-align:center; background: rgba(10, 15, 30, 0.7); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
   .lockBox .icon {font-size: 32px; margin-bottom: 5px;}
   
-  /* --- FIXED: FULL SCREEN COMMENT MODAL (Anti-Keyboard Glitch) --- */
+  /* --- ULTRA SMOOTH FULL SCREEN COMMENT MODAL --- */
   .comment-modal { 
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0; /* Cover Full Screen */
-      background: var(--bg); z-index: 10000; 
+      position: fixed; inset: 0; background: var(--bg); z-index: 10000; 
       display: flex; flex-direction: column; 
-      transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); 
+      transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); 
+      will-change: transform; /* Hardware Acceleration for zero lag */
   }
   .comment-modal.active { transform: translateY(0); }
   
-  .cm-header { flex-shrink: 0; padding: 15px 20px; background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 16px;}
+  .cm-header { flex-shrink: 0; padding: 15px 20px; background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 16px;}
   .cm-close { background: rgba(255,255,255,0.1); border: none; width: 32px; height: 32px; border-radius: 50%; color: #fff; cursor: pointer; font-size: 14px; display:flex; align-items:center; justify-content:center;}
   
-  .cm-body { flex: 1; overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
+  .cm-body { flex: 1; overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; background: var(--bg); }
   
-  .cm-footer { flex-shrink: 0; padding: 12px 15px; border-top: 1px solid var(--border); background: var(--bg); display: flex; gap: 10px; align-items: center; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
-  .c-input { flex: 1; padding: 12px 18px; border-radius: 24px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: #fff; font-family: 'Poppins'; font-size: 13px; outline: none; }
+  .cm-footer { flex-shrink: 0; padding: 12px 15px; border-top: 1px solid var(--border); background: rgba(15, 23, 42, 0.95); display: flex; flex-direction: column; gap: 8px; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+  
+  .replying-indicator { display: none; justify-content: space-between; align-items: center; font-size: 12px; color: var(--accent); padding: 0 10px; font-weight: 600; }
+  .replying-indicator.active { display: flex; }
+  
+  .c-input-row { display: flex; gap: 10px; width: 100%; align-items: center; }
+  .c-input { flex: 1; padding: 12px 18px; border-radius: 24px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: #fff; font-family: 'Poppins'; font-size: 13.5px; outline: none; }
   .c-input:focus { border-color: var(--primary); }
-  .c-send { background: linear-gradient(135deg, var(--accent), var(--primary)); border: none; border-radius: 50%; width: 42px; height: 42px; color: #fff; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 16px;}
+  .c-send { background: linear-gradient(135deg, var(--accent), var(--primary)); border: none; border-radius: 50%; width: 42px; height: 42px; color: #fff; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 16px; flex-shrink:0;}
   
-  /* Comments & Reply UI */
-  .c-comment { display: flex; gap: 10px; margin-bottom: 15px; }
-  .c-avatar { width: 35px; height: 35px; background: linear-gradient(45deg, var(--accent), var(--primary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; font-size: 14px;}
-  .c-content-wrap { display: flex; flex-direction: column; align-items: flex-start; max-width: 85%; }
-  .c-text-box { background: rgba(255,255,255,0.08); padding: 10px 14px; border-radius: 4px 18px 18px 18px; font-size: 13px; width: 100%; word-wrap: break-word;}
+  /* Nested Comments UI */
+  .c-comment { display: flex; gap: 10px; margin-bottom: 18px; }
+  .c-comment.is-reply { margin-left: 35px; margin-top: -5px; margin-bottom: 12px; position: relative;}
+  .c-comment.is-reply::before { content: ''; position: absolute; left: -22px; top: -15px; width: 15px; height: 30px; border-left: 2px solid var(--border); border-bottom: 2px solid var(--border); border-bottom-left-radius: 8px; }
+  
+  .c-avatar { width: 32px; height: 32px; background: linear-gradient(45deg, var(--accent), var(--primary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; font-size: 13px;}
+  .c-content-wrap { display: flex; flex-direction: column; align-items: flex-start; max-width: 88%; }
+  .c-text-box { background: rgba(255,255,255,0.08); padding: 10px 14px; border-radius: 4px 18px 18px 18px; font-size: 13px; width: 100%; word-wrap: break-word; line-height: 1.5;}
   .c-name { font-weight: 800; font-size: 12px; margin-bottom: 4px; color: var(--accent); }
-  .c-reply-btn { font-size: 11px; color: var(--muted); margin-left: 10px; margin-top: 5px; cursor: pointer; font-weight: 600; transition: 0.2s;}
-  .c-reply-btn:active { color: var(--primary); }
   
+  .c-actions-row { display: flex; align-items: center; gap: 15px; margin-top: 6px; margin-left: 5px; }
+  .c-reply-btn { font-size: 11px; color: var(--muted); cursor: pointer; font-weight: 600; transition: 0.2s;}
+  .c-reply-btn:active { color: var(--primary); }
+  .c-date { font-size: 10px; color: rgba(255,255,255,0.3); }
+  
+  .view-replies-btn { font-size: 12px; color: var(--primary); font-weight: 600; cursor: pointer; margin-top: 5px; margin-left: 40px; display: flex; align-items: center; gap: 5px; }
+  .view-replies-btn::before { content: '—'; }
+
   .toast{position:fixed; left:50%; transform:translateX(-50%); top:20px; background:var(--ok); color:#000; padding:10px 24px; border-radius:999px; font-weight:800; font-size:13px; opacity:0; transition:.3s; z-index:9999; box-shadow: 0 5px 20px rgba(0,0,0,0.3); pointer-events: none;}
   .toast.show{opacity:1; transform:translateX(-50%) translateY(10px);}
   
@@ -238,8 +262,14 @@
     </div>
     <div class="cm-body" id="cm-list"></div>
     <div class="cm-footer">
-        <input type="text" id="cm-input" class="c-input" placeholder="Write a comment...">
-        <button class="c-send" onclick="sendComment()">➤</button>
+        <div class="replying-indicator" id="reply-indicator">
+            <span>Replying to <b id="reply-to-name">@User</b></span>
+            <span style="font-size:16px; cursor:pointer;" onclick="cancelReply()">✖</span>
+        </div>
+        <div class="c-input-row">
+            <input type="text" id="cm-input" class="c-input" placeholder="Write a comment...">
+            <button class="c-send" onclick="sendComment()">➤</button>
+        </div>
     </div>
 </div>
 
@@ -272,7 +302,9 @@
   let me = null;
   let allVideosData = []; 
   let allPostsData = [];
+  
   let currentActivePostForComment = null;
+  let activeReplyParentId = null; // To track nested replies
 
   function toast(msg){
     const t = document.getElementById("toast");
@@ -286,6 +318,12 @@
       if(!timestamp) return "Just now";
       const d = new Date(timestamp);
       return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+  
+  function formatTime(timestamp) {
+      if(!timestamp) return "Now";
+      const d = new Date(timestamp);
+      return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
   }
 
   // --- Carousel Logic ---
@@ -357,20 +395,23 @@
     if(pSt) { pSt.textContent = isPro ? "PRO MEMBER" : "FREE MEMBER"; pSt.className = isPro ? "pill pro" : "pill free"; }
   }
 
-  // --- Scroll Auto Hide Category Bar ---
+  // --- NEW: FADE IN/OUT AUTO HIDE CATEGORY BAR ---
   let lastScrollY = window.scrollY;
   window.addEventListener('scroll', () => {
       const postCat = document.getElementById('post-cat-container');
       const vidCat = document.getElementById('vid-cat-container');
+      
+      // If scrolled down more than 50px, hide with fade out
       if (window.scrollY > lastScrollY && window.scrollY > 50) {
-          if(postCat) postCat.style.transform = 'translateY(-150%)';
-          if(vidCat) vidCat.style.transform = 'translateY(-150%)';
+          if(postCat) postCat.classList.add('hidden');
+          if(vidCat) vidCat.classList.add('hidden');
       } else {
-          if(postCat) postCat.style.transform = 'translateY(0)';
-          if(vidCat) vidCat.style.transform = 'translateY(0)';
+          // Scrolling up, show with fade in
+          if(postCat) postCat.classList.remove('hidden');
+          if(vidCat) vidCat.classList.remove('hidden');
       }
       lastScrollY = window.scrollY;
-  });
+  }, {passive: true});
 
   // --- Inline See More Logic ---
   window.toggleText = (id) => {
@@ -419,13 +460,11 @@
       if(postIndex === -1) return;
       
       let reactions = allPostsData[postIndex].reactions || {};
-      
       if(reactions[me.uid] === type) delete reactions[me.uid]; 
       else reactions[me.uid] = type; 
       
       allPostsData[postIndex].reactions = reactions;
       renderPostFeed(document.querySelector('#post-cat-list .active')?.innerText || "All Updates");
-      
       try { await updateDoc(doc(db, "posts", postId), { reactions: reactions }); } catch(e) {}
   };
 
@@ -436,7 +475,6 @@
       
       const myReact = me && reactionsObj[me.uid] ? reactionsObj[me.uid] : null;
       const types = [...new Set(Object.values(reactionsObj))].slice(0, 3).join(""); 
-      
       return { count: keys.length, icons: types, myReact: myReact };
   }
 
@@ -548,12 +586,13 @@
       feed.innerHTML = html || `<div class="muted" style="text-align:center; padding:20px;">No posts found.</div>`;
   }
 
-  // --- FULL SCREEN COMMENT MODAL LOGIC & REPLY FEATURE ---
+  // --- NESTED COMMENT MODAL LOGIC ---
   let commentUnsubscribe = null;
 
   window.openComment = (postId) => {
       if(!me) return toast("Please Login First!");
       currentActivePostForComment = postId;
+      activeReplyParentId = null; // Reset reply state
       document.getElementById('cm-box').classList.add('active');
       document.body.style.overflow = 'hidden'; 
       
@@ -567,39 +606,94 @@
           snap.forEach(doc => comments.push({id: doc.id, ...doc.data()}));
           comments.sort((a,b) => (a.createdAt?.toMillis() || 0) - (b.createdAt?.toMillis() || 0));
           
-          list.innerHTML = comments.length === 0 ? "<div class='muted' style='text-align:center; margin-top:20px;'>Be the first to comment!</div>" : "";
+          // Separate Parents and Replies
+          const parents = comments.filter(c => !c.parentId);
+          const replies = comments.filter(c => c.parentId);
           
-          comments.forEach(d => {
-              const initial = d.email ? d.email.charAt(0).toUpperCase() : "U";
-              const name = d.email ? d.email.split('@')[0] : "User";
+          list.innerHTML = parents.length === 0 ? "<div class='muted' style='text-align:center; margin-top:20px;'>Be the first to comment!</div>" : "";
+          
+          parents.forEach(p => {
+              const initial = p.email ? p.email.charAt(0).toUpperCase() : "U";
+              const name = p.email ? p.email.split('@')[0] : "User";
+              
+              // Get replies for this parent
+              const childReplies = replies.filter(r => r.parentId === p.id);
+              let repliesHtml = "";
+              let viewRepliesBtn = "";
+              
+              if(childReplies.length > 0) {
+                  viewRepliesBtn = `<div class="view-replies-btn" onclick="toggleRepliesGroup('${p.id}')">View ${childReplies.length} replies</div>`;
+                  repliesHtml = `<div id="reply-grp-${p.id}" style="display:none; margin-top: 10px;">`;
+                  childReplies.forEach(r => {
+                      const rInitial = r.email ? r.email.charAt(0).toUpperCase() : "U";
+                      const rName = r.email ? r.email.split('@')[0] : "User";
+                      repliesHtml += `
+                          <div class="c-comment is-reply">
+                              <div class="c-avatar" style="width:26px; height:26px; font-size:11px;">${rInitial}</div>
+                              <div class="c-content-wrap">
+                                  <div class="c-text-box"><div class="c-name">${esc(rName)}</div>${esc(r.text)}</div>
+                                  <div class="c-actions-row"><span class="c-date">${formatTime(r.createdAt?.toMillis())}</span></div>
+                              </div>
+                          </div>
+                      `;
+                  });
+                  repliesHtml += `</div>`;
+              }
+              
               list.innerHTML += `
                   <div class="c-comment">
                       <div class="c-avatar">${initial}</div>
-                      <div class="c-content-wrap">
+                      <div class="c-content-wrap" style="width:100%;">
                           <div class="c-text-box">
                               <div class="c-name">${esc(name)}</div>
-                              ${esc(d.text)}
+                              ${esc(p.text)}
                           </div>
-                          <div class="c-reply-btn" onclick="replyToUser('${esc(name)}')">Reply</div>
+                          <div class="c-actions-row">
+                              <span class="c-date">${formatTime(p.createdAt?.toMillis())}</span>
+                              <span class="c-reply-btn" onclick="startReply('${p.id}', '${esc(name)}')">Reply</span>
+                          </div>
+                          ${viewRepliesBtn}
+                          ${repliesHtml}
                       </div>
                   </div>
               `;
           });
-          list.scrollTop = list.scrollHeight;
+          
+          // Auto scroll only if we aren't replying
+          if(!activeReplyParentId) list.scrollTop = list.scrollHeight;
       });
   };
 
-  // Reply Function (Adds @username to input)
-  window.replyToUser = (name) => {
-      const input = document.getElementById('cm-input');
-      input.value = `@${name} `;
-      input.focus();
+  window.toggleRepliesGroup = (parentId) => {
+      const grp = document.getElementById(`reply-grp-${parentId}`);
+      const btn = event.target;
+      if(grp.style.display === "none") {
+          grp.style.display = "block";
+          btn.innerText = "Hide replies";
+      } else {
+          grp.style.display = "none";
+          const count = grp.querySelectorAll('.is-reply').length;
+          btn.innerText = `View ${count} replies`;
+      }
+  }
+
+  window.startReply = (parentId, userName) => {
+      activeReplyParentId = parentId;
+      document.getElementById('reply-indicator').classList.add('active');
+      document.getElementById('reply-to-name').innerText = `@${userName}`;
+      document.getElementById('cm-input').focus();
+  };
+
+  window.cancelReply = () => {
+      activeReplyParentId = null;
+      document.getElementById('reply-indicator').classList.remove('active');
   };
 
   window.closeComment = () => {
       document.getElementById('cm-box').classList.remove('active');
       document.body.style.overflow = 'auto';
       currentActivePostForComment = null;
+      cancelReply();
       if(commentUnsubscribe) { commentUnsubscribe(); commentUnsubscribe = null; }
   };
 
@@ -608,12 +702,31 @@
       const input = document.getElementById('cm-input');
       const text = input.value.trim();
       if(!text) return;
+      
+      const parentToSave = activeReplyParentId; // Store before clearing
       input.value = ""; 
+      cancelReply(); // Reset UI immediately
       
       try {
           await addDoc(collection(db, "comments"), {
-              postId: currentActivePostForComment, text: text, uid: me.uid, email: me.email, createdAt: serverTimestamp()
+              postId: currentActivePostForComment, 
+              text: text, 
+              uid: me.uid, 
+              email: me.email, 
+              parentId: parentToSave, // Will be null for main comments
+              createdAt: serverTimestamp()
           });
+          
+          // If we replied, auto open that group
+          if(parentToSave) {
+              setTimeout(() => {
+                  const grp = document.getElementById(`reply-grp-${parentToSave}`);
+                  if(grp && grp.style.display === "none") {
+                      grp.style.display = "block";
+                      grp.previousElementSibling.innerText = "Hide replies";
+                  }
+              }, 500);
+          }
       } catch(e) { toast("Failed to comment"); }
   };
 
