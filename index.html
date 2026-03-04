@@ -12,78 +12,91 @@
             margin: 0;
             padding: 15px;
         }
-        .header {
+        
+        /* --- Login မျက်နှာပြင်အတွက် အလှဆင် CSS --- */
+        #login-screen {
             text-align: center;
+            margin-top: 50px;
             background-color: #ffffff;
-            padding: 20px;
+            padding: 30px;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
         }
-        h2 {
-            color: #333333;
-            margin: 0;
+        #login-screen input {
+            padding: 12px;
+            width: 80%;
+            max-width: 300px;
+            margin: 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
         }
-        .video-card {
-            background-color: #ffffff;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 15px;
-        }
-        .video-title {
-            font-size: 18px;
-            color: #0056b3;
-            margin-bottom: 10px;
-            margin-top: 0;
-        }
-        /* Cloudinary Player ကို ဖုန်းနှင့် အံဝင်ခွင်ကျဖြစ်စေရန် */
-        .iframe-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio ဖြင့် အချိုးကျစေရန် */
-            height: 0;
-            background-color: #000;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .iframe-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        #login-screen button {
+            padding: 12px 25px;
+            background-color: #0056b3;
+            color: white;
             border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
         }
-        .notes {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #555555;
-            line-height: 1.5;
+        
+        /* --- ဗီဒီယိုများကို အစပိုင်းတွင် ဖျောက်ထားရန် --- */
+        #course-content {
+            display: none; 
         }
+
+        /* --- အရင်က ဗီဒီယိုများအတွက် CSS များ --- */
+        .header { text-align: center; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        h2 { color: #333333; margin: 0; }
+        .video-card { background-color: #ffffff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        .video-title { font-size: 18px; color: #0056b3; margin-bottom: 10px; margin-top: 0; }
+        .iframe-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; background-color: #000; border-radius: 8px; overflow: hidden; }
+        .iframe-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .notes { margin-top: 10px; font-size: 14px; color: #555555; line-height: 1.5; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h2>စိတ်မဆိုပါနဲ့တော့</h2>
-        <p style="color: #666; margin-top: 5px;">ကိုကိုမှားခဲ့တာတွေအတွက်တောင်းပန်ပါတယ်</p>
+    <div id="login-screen">
+        <h2>Kazeno သင်တန်း</h2>
+        <p style="color: #666;">ဝင်ကြည့်ရန် လျှို့ဝှက်နံပါတ် ထည့်ပါ</p>
+        <input type="password" id="password-input" placeholder="Password ရိုက်ထည့်ပါ">
+        <br>
+        <button onclick="checkPassword()">ဝင်မည်</button>
+        <p id="error-msg" style="color: red; display: none; margin-top: 15px;">စကားဝှက် မှားယွင်းနေပါသည်၊ ပြန်ကြိုးစားကြည့်ပါ။</p>
     </div>
 
-    <div class="video-card">
-        <h3 class="video-title">အပိုင်း (၁) - သင်ခန်းစာ မိတ်ဆက်</h3>
-        
-        <div class="iframe-container">
-            <iframe 
-                src="https://player.cloudinary.com/embed/?cloud_name=dhcjrybpm&public_id=4_5849104708160981443_hcfnwy" 
-                allow="autoplay; fullscreen; encrypted-media; picture-in-picture" 
-                allowfullscreen 
-                frameborder="0">
-            </iframe>
+    <div id="course-content">
+        <div class="header">
+            <h2>Kazeno သင်တန်းမှ ကြိုဆိုပါတယ်</h2>
+            <p style="color: #666; margin-top: 5px;">လေ့လာစရာ သင်ခန်းစာများ</p>
         </div>
-        
-        <p class="notes">📌 <b>မှတ်စု:</b> ဒီဗီဒီယိုမှာ အခြေခံအချက်တွေကို ရှင်းပြပေးထားပါတယ်။ မရှင်းလင်းတာရှိရင် ပြန်ရစ်ကြည့်နိုင်ပါတယ်။</p>
+
+        <div class="video-card">
+            <h3 class="video-title">အပိုင်း (၁) - သင်ခန်းစာ မိတ်ဆက်</h3>
+            <div class="iframe-container">
+                <iframe src="https://player.cloudinary.com/embed/?cloud_name=dhcjrybpm&public_id=4_5849104708160981443_hcfnwy" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen frameborder="0"></iframe>
+            </div>
+            <p class="notes">📌 <b>မှတ်စု:</b> ဒီဗီဒီယိုမှာ အခြေခံအချက်တွေကို ရှင်းပြပေးထားပါတယ်။ မရှင်းလင်းတာရှိရင် ပြန်ရစ်ကြည့်နိုင်ပါတယ်။</p>
+        </div>
     </div>
 
+    <script>
+        function checkPassword() {
+            // အောက်ပါ 123 နေရာတွင် ကိုယ်ပိုင် Password ကို ပြောင်းလဲ သတ်မှတ်နိုင်ပါသည်
+            var correctPassword = "123"; 
+            var enteredPassword = document.getElementById("password-input").value;
+
+            if (enteredPassword === correctPassword) {
+                // မှန်ကန်ပါက Login ကို ဖျောက်ပြီး ဗီဒီယိုများကို ပြမည်
+                document.getElementById("login-screen").style.display = "none";
+                document.getElementById("course-content").style.display = "block";
+            } else {
+                // မှားယွင်းပါက အမှားစာသားကို ပြမည်
+                document.getElementById("error-msg").style.display = "block";
+            }
+        }
+    </script>
 </body>
 </html>
