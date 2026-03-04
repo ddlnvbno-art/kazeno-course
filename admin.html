@@ -9,14 +9,15 @@
   :root{
     --bg:#090e17; --card:#111b33; --border:rgba(255,255,255,.1);
     --text:#fff; --muted:#8b9bb4;
-    --primary:#ffb300; --danger:#ff4d4d; --ok:#00e676;
+    --primary:#8a2be2; --accent:#4facfe; --danger:#ff4d4d; --ok:#00e676;
     --r:16px;
   }
+  * { outline: none; -webkit-tap-highlight-color: transparent; }
   body{margin:0; font-family:'Poppins', Arial; background:var(--bg); color:var(--text); padding:20px;}
   .wrap{max-width:900px; margin:0 auto;}
   .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
   .card{background:var(--card); border:1px solid var(--border); border-radius:var(--r); padding:24px; margin-bottom:20px;}
-  .title{margin:0 0 16px; font-weight:800; font-size: 18px; color: var(--primary);}
+  .title{margin:0 0 16px; font-weight:800; font-size: 18px; color: var(--accent);}
   .muted{color:var(--muted); font-size:13px; line-height:1.6;}
   
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -24,14 +25,14 @@
   
   input,textarea,select{
     width:100%; padding:14px; border-radius:12px; border:1px solid var(--border);
-    background:rgba(0,0,0,.2); color:var(--text); outline:none; font-family:'Poppins'; box-sizing:border-box; margin-bottom: 12px;
+    background:rgba(0,0,0,.2); color:var(--text); font-family:'Poppins'; box-sizing:border-box; margin-bottom: 12px;
   }
-  input:focus, textarea:focus { border-color: var(--primary); }
+  input:focus, textarea:focus { border-color: var(--accent); }
   textarea{min-height:100px; resize: vertical;}
   
   .btn{padding:12px 20px; border-radius:12px; border:none; cursor:pointer; font-weight:800; font-family:'Poppins'; transition:0.2s;}
   .btn:active {transform:scale(0.95);}
-  .btnP{background:var(--primary); color:#000;}
+  .btnP{background:linear-gradient(135deg, var(--accent), var(--primary)); color:#fff;}
   .btnS{background:rgba(255,255,255,.1); color:var(--text); border:1px solid var(--border);}
   .btnD{background:rgba(255,77,77,0.2); color:var(--danger); border:1px solid var(--danger);}
   .btnOK{background:rgba(0,230,118,0.2); color:var(--ok); border:1px solid var(--ok);}
@@ -54,16 +55,19 @@
   </div>
 
   <div id="panel" style="display:none;">
-    
     <div class="header">
         <h2>Dashboard</h2>
         <button class="btn btnS" onclick="logout()">Log Out</button>
     </div>
 
-    <div class="card" style="border-color: var(--primary);">
-      <h2 class="title">💳 Pending Purchase Requests</h2>
-      <div class="muted" style="margin-bottom: 15px;">Approve users here to unlock PRO access.</div>
-      <div id="reqList">Loading...</div>
+    <div class="card" style="border-color: var(--primary); box-shadow: 0 0 15px rgba(138,43,226,0.2);">
+      <h2 class="title">🔍 Manage PRO Users</h2>
+      <div class="muted" style="margin-bottom: 15px;">ကျောင်းသား၏ Email ကိုရိုက်ထည့်ပြီး PRO အကောင့် ဖွင့်ပေးပါ / ပိတ်ပါ။</div>
+      <div class="row">
+          <input id="searchEmail" type="email" placeholder="Enter user email (e.g. user@gmail.com)" style="margin-bottom:0;">
+          <button class="btn btnP" style="width: auto; padding: 0 24px;" onclick="searchUser()">Search</button>
+      </div>
+      <div id="searchResult" style="margin-top:15px;"></div>
     </div>
 
     <div class="grid-2">
@@ -95,18 +99,12 @@
           </div>
         </div>
     </div>
-
-    <div class="card">
-      <h2 class="title">📊 User Progress (Logs)</h2>
-      <div id="progList" class="muted">Loading...</div>
-    </div>
-
   </div>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, setDoc, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, setDoc, query, orderBy, getDocs, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
   import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
   const firebaseConfig = {
@@ -133,7 +131,7 @@
 
   onAuthStateChanged(auth, async (user)=>{
     if(!user) return;
-    if(user.uid !== ADMIN_UID){ alert("Access Denied: Not an Admin"); await signOut(auth); return; }
+    if(user.uid !== ADMIN_UID){ alert("Access Denied"); await signOut(auth); return; }
     document.getElementById("loginBox").style.display="none";
     document.getElementById("panel").style.display="block";
     loadAll();
@@ -141,7 +139,50 @@
 
   function esc(s){ return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
 
-  // --- Videos ---
+  // --- SEARCH USER & GRANT PRO ---
+  window.searchUser = async () => {
+      const emailInput = document.getElementById("searchEmail").value.trim();
+      const resDiv = document.getElementById("searchResult");
+      if(!emailInput) return;
+      resDiv.innerHTML = "Searching...";
+
+      try {
+          const q = query(collection(db, "users"), where("email", "==", emailInput));
+          const snap = await getDocs(q);
+
+          if(snap.empty) {
+              resDiv.innerHTML = `<span style="color:var(--danger)">User မတွေ့ပါ။ ကျောင်းသားသည် App ထဲတွင် Email ဖြင့် အကောင့်ဝင်ထားခြင်း ရှိမရှိ သေချာစစ်ဆေးပါ။</span>`;
+              return;
+          }
+
+          const userData = snap.docs[0].data();
+          const uid = userData.uid;
+
+          resDiv.innerHTML = `
+              <div class="item" style="border-color: var(--accent);">
+                  <div style="font-size: 16px;"><b>Email:</b> ${esc(userData.email)}</div>
+                  <div class="muted" style="margin-top: 5px;">UID: ${esc(uid)}</div>
+                  <div class="row" style="margin-top:15px;">
+                      <button class="btn btnOK" onclick="grantPro('${uid}')">Grant PRO Access</button>
+                      <button class="btn btnD" onclick="revokePro('${uid}')">Revoke Access</button>
+                  </div>
+              </div>
+          `;
+      } catch(e) {
+          resDiv.innerHTML = `<span style="color:var(--danger)">Error: Firestore Rules ကို အသစ်ပြင်ပေးထားခြင်း ရှိမရှိ စစ်ဆေးပါ။</span>`;
+      }
+  };
+
+  window.grantPro = async (uid) => {
+      await setDoc(doc(db, "paidUsers", uid), { active: true, plan: "lifetime", updatedAt: Date.now() }, { merge: true });
+      alert("PRO Access ဖွင့်ပေးလိုက်ပါပြီ! ✅");
+  };
+  
+  window.revokePro = async (uid) => {
+      await setDoc(doc(db, "paidUsers", uid), { active: false, updatedAt: Date.now() }, { merge: true });
+      alert("PRO Access ပိတ်လိုက်ပါပြီ! ❌");
+  };
+
   window.addVideo = async ()=>{
     const title = document.getElementById("vTitle").value.trim();
     const link = document.getElementById("vLink").value.trim();
@@ -172,7 +213,6 @@
     box.innerHTML = html || "No videos found.";
   }
 
-  // --- Posts ---
   window.addPost = async ()=>{
     const title = document.getElementById("pTitle").value.trim();
     if(!title) return alert("Title required");
@@ -181,7 +221,7 @@
     await addDoc(collection(db,"posts"), {
       title, body: document.getElementById("pBody").value.trim(),
       images: imagesRaw ? imagesRaw.split(",").map(x=>x.trim()).filter(Boolean) : [],
-      isPublic: true, createdAt: Date.now() // Changed to Date.now() for universal sorting
+      isPublic: true, createdAt: Date.now() 
     });
     alert("Post Published ✅"); location.reload();
   };
@@ -200,57 +240,10 @@
     box.innerHTML = html || "No posts found.";
   }
 
-  // --- Purchase Requests ---
-  async function loadRequests(){
-    const box = document.getElementById("reqList");
-    const snap = await getDocs(query(collection(db,"purchaseRequests"), orderBy("createdAt","desc")));
-    let html = "";
-    snap.forEach(d=>{
-      const r = d.data();
-      if(r.status !== "pending") return; // Only show pending
-      html += `
-        <div class="item">
-          <div class="item-header">
-            <span>Provider: <b>${esc(r.provider)}</b></span>
-            <span>Phone: <b>${esc(r.phone)}</b></span>
-          </div>
-          <div style="margin: 8px 0; font-family: monospace; font-size: 15px;">TX ID: <b style="color:var(--primary);">${esc(r.txRef)}</b></div>
-          <div class="muted">Email: ${esc(r.email)} | UID: ${esc(r.uid)}</div>
-          <div class="row" style="margin-top:12px;">
-            <button class="btn btnOK" onclick="approve('${r.uid}','${d.id}')">Approve & Grant PRO</button>
-            <button class="btn btnD" onclick="reject('${d.id}')">Reject</button>
-          </div>
-        </div>`;
-    });
-    box.innerHTML = html || "No pending requests.";
-  }
-
-  window.approve = async (uid, reqId)=>{
-    await setDoc(doc(db,"paidUsers", uid), { active:true, plan:"lifetime", updatedAt: Date.now() }, { merge:true });
-    await updateDoc(doc(db,"purchaseRequests", reqId), { status:"approved" });
-    alert("Approved ✅"); loadRequests();
-  };
-
-  window.reject = async (reqId)=>{
-    await updateDoc(doc(db,"purchaseRequests", reqId), { status:"rejected" });
-    alert("Rejected"); loadRequests();
-  };
-
-  // --- Progress ---
-  async function loadProgress(){
-    const box = document.getElementById("progList");
-    const snap = await getDocs(query(collection(db,"progress"), orderBy("updatedAt","desc")));
-    let html = "";
-    snap.forEach(d=>{
-      const p = d.data();
-      html += `<div class="item" style="padding:10px; font-size:12px;">UID: ${esc(p.uid)} | Video: ${esc(p.videoId)} | Done: ${p.completed?"Yes":"No"} | Saved: ${p.saved?"Yes":"No"}</div>`;
-    });
-    box.innerHTML = html || "No activity yet.";
-  }
-
   window.delDoc = async (col, id)=>{ if(confirm("Delete this item?")){ await deleteDoc(doc(db,col,id)); location.reload(); } };
 
-  function loadAll(){ loadVideos(); loadPosts(); loadRequests(); loadProgress(); }
+  function loadAll(){ loadVideos(); loadPosts(); }
 </script>
 </body>
 </html>
+
