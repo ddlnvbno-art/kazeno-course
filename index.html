@@ -6,85 +6,128 @@
     <title>Kazeno Course App</title>
     
     <style>
-                .logo-img {
-            width: 100px; /* လိုဂိုအကျယ် (စိတ်ကြိုက်ပြင်နိုင်သည်) */
-            height: auto;
-            margin-bottom: 15px;
-            border-radius: 50%; /* လိုဂိုကို အဝိုင်းပုံစံဖြစ်စေရန် (မလိုလျှင် ဖျက်နိုင်သည်) */
+        /* ဆွဲဆောင်မှုရှိသော နောက်ခံအရောင် (Liquid Glass ပေါ်လွင်စေရန်) */
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 15px; 
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: #ffffff;
         }
 
-        body { font-family: Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 15px; }
+        /* မှန်သားပြင် (Glassmorphism) Effect အတွက် အခြေခံ CSS */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .logo-img { width: 90px; height: auto; margin-bottom: 10px; border-radius: 50%; }
         
-        /* Login Screen CSS */
-        #login-screen { text-align: center; margin-top: 50px; background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        #login-screen input { padding: 12px; width: 80%; max-width: 300px; margin: 15px 0; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; }
-        #login-screen button { padding: 12px 25px; background-color: #ffb300; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+        /* Login Screen */
+        #login-screen { text-align: center; margin-top: 50px; }
+        #login-screen input { padding: 12px; width: 80%; max-width: 300px; margin: 15px 0; border: none; border-radius: 8px; font-size: 16px; background: rgba(255,255,255,0.9); }
+        #login-screen button { padding: 12px 25px; background-color: #ffb300; color: #333; font-weight: bold; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
         
-        /* Course Content ကို အစတွင် ဖျောက်ထားရန် */
         #course-content { display: none; }
 
-        /* Video Cards CSS */
-        .header { text-align: center; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        h2 { color: #333333; margin: 0; }
-        .video-card { background-color: #ffffff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 15px; }
-        .video-title { font-size: 18px; color: #e60000; margin-bottom: 10px; margin-top: 0; }
-        .iframe-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; background-color: #000; border-radius: 8px; overflow: hidden; }
+        /* Header & Video List */
+        .header { text-align: center; }
+        h2 { margin: 0; font-size: 22px; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        
+        .video-title { font-size: 18px; color: #ffd700; margin-bottom: 10px; margin-top: 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        .iframe-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; background-color: #000; border-radius: 10px; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); }
         .iframe-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .notes { margin-top: 10px; font-size: 14px; color: #555555; line-height: 1.5; }
+        .notes { margin-top: 10px; font-size: 14px; color: #e0e0e0; line-height: 1.5; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
+    <div id="login-screen" class="glass-panel">
         <img src="https://res.cloudinary.com/dhcjrybpm/image/upload/v1772618567/anger-512x512_kjj3f7.png" class="logo-img" alt="Logo">
         <h2>Kazeno သင်တန်း</h2>
-        <p style="color: #666;">ဝင်ကြည့်ရန် လျှို့ဝှက်နံပါတ် ထည့်ပါ</p>
+        <p>ဝင်ကြည့်ရန် လျှို့ဝှက်နံပါတ် ထည့်ပါ</p>
         <input type="password" id="password-input" placeholder="Password ရိုက်ထည့်ပါ">
         <br>
         <button onclick="checkPassword()">ဝင်မည်</button>
-        <p id="error-msg" style="color: red; display: none; margin-top: 15px;">စကားဝှက် မှားယွင်းနေပါသည်၊ ပြန်ကြိုးစားကြည့်ပါ။</p>
+        <p id="error-msg" style="color: #ff4d4d; display: none; margin-top: 15px; font-weight: bold;">စကားဝှက် မှားယွင်းနေပါသည်</p>
     </div>
 
     <div id="course-content">
-        
-        <div class="header">
+        <div class="header glass-panel">
             <img src="https://res.cloudinary.com/dhcjrybpm/image/upload/v1772618567/anger-512x512_kjj3f7.png" class="logo-img" style="width: 60px;" alt="Logo">
-            <h2>Kazeno သင်တန်းမှ ကြိုဆိုပါတယ်</h2>
-            <p style="color: #666; margin-top: 5px;">လေ့လာစရာ သင်ခန်းစာများ</p>
+            <h2>Kazeno သင်တန်း</h2>
+            <p>လေ့လာစရာ သင်ခန်းစာများ</p>
         </div>
 
-        <div class="video-card">
-            <h3 class="video-title">အပိုင်း (၁) - သင်ခန်းစာ မိတ်ဆက်</h3>
-            <div class="iframe-container">
-                <iframe src="https://player.cloudinary.com/embed/?cloud_name=dhcjrybpm&public_id=4_5849104708160981443_hcfnwy" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen frameborder="0"></iframe>
-            </div>
-            <p class="notes">📌 <b>မှတ်စု:</b> ဒီဗီဒီယိုမှာ အခြေခံအချက်တွေကို ရှင်းပြပေးထားပါတယ်။ မရှင်းလင်းတာရှိရင် ပြန်ရစ်ကြည့်နိုင်ပါတယ်။</p>
-        </div>
+        <div id="video-list-container"></div>
+    </div> 
 
-        <div class="video-card">
-            <h3 class="video-title">အပိုင်း (၂) - ခေါင်းစဉ်အသစ် ကိုဒီမှာရေးပါ</h3>
-            <div class="iframe-container">
-                <iframe src="https://player.cloudinary.com/embed/?cloud_name=dhcjrybpm&public_id=4_5831124961447643861_wulwug" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen frameborder="0"></iframe>
-            </div>
-            <p class="notes">📌 <b>မှတ်စု:</b> အပိုင်း (၂) ငါနှင့်ကိုယ်ချစ်ပါတယ် ဒါကစမ်းသပ်မှုတစ်ခုပါ။</p>
-        </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        <div class="video-card">
-            <h3 class="video-title">အပိုင်း (3) - ခေါင်းစဉ်အသစ် ကိုဒီမှာရေးပါ</h3>
-            <div class="iframe-container">
-                <iframe src="https://player.cloudinary.com/embed/?cloud_name=dhcjrybpm&public_id=4_5849296783393426060_qnqjyl" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen frameborder="0"></iframe>
-            </div>
-            <p class="notes">📌 <b>မှတ်စု:</b> အပိုင်း (3) ငါ ဒါကစမ်းသပ်မှုတစ်ခုပါ။</p>
-        </div>
+        // ကိုယ်လူ၏ Firebase Config
+        const firebaseConfig = {
+          apiKey: "AIzaSyDV8UNUW7CVvJy2k5_6OMrRz197c1A7uKU",
+          authDomain: "kazeno-course.firebaseapp.com",
+          projectId: "kazeno-course",
+          storageBucket: "kazeno-course.firebasestorage.app",
+          messagingSenderId: "356111425732",
+          appId: "1:356111425732:web:fd5b3a7429372ec41da991"
+        };
 
-    </div> <script>
-        function checkPassword() {
-            var correctPassword = "123"; 
-            var enteredPassword = document.getElementById("password-input").value;
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-            if (enteredPassword === correctPassword) {
+        // Firebase မှ ဗီဒီယိုများကို ဆွဲထုတ်မည့် Function
+        async function loadVideos() {
+            const container = document.getElementById("video-list-container");
+            container.innerHTML = "<p style='text-align:center;'>ဗီဒီယိုများ ရယူနေပါသည်... စောင့်ပါ ခင်ဗျာ။</p>";
+
+            try {
+                const q = query(collection(db, "videos"), orderBy("timestamp", "asc"));
+                const querySnapshot = await getDocs(q);
+
+                container.innerHTML = ""; // Loading စာသားကို ဖျက်မည်
+                
+                if(querySnapshot.empty) {
+                    container.innerHTML = "<p style='text-align:center;'>လောလောဆယ် ဗီဒီယို မရှိသေးပါ ခင်ဗျာ။</p>";
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const videoHTML = `
+                        <div class="video-card glass-panel">
+                            <h3 class="video-title">${data.title}</h3>
+                            <div class="iframe-container">
+                                <iframe src="${data.link}" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen frameborder="0"></iframe>
+                            </div>
+                            <p class="notes">📌 <b>မှတ်စု:</b> ${data.notes}</p>
+                        </div>
+                    `;
+                    container.innerHTML += videoHTML; // ဗီဒီယိုများကို တစ်ခုပြီးတစ်ခု List အနေဖြင့် ဆက်ထည့်မည်
+                });
+            } catch (e) {
+                console.error("Error:", e);
+                container.innerHTML = "<p style='text-align:center; color:#ff4d4d;'>ချိတ်ဆက်မှု အမှားအယွင်းဖြစ်နေပါသည် ခင်ဗျာ။</p>";
+            }
+        }
+
+        // Login ဝင်သည့် စနစ် (စကားဝှက် - 123)
+        window.checkPassword = function() {
+            var pass = document.getElementById("password-input").value;
+            if (pass === "123") {
                 document.getElementById("login-screen").style.display = "none";
                 document.getElementById("course-content").style.display = "block";
+                loadVideos(); // မှန်ကန်ပါက ဗီဒီယိုများကို စတင် ဆွဲယူမည်
             } else {
                 document.getElementById("error-msg").style.display = "block";
             }
@@ -92,4 +135,3 @@
     </script>
 </body>
 </html>
-
