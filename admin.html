@@ -1,144 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kazeno Admin Panel</title>
-    
-    <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            margin: 0; 
-            padding: 15px; 
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); /* Admin အတွက် သီးသန့် နောက်ခံအရောင် */
-            min-height: 100vh; 
-            color: white; 
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kazeno Admin</title>
 
-        /* Liquid Glass Design (မှန်သားပုံစံ) */
-        .glass-panel { 
-            background: rgba(255, 255, 255, 0.1); 
-            backdrop-filter: blur(10px); 
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 15px; 
-            padding: 25px; 
-            border: 1px solid rgba(255,255,255,0.2); 
-            margin-top: 20px; 
-            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.3); 
-        }
+<style>
+body{
+font-family:Arial;
+background:#0f172a;
+color:white;
+margin:0;
+padding:20px;
+}
 
-        input, textarea { 
-            width: 100%; 
-            padding: 12px; 
-            margin: 10px 0; 
-            border: none; 
-            border-radius: 8px; 
-            font-size: 16px; 
-            background: rgba(255,255,255,0.9); 
-            box-sizing: border-box;
-        }
+.panel{
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+}
 
-        button { 
-            width: 100%; 
-            padding: 12px; 
-            background-color: #ffb300; 
-            color: #333; 
-            font-weight: bold; 
-            border: none; 
-            border-radius: 8px; 
-            font-size: 16px; 
-            cursor: pointer; 
-            margin-top: 10px;
-        }
+input,textarea,select{
+width:100%;
+padding:10px;
+margin-top:8px;
+margin-bottom:10px;
+border-radius:6px;
+border:none;
+}
 
-        #admin-form { display: none; }
-        .success-msg { color: #00e676; display: none; font-weight: bold; margin-top: 10px; text-align: center; }
-    </style>
+button{
+padding:10px 14px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+.btn-main{background:#ffb300;color:black;}
+.btn-del{background:#ff4d4d;color:white;}
+
+.video{
+background:#334155;
+padding:10px;
+border-radius:6px;
+margin-bottom:10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+</style>
+
 </head>
 <body>
-    <h2 style="text-align: center;">Kazeno Admin Panel</h2>
 
-    <div id="login-screen" class="glass-panel">
-        <p>Admin စကားဝှက် ထည့်ပါ</p>
-        <input type="password" id="admin-pass" placeholder="Password...">
-        <button onclick="checkAdmin()">ဝင်မည်</button>
-        <p id="error-msg" style="color: #ff4d4d; display: none;">စကားဝှက် မှားယွင်းနေပါသည်</p>
-    </div>
+<div id="loginBox" class="panel">
+<h2>Admin Login</h2>
 
-    <div id="admin-form" class="glass-panel">
-        <h3 style="margin-top:0; color: #ffd700;">ဗီဒီယိုအသစ် တင်ရန်</h3>
-        <input type="text" id="v-title" placeholder="ခေါင်းစဉ် (ဥပမာ - အပိုင်း (၄) - ...)">
-        <input type="text" id="v-link" placeholder="Cloudinary Embed Link ထည့်ပါ">
-        <textarea id="v-notes" rows="3" placeholder="မှတ်စုများ ရေးရန်..."></textarea>
-        
-        <button id="upload-btn">Upload တင်မည်</button>
-        <p id="success-msg" class="success-msg">✅ အောင်မြင်စွာ တင်ပြီးပါပြီ!</p>
-    </div>
+<input id="email" placeholder="Email">
+<input id="pass" type="password" placeholder="Password">
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+<button class="btn-main" onclick="login()">Login</button>
 
-        // ပုံထဲမှ ကိုယ်လူ၏ Firebase Config အတိအကျ
-        const firebaseConfig = {
-          apiKey: "AIzaSyDV8UNUW7CVvJy2k5_6OMrRz197c1A7uKU",
-          authDomain: "kazeno-course.firebaseapp.com",
-          projectId: "kazeno-course",
-          storageBucket: "kazeno-course.firebasestorage.app",
-          messagingSenderId: "356111425732",
-          appId: "1:356111425732:web:fd5b3a7429372ec41da991"
-        };
+<p id="loginError" style="color:red;display:none;">Login Failed</p>
+</div>
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+<div id="adminPanel" style="display:none">
 
-        // Upload Button ကို နှိပ်လျှင် ဒေတာဘေ့စ်သို့ သိမ်းမည့် စနစ်
-        document.getElementById("upload-btn").addEventListener("click", async () => {
-            const title = document.getElementById("v-title").value;
-            const link = document.getElementById("v-link").value;
-            const notes = document.getElementById("v-notes").value;
-            const btn = document.getElementById("upload-btn");
+<div class="panel">
+<h2>Upload Lesson</h2>
 
-            if(title === "" || link === "") {
-                alert("ခေါင်းစဉ်နှင့် လင့်ခ် ထည့်သွင်းပါ!");
-                return;
-            }
+<input id="category" placeholder="Category">
+<input id="title" placeholder="Title">
 
-            btn.innerText = "တင်နေပါသည်..."; // တင်နေစဉ် စာသားပြောင်းရန်
-            
-            try {
-                // "videos" အမည်ရှိ စာရင်းထဲသို့ သိမ်းဆည်းခြင်း
-                await addDoc(collection(db, "videos"), {
-                    title: title,
-                    link: link,
-                    notes: notes,
-                    timestamp: Date.now() // တင်သည့် အချိန်မှတ်တမ်း
-                });
-                
-                // အောင်မြင်သွားလျှင် ဖောင်ကို ရှင်းလင်းပြီး စာတန်းပြမည်
-                document.getElementById("success-msg").style.display = "block";
-                document.getElementById("v-title").value = "";
-                document.getElementById("v-link").value = "";
-                document.getElementById("v-notes").value = "";
-                btn.innerText = "Upload တင်မည်";
-                
-                setTimeout(() => { document.getElementById("success-msg").style.display = "none"; }, 3000);
-            } catch (e) {
-                alert("Error: " + e.message);
-                btn.innerText = "Upload တင်မည်";
-            }
-        });
+<input id="link" placeholder="Video Embed Link">
 
-        // Admin Login အလုပ်လုပ်စေရန်
-        window.checkAdmin = function() {
-            var pass = document.getElementById("admin-pass").value;
-            if(pass === "admin123") { // Admin စကားဝှက်ကို "admin123" ဟု ပေးထားပါသည်
-                document.getElementById("login-screen").style.display = "none";
-                document.getElementById("admin-form").style.display = "block";
-            } else {
-                document.getElementById("error-msg").style.display = "block";
-            }
-        }
-    </script>
+<textarea id="notes" placeholder="Notes"></textarea>
+
+<select id="isFree">
+<option value="true">FREE Lesson</option>
+<option value="false">PREMIUM Lesson</option>
+</select>
+
+<button class="btn-main" onclick="addVideo()">Upload Video</button>
+</div>
+
+<div class="panel">
+<h2>All Lessons</h2>
+<div id="videoList">Loading...</div>
+</div>
+
+</div>
+
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { 
+getFirestore,
+collection,
+addDoc,
+getDocs,
+deleteDoc,
+doc,
+query,
+orderBy
+} from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+import {
+getAuth,
+signInWithEmailAndPassword,
+onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+
+const firebaseConfig = {
+apiKey: "AIzaSyDV8UNUW7CVvJy2k5_6OMrRz197c1A7uKU",
+authDomain: "kazeno-course.firebaseapp.com",
+projectId: "kazeno-course",
+storageBucket: "kazeno-course.firebasestorage.app",
+messagingSenderId: "356111425732",
+appId: "1:356111425732:web:fd5b3a7429372ec41da991"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+
+/* ADMIN UID */
+
+const ADMIN_UID="4ZPJde1L9uUd6LbRLpQJvw5lYda2";
+
+
+/* LOGIN */
+
+window.login=async()=>{
+
+try{
+
+await signInWithEmailAndPassword(
+auth,
+document.getElementById("email").value,
+document.getElementById("pass").value
+)
+
+}catch{
+
+document.getElementById("loginError").style.display="block"
+
+}
+
+}
+
+
+/* CHECK ADMIN */
+
+onAuthStateChanged(auth,(user)=>{
+
+if(!user)return
+
+if(user.uid!==ADMIN_UID){
+
+alert("Not Admin")
+return
+
+}
+
+document.getElementById("loginBox").style.display="none"
+document.getElementById("adminPanel").style.display="block"
+
+loadVideos()
+
+})
+
+
+/* ADD VIDEO */
+
+window.addVideo=async()=>{
+
+const data={
+category:document.getElementById("category").value,
+title:document.getElementById("title").value,
+link:document.getElementById("link").value,
+notes:document.getElementById("notes").value,
+isFree:document.getElementById("isFree").value==="true",
+timestamp:Date.now()
+}
+
+await addDoc(collection(db,"videos"),data)
+
+alert("Uploaded")
+
+location.reload()
+
+}
+
+
+/* LOAD VIDEOS */
+
+async function loadVideos(){
+
+const q=query(collection(db,"videos"),orderBy("timestamp","desc"))
+
+const snap=await getDocs(q)
+
+let html=""
+
+snap.forEach(docu=>{
+
+const d=docu.data()
+
+html+=`
+<div class="video">
+
+<div>
+<b>${d.title}</b><br>
+<small>${d.category}</small>
+</div>
+
+<button class="btn-del" onclick="deleteVideo('${docu.id}')">Delete</button>
+
+</div>
+`
+
+})
+
+document.getElementById("videoList").innerHTML=html
+
+}
+
+
+/* DELETE */
+
+window.deleteVideo=async(id)=>{
+
+if(!confirm("Delete lesson?"))return
+
+await deleteDoc(doc(db,"videos",id))
+
+location.reload()
+
+}
+
+</script>
+
 </body>
 </html>
