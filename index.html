@@ -3,637 +3,901 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kazeno App</title>
-
+  <title>Kazeno+</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* =========================
-       Liquid Glass Theme System
-       ========================= */
-    :root{
-      /* Background */
-      --bg: #f2f3f6;
-      --bg2: #e9ebf1;
-
-      /* Text */
-      --text: #101114;
-      --subtext: rgba(16,17,20,0.65);
-
-      /* Accent */
+    :root {
+      --bg: #f4f7fb;
+      --surface: rgba(255,255,255,0.92);
+      --surface2: rgba(255,255,255,0.72);
+      --primary: #1e56a0;
       --accent: #ffb300;
 
-      /* Glass surfaces */
-      --glass: rgba(255,255,255,0.55);
-      --glass-strong: rgba(255,255,255,0.72);
-      --stroke: rgba(255,255,255,0.60);
-      --stroke2: rgba(16,17,20,0.10);
+      --text: #0f172a;
+      --muted: rgba(15,23,42,0.60);
+      --border: rgba(15,23,42,0.10);
 
-      /* Shadows */
-      --shadow: 0 10px 30px rgba(0,0,0,0.08);
-      --shadow2: 0 4px 14px rgba(0,0,0,0.08);
-
-      /* Blur */
-      --blur: 18px;
-
-      /* Radius */
+      --shadow: 0 14px 38px rgba(0,0,0,0.10);
+      --shadow2: 0 8px 24px rgba(0,0,0,0.08);
       --r-xl: 22px;
-      --r-lg: 18px;
-      --r-md: 14px;
-
-      /* Safe padding for bottom bar */
-      --bottom-pad: 96px;
+      --blur: 16px;
     }
 
-    [data-theme="dark"]{
-      --bg: #0c0d10;
-      --bg2: #14151a;
+    [data-theme="dark"] {
+      --bg: #0f1014;
+      --surface: rgba(28, 29, 35, 0.86);
+      --surface2: rgba(28, 29, 35, 0.62);
+      --primary: #ffb300;
+      --accent: #ffb300;
 
-      --text: #f4f6fb;
-      --subtext: rgba(244,246,251,0.70);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,0.65);
+      --border: rgba(255,255,255,0.10);
 
-      --accent: #f0a000;
-
-      --glass: rgba(28,29,34,0.55);
-      --glass-strong: rgba(28,29,34,0.72);
-      --stroke: rgba(255,255,255,0.10);
-      --stroke2: rgba(255,255,255,0.08);
-
-      --shadow: 0 10px 30px rgba(0,0,0,0.45);
-      --shadow2: 0 4px 14px rgba(0,0,0,0.35);
-
-      --blur: 20px;
+      --shadow: 0 16px 44px rgba(0,0,0,0.48);
+      --shadow2: 0 8px 24px rgba(0,0,0,0.35);
+      --blur: 18px;
     }
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
-    body{
-      margin:0;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Segoe UI, Roboto, Arial, sans-serif;
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding-bottom: 100px;
       color: var(--text);
       background:
-        radial-gradient(900px 500px at 15% 10%, rgba(255,179,0,0.20), transparent 50%),
-        radial-gradient(800px 500px at 85% 20%, rgba(80,140,255,0.14), transparent 55%),
-        radial-gradient(900px 600px at 50% 100%, rgba(170,90,255,0.10), transparent 60%),
-        linear-gradient(180deg, var(--bg), var(--bg2));
-      padding-bottom: var(--bottom-pad);
-      transition: background .35s ease, color .35s ease;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+        radial-gradient(900px 520px at 15% 10%, rgba(255,179,0,0.16), transparent 55%),
+        radial-gradient(900px 620px at 82% 18%, rgba(30,86,160,0.14), transparent 60%),
+        linear-gradient(180deg, var(--bg), rgba(0,0,0,0));
+      transition: 0.3s;
     }
 
-    /* =========================
-       Liquid Glass Helpers
-       ========================= */
-    .glass{
-      background: var(--glass);
-      border: 1px solid var(--stroke);
-      box-shadow: var(--shadow2);
-      backdrop-filter: blur(var(--blur)) saturate(1.25);
-      -webkit-backdrop-filter: blur(var(--blur)) saturate(1.25);
-    }
-
-    .glass-strong{
-      background: var(--glass-strong);
-      border: 1px solid var(--stroke);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(calc(var(--blur) + 6px)) saturate(1.35);
-      -webkit-backdrop-filter: blur(calc(var(--blur) + 6px)) saturate(1.35);
-    }
-
-    .hairline{
-      border: 1px solid var(--stroke2);
-    }
-
-    /* =========================
-       Header + Marquee
-       ========================= */
-    .header{
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      padding: 14px 16px;
-      margin: 10px 12px 10px;
+    .glass {
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: var(--r-xl);
-      display:flex;
-      align-items:center;
-      gap:12px;
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(var(--blur)) saturate(1.2);
+      -webkit-backdrop-filter: blur(var(--blur)) saturate(1.2);
     }
-    .header img{
-      width: 40px; height: 40px;
-      border-radius: 14px;
-      border: 1px solid var(--stroke);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+    .glass-strong {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(calc(var(--blur) + 6px)) saturate(1.25);
+      -webkit-backdrop-filter: blur(calc(var(--blur) + 6px)) saturate(1.25);
     }
-    .header h2{
-      margin:0;
-      font-size: 18px;
-      letter-spacing: .2px;
-      color: var(--text);
+
+    /* Top bar */
+    .topbar{
+      position: sticky; top: 12px; z-index: 200;
+      margin: 12px 12px 0;
+      padding: 14px 14px;
+      display:flex; align-items:center; justify-content:space-between; gap: 10px;
     }
-    .header .badge{
-      margin-left:auto;
-      font-size:12px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--stroke);
-      background: rgba(255,179,0,0.18);
-      color: var(--text);
-      backdrop-filter: blur(var(--blur));
-      -webkit-backdrop-filter: blur(var(--blur));
+    .brand{ font-weight: 900; letter-spacing: .2px; font-size: 16px; }
+    .brand span{ color: var(--primary); }
+    .chip{
+      padding: 7px 10px; border-radius: 999px;
+      font-size: 12px; font-weight: 900;
+      background: rgba(255,179,0,0.14);
+      border: 1px solid rgba(255,179,0,0.22);
       white-space: nowrap;
     }
-
-    .marquee-bar{
-      margin: 0 12px 12px;
-      padding: 10px 12px;
-      border-radius: var(--r-lg);
-      background: rgba(255,179,0,0.18);
-      border: 1px solid rgba(255,179,0,0.25);
-      color: var(--text);
-      font-weight: 700;
-      font-size: 13px;
-      backdrop-filter: blur(var(--blur));
-      -webkit-backdrop-filter: blur(var(--blur));
-    }
-    marquee{ opacity:.95; }
-
-    /* =========================
-       Pages
-       ========================= */
-    .page{ display:none; padding: 8px 12px 0; animation: fadeIn .28s ease; }
-    .page.active{ display:block; }
-    @keyframes fadeIn{ from{ opacity:0; transform: translateY(4px);} to{ opacity:1; transform: translateY(0);} }
-
-    /* =========================
-       Card (hello)
-       ========================= */
-    .card{
-      border-radius: var(--r-xl);
-      padding: 16px;
-      margin-bottom: 14px;
-      position: relative;
-      overflow: hidden;
-    }
-    .card.glass-strong::before{
-      content:"";
-      position:absolute; inset:-40%;
-      background:
-        radial-gradient(closest-side at 25% 20%, rgba(255,255,255,0.45), transparent 60%),
-        radial-gradient(closest-side at 80% 30%, rgba(255,179,0,0.20), transparent 65%),
-        radial-gradient(closest-side at 60% 80%, rgba(120,160,255,0.18), transparent 65%);
-      transform: rotate(12deg);
-      pointer-events:none;
-      opacity: .65;
-    }
-    .card > *{ position: relative; z-index: 1; }
-
-    .card-title{
-      margin: 0 0 10px;
-      font-size: 17px;
-      color: var(--text);
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-    .title-accent{
-      width: 10px; height: 10px;
-      border-radius: 999px;
-      background: var(--accent);
-      box-shadow: 0 0 0 6px rgba(255,179,0,0.14);
-      display:inline-block;
-    }
-    .card-text{
-      margin:0;
-      font-size: 14px;
-      color: var(--subtext);
-      line-height: 1.6;
+    .avatar{
+      width: 38px; height: 38px; border-radius: 14px;
+      border: 1px solid var(--border);
     }
 
-    /* =========================
-       Buttons (iOS-ish)
-       ========================= */
+    /* Common */
+    .page { display:none; padding: 18px; animation: fade .25s ease; }
+    .page.active { display:block; }
+    @keyframes fade { from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
+
     .btn{
       width: 100%;
       border: none;
       cursor: pointer;
-      padding: 14px 14px;
+      padding: 13px 14px;
       border-radius: 16px;
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: .2px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      text-decoration: none;
-      transition: transform .10s ease, filter .18s ease, opacity .18s ease;
-      user-select: none;
+      font-size: 13px;
+      font-weight: 900;
+      display:inline-flex;
+      justify-content:center;
+      align-items:center;
+      gap: 10px;
+      transition: transform .12s ease;
       -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      text-decoration: none;
     }
-    .btn:active{ transform: scale(.98); }
-
+    .btn:active{ transform: scale(.985); }
     .btn-primary{
-      background: linear-gradient(180deg, rgba(255,179,0,1), rgba(230,149,0,1));
+      background: linear-gradient(180deg, #ffb300, #e69500);
       color: #111;
-      box-shadow: 0 10px 24px rgba(255,179,0,0.25);
+      box-shadow: 0 16px 32px rgba(255,179,0,0.20);
     }
-    .btn-outline{
-      background: rgba(255,255,255,0.08);
+    .btn-soft{
+      background: var(--surface2);
+      border: 1px solid var(--border);
       color: var(--text);
-      border: 1px solid rgba(255,179,0,0.45);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
       backdrop-filter: blur(var(--blur));
       -webkit-backdrop-filter: blur(var(--blur));
     }
-    .btn-download{
-      background: linear-gradient(180deg, rgba(0,230,118,1), rgba(0,200,100,1));
-      color:#07140c;
-      box-shadow: 0 10px 24px rgba(0,230,118,0.20);
-    }
-
-    /* =========================
-       Inputs
-       ========================= */
+    .btn-danger{ background: #ff4d4d; color:#fff; box-shadow: 0 12px 24px rgba(255,77,77,0.18); }
     .input{
       width: 100%;
-      padding: 14px 14px;
+      padding: 13px 14px;
       border-radius: 16px;
-      border: 1px solid var(--stroke2);
-      background: rgba(255,255,255,0.28);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.22);
       color: var(--text);
-      outline: none;
+      outline:none;
+      font-size: 13px;
       backdrop-filter: blur(var(--blur));
       -webkit-backdrop-filter: blur(var(--blur));
-      transition: border .2s ease, background .2s ease;
     }
-    [data-theme="dark"] .input{
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.10);
-    }
-    .input:focus{
-      border-color: rgba(255,179,0,0.55);
-      box-shadow: 0 0 0 6px rgba(255,179,0,0.12);
-    }
+    [data-theme="dark"] .input{ background: rgba(255,255,255,0.07); }
+    .muted{ color: var(--muted); font-size: 12px; line-height: 1.6; }
 
-    /* =========================
-       Video iframe
-       ========================= */
-    .iframe-container{
-      position: relative;
-      width: 100%;
-      padding-bottom: 56.25%;
-      border-radius: 18px;
-      overflow: hidden;
-      background: rgba(0,0,0,0.20);
-      border: 1px solid var(--stroke2);
-      box-shadow: 0 10px 26px rgba(0,0,0,0.10);
-      margin: 12px 0 10px;
+    .section-title{
+      margin: 8px 2px 12px;
+      font-size: 14px;
+      font-weight: 900;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
     }
-    .iframe-container iframe{
-      position:absolute; inset:0;
-      width: 100%; height: 100%;
-      border:0;
-    }
+    .mini-link{ font-size: 12px; font-weight: 900; color: var(--primary); cursor:pointer; }
 
-    /* =========================
-       Category Folder (Glass list item)
-       ========================= */
-    .category-folder{
-      padding: 16px 16px;
+    /* Landing */
+    .center{
+      min-height: calc(100vh - 90px);
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      padding: 24px 16px;
+      text-align:center;
+      gap: 12px;
+    }
+    .logo{
+      width: 84px; height: 84px; border-radius: 22px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow2);
+    }
+    .h1{ margin: 6px 0 0; font-size: 22px; font-weight: 900; }
+    .card{ width:100%; max-width: 540px; padding: 16px; }
+
+    .row{ display:flex; gap: 10px; }
+    .row > *{ flex:1; }
+
+    /* Home */
+    .cat-scroll{ display:flex; overflow-x:auto; gap: 10px; padding-bottom: 6px; margin-bottom: 12px; }
+    .pill{
+      padding: 9px 16px;
+      border-radius: 999px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      font-weight: 900;
+      font-size: 12px;
+      white-space: nowrap;
+      cursor:pointer;
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+    }
+    .pill.active{ background: var(--primary); color:#fff; border-color: var(--primary); }
+
+    .video-card{
+      padding: 14px;
+      margin-bottom: 16px;
       border-radius: var(--r-xl);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .iframe-box{
+      width:100%;
+      padding-bottom: 56.25%;
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #000;
+      border: 1px solid var(--border);
+    }
+    .iframe-box iframe{ position:absolute; width:100%; height:100%; border:none; }
+
+    .meta{
+      display:flex; justify-content:space-between; align-items:flex-start; gap: 10px;
+      margin-top: 12px;
+    }
+    .title{ margin:0; font-size: 14px; font-weight: 900; line-height: 1.25; }
+    .sub{ margin: 6px 0 0; font-size: 11px; color: var(--muted); line-height: 1.6; }
+
+    .actions{ display:flex; gap: 8px; align-items:center; }
+    .bookmark{
+      border:none; background:transparent; cursor:pointer;
+      font-size: 20px; color: var(--muted);
+    }
+    .bookmark.saved{ color: var(--primary); }
+
+    .tag{
+      font-size: 11px;
+      font-weight: 900;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.04);
+      white-space: nowrap;
+    }
+    [data-theme="dark"] .tag{ background: rgba(255,255,255,0.06); }
+
+    .row-actions{ display:flex; gap: 10px; margin-top: 10px; }
+    .chipbtn{
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      cursor:pointer;
+      font-weight: 900;
+      font-size: 12px;
+      color: var(--text);
+      flex:1;
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+    }
+
+    /* Locked overlay */
+    .locked{
+      position:absolute; inset:0;
+      background: rgba(0,0,0,0.55);
+      z-index: 9;
       display:flex;
       align-items:center;
-      gap: 12px;
-      margin-bottom: 12px;
-      cursor:pointer;
-      position: relative;
-      overflow:hidden;
+      justify-content:center;
+      padding: 16px;
+      text-align:center;
+      color:#fff;
     }
-    .category-folder::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(closest-side at 10% 30%, rgba(255,255,255,0.25), transparent 60%),
-        radial-gradient(closest-side at 90% 20%, rgba(255,179,0,0.16), transparent 65%);
-      opacity:.8;
-      pointer-events:none;
-    }
-    .category-folder > *{ position: relative; z-index: 1; }
-    .folder-icon{
-      width: 44px; height: 44px;
-      border-radius: 16px;
-      display:flex; align-items:center; justify-content:center;
-      background: rgba(255,255,255,0.20);
-      border: 1px solid var(--stroke);
+    .locked .box{
+      width:100%;
+      max-width: 380px;
+      border-radius: 18px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
       backdrop-filter: blur(var(--blur));
       -webkit-backdrop-filter: blur(var(--blur));
-      font-size: 22px;
     }
-    .folder-title{
-      margin:0;
-      font-size: 16px;
+    .locked .big{ font-size: 18px; font-weight: 900; }
+    .locked .small{ font-size: 12px; opacity:.92; margin-top:6px; line-height: 1.5; }
+
+    /* Comments */
+    .comment-toggle{
+      margin-top: 10px;
+      width:100%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
       font-weight: 900;
+      font-size: 12px;
+      cursor:pointer;
       color: var(--text);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+    }
+    .comment-section{
+      display:none;
+      margin-top: 12px;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+    }
+    .comment-list{
+      max-height: 220px;
+      overflow:auto;
+      font-size: 12px;
+    }
+    .comment-item{
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+    .comment-item b{ color: var(--primary); }
+    .comment-row{
+      display:flex; gap: 10px; margin-top: 10px;
+    }
+    .c-input{
+      flex:1;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      outline:none;
+      color: var(--text);
+      font-size: 13px;
+    }
+    .c-send{
+      padding: 0 14px;
+      border-radius: 14px;
+      border:none;
+      background: var(--primary);
+      color:#fff;
+      font-weight: 900;
+      cursor:pointer;
     }
 
-    .back-btn{
-      background: transparent;
-      border: 1px solid var(--stroke2);
+    /* Search */
+    .search{
+      width:100%;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      outline:none;
       color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    /* Bottom nav */
+    .nav{
+      position: fixed;
+      bottom: 16px; left: 16px; right: 16px;
+      padding: 12px;
+      border-radius: 30px;
+      display:flex;
+      justify-content:space-around;
+      gap: 10px;
+      z-index: 999;
+    }
+    .navbtn{
+      border:none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 22px;
+      cursor:pointer;
+      padding: 10px 12px;
+      border-radius: 18px;
+      font-weight: 900;
+    }
+    .navbtn.active{
+      color: var(--primary);
+      background: rgba(255,179,0,0.14);
+      border: 1px solid rgba(255,179,0,0.18);
+      transform: translateY(-1px);
+    }
+    .navcenter{
+      width:54px; height:54px;
+      background: var(--primary);
+      color:#fff;
+      border-radius: 50%;
+      margin-top: -28px;
+      box-shadow: 0 10px 24px rgba(30,86,160,0.25);
+    }
+
+    /* Toast */
+    .toast{
+      position: fixed;
+      left:50%; transform: translateX(-50%);
+      bottom: 92px;
+      background: rgba(0,0,0,0.78);
+      border: 1px solid rgba(255,255,255,0.14);
+      color:#fff;
       padding: 10px 12px;
       border-radius: 999px;
       font-weight: 900;
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      cursor:pointer;
-      backdrop-filter: blur(var(--blur));
-      -webkit-backdrop-filter: blur(var(--blur));
-      margin-bottom: 14px;
+      font-size: 12px;
+      opacity: 0;
+      pointer-events:none;
+      transition: opacity .2s ease, transform .2s ease;
+      z-index: 2000;
     }
-    .back-btn:active{ transform: scale(.98); }
-
-    /* =========================
-       Bottom Nav (Glass Tab Bar)
-       ========================= */
-    .bottom-nav{
-      position: fixed;
-      left: 12px;
-      right: 12px;
-      bottom: 12px;
-      z-index: 1000;
-      padding: 10px 10px;
-      border-radius: 26px;
-      display:flex;
-      justify-content: space-around;
-      align-items: center;
-      gap: 10px;
-    }
-    .nav-item{
-      flex:1;
-      background: transparent;
-      border: none;
-      color: var(--subtext);
-      padding: 10px 10px;
-      border-radius: 18px;
-      display:flex;
-      flex-direction: column;
-      align-items:center;
-      gap: 4px;
-      cursor:pointer;
-      transition: transform .15s ease, background .2s ease, color .2s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .nav-item .nav-icon{ font-size: 20px; }
-    .nav-item span:last-child{ font-size: 11px; font-weight: 800; letter-spacing: .2px; }
-
-    .nav-item.active{
-      color: var(--text);
-      background: rgba(255,179,0,0.18);
-      border: 1px solid rgba(255,179,0,0.22);
-      transform: translateY(-1px);
-    }
-
-    /* Small helpers */
-    .center{ text-align:center; }
-    .muted{ color: var(--subtext); }
-
+    .toast.show{ opacity: 1; transform: translateX(-50%) translateY(-4px); }
   </style>
 </head>
 
 <body>
-  <!-- Header -->
-  <div class="header glass-strong">
-    <img src="https://res.cloudinary.com/dhcjrybpm/image/upload/v1772618567/anger-512x512_kjj3f7.png" alt="Logo" />
-    <h2>Kazeno App</h2>
-    <div class="badge">Liquid Glass</div>
-  </div>
+  <div id="toast" class="toast">Done</div>
 
-  <!-- Marquee -->
-  <div class="marquee-bar glass">
-    <marquee behavior="scroll" direction="left">
-      🔥 ကြိုဆိုပါတယ် ညီအစ်ကိုတို့... သတင်းအချက်အလက်အသစ်များကို ဤနေရာတွင် ဖတ်ရှုနိုင်ပါပြီ ခင်ဗျာ။
-    </marquee>
-  </div>
-
-  <!-- HOME -->
-  <div id="page-home" class="page active">
-    <div class="card glass-strong">
-      <h3 class="card-title"><span class="title-accent"></span>📌 App အသစ်ကို မိတ်ဆက်ခြင်း</h3>
-      <p class="card-text">
-        ညီအစ်ကိုတို့အတွက် ပိုမိုကောင်းမွန်တဲ့ အတွေ့အကြုံရစေဖို့ UI အသစ်နဲ့ App ကို ပြောင်းလဲထားပါတယ်။
-      </p>
-      <button class="btn btn-primary" style="margin-top: 12px;">ဆက်ဖတ်ရန်</button>
-    </div>
-  </div>
-
-  <!-- VIDEOS -->
-  <div id="page-videos" class="page">
-
-    <div id="login-section" class="card glass-strong center" style="margin-top: 8px;">
-      <h3 class="card-title" style="justify-content:center;"><span class="title-accent"></span>သင်ခန်းစာများ ကြည့်ရန်</h3>
-
-      <input
-        type="password"
-        id="app-password"
-        placeholder="စကားဝှက် ရိုက်ထည့်ပါ"
-        class="input"
-        style="max-width: 420px; margin: 8px auto 12px;"
-      />
-
-      <button class="btn btn-primary" onclick="unlockVideos()" style="max-width: 420px; margin: 0 auto;">
-        ဝင်မည်
-      </button>
-
-      <p id="error-text" style="color:#ff4d4f; display:none; margin-top:12px; font-weight:800;">
-        စကားဝှက် မှားနေပါသည်
-      </p>
-    </div>
-
-    <div id="categories-section" style="display:none;">
-      <h3 style="margin: 4px 4px 12px; color: var(--text); font-size: 16px; font-weight: 900;">
-        📚 လေ့လာရန် အပိုင်းများ
-      </h3>
-      <div id="category-list-container"></div>
-    </div>
-
-    <div id="video-content-section" style="display:none;">
-      <button class="back-btn" onclick="backToCategories()">⬅️ အနောက်သို့ ပြန်သွားမည်</button>
-      <h3 id="current-category-title" style="margin: 0 0 12px; color: var(--text); font-size: 16px; font-weight: 1000;"></h3>
-      <div id="video-list-container"></div>
-    </div>
-
-  </div>
-
-  <!-- SETTINGS -->
-  <div id="page-settings" class="page">
-    <div class="card glass-strong">
-      <h3 class="card-title"><span class="title-accent"></span>အပြင်အဆင်များ</h3>
-      <button class="btn btn-outline" onclick="toggleDarkMode()" id="theme-btn">
-        🌙 Dark Mode သို့ ပြောင်းရန်
-      </button>
+  <!-- LANDING -->
+  <div id="landing" class="center">
+    <img class="logo" src="https://res.cloudinary.com/dhcjrybpm/image/upload/v1772618567/anger-512x512_kjj3f7.png" alt="logo">
+    <div class="h1">Kazeno Workspace</div>
+    <div class="muted">
+      Free preview ကို အရင်ကြည့်နိုင်ပါတယ်။ Premium lessons ကိုကြည့်ရန် Login + Pro Access လိုအပ်ပါတယ်။
     </div>
 
     <div class="card glass-strong">
-      <h3 class="card-title"><span class="title-accent"></span>Downloads & Links</h3>
-      <a href="#" class="btn btn-primary">📲 Android App ဒေါင်းလုဒ်ဆွဲရန်</a>
+      <div class="section-title" style="margin-top:0;">
+        <span>🔑 Login / Sign up</span>
+        <span id="proBadge" class="chip" style="display:none;">PRO</span>
+      </div>
+
+      <input class="input" id="email" type="email" placeholder="Email" autocomplete="email">
+      <div style="height:10px;"></div>
+      <input class="input" id="password" type="password" placeholder="Password" autocomplete="current-password">
+      <div style="height:12px;"></div>
+
+      <div class="row">
+        <button class="btn btn-primary" onclick="login()">Log In</button>
+        <button class="btn btn-soft" onclick="signup()">Sign Up</button>
+      </div>
+
+      <div style="height:12px;"></div>
+      <button class="btn btn-soft" onclick="openPreview()">👀 View Free Preview</button>
+
+      <div class="muted" style="margin-top:12px;">
+        Pro ဝယ်ပြီးသားဆိုရင် Login ဝင်တာနဲ့ Premium အလိုအလျောက် Unlock ဖြစ်ပါမယ်။
+      </div>
     </div>
   </div>
 
-  <!-- Bottom Nav -->
-  <nav class="bottom-nav glass-strong">
-    <button class="nav-item active" onclick="changeTab('page-home', this)">
-      <span class="nav-icon">🏠</span><span>Home</span>
-    </button>
-    <button class="nav-item" onclick="changeTab('page-videos', this)">
-      <span class="nav-icon">▶️</span><span>Videos</span>
-    </button>
-    <button class="nav-item" onclick="changeTab('page-settings', this)">
-      <span class="nav-icon">⚙️</span><span>Settings</span>
-    </button>
-  </nav>
+  <!-- APP -->
+  <div id="app" style="display:none;">
+    <div class="topbar glass-strong">
+      <div class="brand">Kazeno<span>+</span></div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div id="statusChip" class="chip">FREE</div>
+        <img class="avatar" src="https://res.cloudinary.com/dhcjrybpm/image/upload/v1772618567/anger-512x512_kjj3f7.png" alt="avatar">
+      </div>
+    </div>
 
-  <!-- Firebase / Firestore -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDV8UNUW7CVvJy2k5_6OMrRz197c1A7uKU",
-      authDomain: "kazeno-course.firebaseapp.com",
-      projectId: "kazeno-course",
-      storageBucket: "kazeno-course.firebasestorage.app",
-      messagingSenderId: "356111425732",
-      appId: "1:356111425732:web:fd5b3a7429372ec41da991"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    let allVideosData = [];
-
-    window.fetchFirebaseVideos = async function() {
-      const catContainer = document.getElementById("category-list-container");
-      catContainer.innerHTML = `
-        <div class="card glass center">
-          <p class="muted" style="margin:0; font-weight:800;">အချက်အလက်များ ရယူနေပါသည် ခင်ဗျာ...</p>
+    <!-- HOME -->
+    <div id="page-home" class="page active">
+      <div id="continueCard" class="glass video-card" style="display:none;">
+        <div class="section-title" style="margin:0 0 10px;">
+          <span>▶️ Continue Learning</span>
+          <span class="mini-link" onclick="clearContinue()">Clear</span>
         </div>
-      `;
+        <div id="continueBody"></div>
+      </div>
 
-      try {
-        const q = query(collection(db, "videos"), orderBy("timestamp", "asc"));
-        const querySnapshot = await getDocs(q);
+      <div id="catList" class="cat-scroll"></div>
+      <div id="feed"></div>
+    </div>
 
-        allVideosData = [];
-        querySnapshot.forEach((doc) => allVideosData.push(doc.data()));
+    <!-- SAVED -->
+    <div id="page-saved" class="page">
+      <div class="section-title"><span>🔖 Saved Lessons</span></div>
+      <div id="savedFeed"></div>
+    </div>
 
-        renderCategories();
-      } catch (error) {
-        catContainer.innerHTML = `
-          <div class="card glass center">
-            <p style="color:#ff4d4f; margin:0; font-weight:900;">ချိတ်ဆက်မှု အမှားအယွင်း ဖြစ်နေပါသည်။</p>
-          </div>
-        `;
-      }
-    };
+    <!-- SEARCH -->
+    <div id="page-search" class="page">
+      <div class="section-title"><span>🔍 Search Lessons</span></div>
+      <input id="searchInput" class="search" placeholder="Search by title..." oninput="handleSearch()">
+      <div id="searchResults"></div>
+    </div>
 
-    window.renderCategories = function() {
-      const catContainer = document.getElementById("category-list-container");
-      catContainer.innerHTML = "";
+    <!-- SETTINGS -->
+    <div id="page-settings" class="page">
+      <div class="glass video-card">
+        <div class="section-title" style="margin-top:0;">
+          <span>⚙️ Settings</span>
+          <span id="uidMini" class="tag" style="max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">UID</span>
+        </div>
 
-      if (allVideosData.length === 0) {
-        catContainer.innerHTML = `
-          <div class="card glass center">
-            <p class="muted" style="margin:0; font-weight:800;">ဗီဒီယို မရှိသေးပါ ခင်ဗျာ။</p>
-          </div>
-        `;
-        return;
-      }
+        <button class="btn btn-soft" onclick="toggleTheme()">🌙 Toggle Dark Mode</button>
+        <div style="height:10px;"></div>
 
-      const categories = [...new Set(allVideosData.map(v => v.category || "အထွေထွေ သင်ခန်းစာများ"))];
+        <button id="upgradeBtn" class="btn btn-primary" onclick="goUpgrade()">🚀 Upgrade to PRO</button>
 
-      categories.forEach(cat => {
-        const el = document.createElement("div");
-        el.className = "category-folder glass";
-        el.onclick = () => showVideosByCategory(cat);
-        el.innerHTML = `
-          <span class="folder-icon">📁</span>
-          <h4 class="folder-title">${cat}</h4>
-        `;
-        catContainer.appendChild(el);
+        <div style="height:14px;"></div>
+        <div class="muted">
+          Premium access ကို server-side rules နဲ့ပိတ်ထားပါတယ်။ Pro ဖြစ်/မဖြစ်ကို <b>paidUsers/{uid}.active</b> နဲ့စစ်ပါတယ်။
+        </div>
+
+        <div style="height:14px;"></div>
+        <button class="btn btn-danger" onclick="logout()">Log Out</button>
+
+        <div class="muted" style="margin-top:12px;">Version 3.0 • © 2026 Kazeno</div>
+      </div>
+    </div>
+
+    <div class="nav glass-strong">
+      <button class="navbtn active" onclick="showPage('page-home', this)">🏠</button>
+      <button class="navbtn" onclick="showPage('page-saved', this); loadSaved();">🔖</button>
+      <button class="navbtn navcenter" onclick="showPage('page-search', this)">🔍</button>
+      <button class="navbtn" onclick="toast('Coming soon ✨')">🔔</button>
+      <button class="navbtn" onclick="showPage('page-settings', this)">⚙️</button>
+    </div>
+  </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import {
+    getFirestore, collection, getDocs, addDoc, query, orderBy, where,
+    onSnapshot, serverTimestamp, doc, getDoc
+  } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+  import {
+    getAuth, onAuthStateChanged,
+    signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut
+  } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDV8UNUW7CVvJy2k5_6OMrRz197c1A7uKU",
+    authDomain: "kazeno-course.firebaseapp.com",
+    projectId: "kazeno-course",
+    storageBucket: "kazeno-course.firebasestorage.app",
+    messagingSenderId: "356111425732",
+    appId: "1:356111425732:web:fd5b3a7429372ec41da991"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  let allVideos = [];
+  let isPro = false;
+  let currentCategory = "All";
+
+  // Theme persistence
+  const savedTheme = localStorage.getItem("theme") || "light";
+  if(savedTheme === "dark") document.body.setAttribute("data-theme","dark");
+
+  // Toast
+  window.toast = (msg) => {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(()=>t.classList.remove("show"), 1400);
+  };
+
+  // Auth actions
+  window.login = async () => {
+    try{
+      const email = document.getElementById("email").value.trim();
+      const pass = document.getElementById("password").value;
+      await signInWithEmailAndPassword(auth, email, pass);
+      toast("Logged in ✅");
+    }catch(e){
+      toast(e?.message || "Login failed");
+    }
+  };
+
+  window.signup = async () => {
+    try{
+      const email = document.getElementById("email").value.trim();
+      const pass = document.getElementById("password").value;
+      await createUserWithEmailAndPassword(auth, email, pass);
+      toast("Account created ✅");
+    }catch(e){
+      toast(e?.message || "Signup failed");
+    }
+  };
+
+  window.logout = async () => {
+    await signOut(auth);
+    toast("Logged out");
+  };
+
+  // Pro status
+  async function refreshPro(){
+    const user = auth.currentUser;
+    isPro = false;
+    if(!user) return;
+    try{
+      const snap = await getDoc(doc(db,"paidUsers", user.uid));
+      isPro = snap.exists() && snap.data().active === true;
+    }catch{
+      isPro = false;
+    }
+  }
+
+  function updateTopUI(){
+    const chip = document.getElementById("statusChip");
+    const badge = document.getElementById("proBadge");
+    const upgradeBtn = document.getElementById("upgradeBtn");
+    const uidMini = document.getElementById("uidMini");
+
+    const user = auth.currentUser;
+    uidMini.textContent = user ? user.uid : "UID";
+
+    if(isPro){
+      chip.textContent = "PRO";
+      badge.style.display = "inline-flex";
+      upgradeBtn.textContent = "✅ You are PRO";
+      upgradeBtn.classList.remove("btn-primary");
+      upgradeBtn.classList.add("btn-soft");
+    }else{
+      chip.textContent = "FREE";
+      badge.style.display = "none";
+      upgradeBtn.textContent = "🚀 Upgrade to PRO";
+      upgradeBtn.classList.remove("btn-soft");
+      upgradeBtn.classList.add("btn-primary");
+    }
+  }
+
+  // Navigation
+  window.showPage = (id, btn) => {
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    document.querySelectorAll(".navbtn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+  };
+
+  // Theme
+  window.toggleTheme = () => {
+    const isDark = document.body.getAttribute("data-theme")==="dark";
+    if(isDark) document.body.removeAttribute("data-theme");
+    else document.body.setAttribute("data-theme","dark");
+    localStorage.setItem("theme", isDark ? "light" : "dark");
+    toast("Theme updated");
+  };
+
+  // Upgrade link (replace)
+  window.goUpgrade = () => {
+    window.open("https://t.me/", "_blank"); // put your contact/checkout link
+  };
+
+  // Continue
+  function renderContinue(){
+    const raw = localStorage.getItem("continue_video");
+    const card = document.getElementById("continueCard");
+    const body = document.getElementById("continueBody");
+    if(!raw){ card.style.display="none"; return; }
+    const c = JSON.parse(raw);
+    card.style.display="block";
+    body.innerHTML = `
+      <div style="display:flex; justify-content:space-between; gap:10px; align-items:center;">
+        <div>
+          <div style="font-weight:900; font-size:13px;">${escapeHtml(c.title)}</div>
+          <div class="muted" style="margin-top:4px;">Category: ${escapeHtml(c.category)}</div>
+        </div>
+        <button class="btn btn-primary" style="width:auto; padding:10px 14px; border-radius:14px;" onclick="jumpTo('${c.id}')">Resume</button>
+      </div>
+    `;
+  }
+
+  window.clearContinue = () => {
+    localStorage.removeItem("continue_video");
+    renderContinue();
+    toast("Cleared");
+  };
+
+  window.jumpTo = (id) => {
+    showPage("page-home", document.querySelectorAll(".navbtn")[0]);
+    setTimeout(()=>{
+      const el = document.getElementById("video-"+id);
+      if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
+    }, 60);
+  };
+
+  // Saved
+  function getSaved(){
+    return JSON.parse(localStorage.getItem("saved_vids")||"[]");
+  }
+  window.toggleSave = (id, btn) => {
+    let saved = getSaved();
+    if(saved.includes(id)){
+      saved = saved.filter(x=>x!==id);
+      btn.classList.remove("saved");
+      toast("Unsaved");
+    }else{
+      saved.push(id);
+      btn.classList.add("saved");
+      toast("Saved ✅");
+    }
+    localStorage.setItem("saved_vids", JSON.stringify(saved));
+  };
+
+  window.loadSaved = () => {
+    const feed = document.getElementById("savedFeed");
+    const ids = getSaved();
+    feed.innerHTML = ids.length ? "" : `<div class="muted" style="padding:10px;">No saved lessons.</div>`;
+    allVideos.filter(v=>ids.includes(v.id)).forEach(v=> feed.innerHTML += cardHTML(v));
+  };
+
+  // Completed
+  function isDone(id){
+    const done = JSON.parse(localStorage.getItem("completed_vids")||"[]");
+    return done.includes(id);
+  }
+  window.toggleDone = (id) => {
+    let done = JSON.parse(localStorage.getItem("completed_vids")||"[]");
+    if(done.includes(id)) done = done.filter(x=>x!==id);
+    else done.push(id);
+    localStorage.setItem("completed_vids", JSON.stringify(done));
+    renderHome(currentCategory);
+  };
+
+  window.startLesson = (id) => {
+    const v = allVideos.find(x=>x.id===id);
+    if(!v) return;
+    if(!v.isFree && !isPro){ toast("PRO required 🔒"); return; }
+    localStorage.setItem("continue_video", JSON.stringify({id:v.id, title:v.title, category:v.category||"General"}));
+    renderContinue();
+    toast("Saved to Continue ✅");
+  };
+
+  // Search
+  window.handleSearch = () => {
+    const q = document.getElementById("searchInput").value.toLowerCase();
+    const out = document.getElementById("searchResults");
+    out.innerHTML = "";
+    allVideos.filter(v => (v.title||"").toLowerCase().includes(q)).forEach(v => out.innerHTML += cardHTML(v));
+  };
+
+  // Preview
+  window.openPreview = async () => {
+    document.getElementById("landing").style.display="none";
+    document.getElementById("app").style.display="block";
+    await fetchVideos();
+    toast("Preview mode");
+  };
+
+  // Fetch videos (RULE-SAFE query)
+  async function fetchVideos(){
+    const feed = document.getElementById("feed");
+    feed.innerHTML = `<div class="muted" style="padding:10px;">Loading lessons...</div>`;
+
+    await refreshPro();
+    updateTopUI();
+    renderContinue();
+
+    try{
+      const ref = collection(db,"videos");
+      const q = isPro
+        ? query(ref, orderBy("timestamp","desc"))
+        : query(ref, where("isFree","==",true), orderBy("timestamp","desc"));
+
+      const snap = await getDocs(q);
+      allVideos = [];
+      snap.forEach(d=>{
+        const data = d.data();
+        allVideos.push({ id:d.id, ...data });
       });
-    };
+      renderHome("All");
+    }catch(e){
+      feed.innerHTML = `<div class="muted" style="padding:10px;">Load failed. (Check rules / indexes)</div>`;
+    }
+  }
 
-    window.showVideosByCategory = function(selectedCategory) {
-      document.getElementById("categories-section").style.display = "none";
-      document.getElementById("video-content-section").style.display = "block";
-      document.getElementById("current-category-title").innerText = `📂 ${selectedCategory}`;
+  // Categories
+  function renderCats(){
+    const cats = [...new Set(allVideos.map(v=>v.category||"General"))];
+    const c = document.getElementById("catList");
+    c.innerHTML = `<div class="pill ${currentCategory==="All"?"active":""}" onclick="filterCat('All', this)">All</div>`;
+    cats.forEach(x=>{
+      c.innerHTML += `<div class="pill ${currentCategory===x?"active":""}" onclick="filterCat('${escapeJs(x)}', this)">${escapeHtml(x)}</div>`;
+    });
+  }
 
-      const vidContainer = document.getElementById("video-list-container");
-      vidContainer.innerHTML = "";
+  window.filterCat = (cat, el) => {
+    document.querySelectorAll(".pill").forEach(p=>p.classList.remove("active"));
+    el.classList.add("active");
+    renderHome(cat);
+  };
 
-      const filteredVideos = allVideosData.filter(v => (v.category || "အထွေထွေ သင်ခန်းစာများ") === selectedCategory);
+  function renderHome(cat="All"){
+    currentCategory = cat;
+    renderCats();
+    const feed = document.getElementById("feed");
+    feed.innerHTML = "";
+    const arr = cat==="All" ? allVideos : allVideos.filter(v => (v.category||"General")===cat);
+    if(!arr.length){
+      feed.innerHTML = `<div class="muted" style="padding:10px;">No lessons.</div>`;
+      return;
+    }
+    arr.forEach(v => feed.innerHTML += cardHTML(v));
+  }
 
-      filteredVideos.forEach(data => {
-        let downloadBtnHTML = "";
-        if (data.downloadLink && data.downloadLink.trim() !== "") {
-          downloadBtnHTML = `<a href="${data.downloadLink}" target="_blank" class="btn btn-download">📲 APK Download ဆွဲရန်</a>`;
-        }
+  // Card HTML
+  function cardHTML(v){
+    const saved = getSaved().includes(v.id);
+    const done = isDone(v.id);
+    const locked = (!v.isFree && !isPro);
 
-        const card = document.createElement("div");
-        card.className = "card glass-strong";
+    const overlay = locked ? `
+      <div class="locked">
+        <div class="box">
+          <div class="big">🔒 Premium Lesson</div>
+          <div class="small">ဒီသင်ခန်းစာကိုကြည့်ရန် PRO လိုအပ်ပါတယ်။</div>
+          <div style="height:10px;"></div>
+          <button class="btn btn-primary" style="border-radius:14px;" onclick="goUpgrade()">Upgrade to PRO</button>
+        </div>
+      </div>` : "";
 
-        card.innerHTML = `
-          <h3 class="card-title"><span class="title-accent"></span>${data.title}</h3>
-          <div class="iframe-container">
-            <iframe src="${data.link}" allowfullscreen></iframe>
+    const blur = locked ? `style="filter: blur(10px); transform: scale(1.02);"` : "";
+    const blurText = locked ? `style="filter: blur(6px);"` : "";
+
+    return `
+      <div id="video-${v.id}" class="glass video-card">
+        ${overlay}
+
+        <div class="iframe-box" ${blur}>
+          <iframe src="${v.link}" allowfullscreen></iframe>
+        </div>
+
+        <div class="meta" ${blurText}>
+          <div style="min-width:0;">
+            <h3 class="title">${escapeHtml(v.title || "Untitled")}</h3>
+            <div class="sub">${escapeHtml(v.category || "General")} • ${v.isFree ? "FREE" : "PREMIUM"}</div>
           </div>
-          <p class="card-text">📌 <b style="color: var(--text);">မှတ်စု:</b> ${data.notes}</p>
-          ${downloadBtnHTML}
-        `;
+          <div class="actions">
+            <span class="tag">${done ? "✅ Completed" : "⏳ In progress"}</span>
+            <button class="bookmark ${saved?"saved":""}" onclick="toggleSave('${v.id}', this)">🔖</button>
+          </div>
+        </div>
 
-        vidContainer.appendChild(card);
+        <div class="sub" ${blurText}>${escapeHtml(v.notes || "")}</div>
+
+        <div class="row-actions" ${blurText}>
+          <button class="chipbtn" onclick="startLesson('${v.id}')">▶️ Start</button>
+          <button class="chipbtn" onclick="toggleDone('${v.id}')">${done ? "↩️ Undo" : "✅ Complete"}</button>
+        </div>
+
+        ${locked ? "" : `
+          <button class="comment-toggle" onclick="toggleComments('${v.id}')">💬 Comments</button>
+          <div class="comment-section" id="section-${v.id}">
+            <div class="comment-list" id="list-${v.id}"><span class="muted">Loading...</span></div>
+            <div class="comment-row">
+              <input class="c-input" id="input-${v.id}" placeholder="Ask a question...">
+              <button class="c-send" onclick="sendComment('${v.id}')">➤</button>
+            </div>
+          </div>
+        `}
+      </div>
+    `;
+  }
+
+  // Comments (login required)
+  window.toggleComments = async (vidId) => {
+    const sec = document.getElementById("section-"+vidId);
+    sec.style.display = sec.style.display==="block" ? "none" : "block";
+    if(sec.style.display!=="block") return;
+
+    const q = query(collection(db,"comments"), where("videoId","==",vidId), orderBy("createdAt","asc"));
+    onSnapshot(q, (snap)=>{
+      const list = document.getElementById("list-"+vidId);
+      list.innerHTML = snap.empty ? `<div class="muted">No questions yet.</div>` : "";
+      snap.forEach(d=>{
+        const c = d.data();
+        list.innerHTML += `<div class="comment-item"><b>Student:</b> ${escapeHtml(c.text||"")}</div>`;
       });
-    };
-  </script>
+    });
+  };
 
-  <!-- App JS -->
-  <script>
-    function changeTab(pageId, element) {
-      document.querySelectorAll(".page").forEach(page => page.classList.remove("active"));
-      document.getElementById(pageId).classList.add("active");
+  window.sendComment = async (vidId) => {
+    const user = auth.currentUser;
+    if(!user){ toast("Please login to comment"); return; }
+    const input = document.getElementById("input-"+vidId);
+    const text = (input.value||"").trim();
+    if(!text) return;
 
-      document.querySelectorAll(".nav-item").forEach(nav => nav.classList.remove("active"));
-      element.classList.add("active");
+    try{
+      await addDoc(collection(db,"comments"), {
+        videoId: vidId,
+        text,
+        userId: user.uid,
+        createdAt: serverTimestamp()
+      });
+      input.value="";
+      toast("Sent ✅");
+    }catch{
+      toast("Comment failed");
     }
+  };
 
-    function toggleDarkMode() {
-      const body = document.body;
-      const btn = document.getElementById("theme-btn");
-      if (body.getAttribute("data-theme") === "dark") {
-        body.removeAttribute("data-theme");
-        btn.innerHTML = "🌙 Dark Mode သို့ ပြောင်းရန်";
-      } else {
-        body.setAttribute("data-theme", "dark");
-        btn.innerHTML = "☀️ Light Mode သို့ ပြောင်းရန်";
-      }
+  // Auth state
+  onAuthStateChanged(auth, async (user)=>{
+    if(user){
+      document.getElementById("landing").style.display="none";
+      document.getElementById("app").style.display="block";
+      await fetchVideos();
+    }else{
+      document.getElementById("app").style.display="none";
+      document.getElementById("landing").style.display="flex";
     }
+  });
 
-    function unlockVideos() {
-      const pass = document.getElementById("app-password").value;
-      if (pass === "123") {
-        document.getElementById("login-section").style.display = "none";
-        document.getElementById("categories-section").style.display = "block";
-        if (window.fetchFirebaseVideos) window.fetchFirebaseVideos();
-      } else {
-        document.getElementById("error-text").style.display = "block";
-      }
-    }
+  function escapeHtml(str){
+    return String(str ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+  function escapeJs(str){
+    return String(str ?? "").replaceAll("\\","\\\\").replaceAll("'","\\'");
+  }
+</script>
 
-    function backToCategories() {
-      document.getElementById("video-content-section").style.display = "none";
-      document.getElementById("categories-section").style.display = "block";
-    }
-  </script>
 </body>
 </html>
