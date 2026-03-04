@@ -15,6 +15,7 @@
     --primary: #8a2be2; 
     --accent: #4facfe; 
     --danger: #ff4d4d; 
+    --ok: #00e676;
     --r: 20px;
   }
   
@@ -106,24 +107,36 @@
   .play-btn {position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:50px; height:50px; background:rgba(255,255,255,0.2); backdrop-filter:blur(5px); border: 2px solid #fff; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size: 20px;}
   .vmeta{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-top:16px;}
   
-  /* Lock UI (Restored Premium Look) */
+  /* Lock UI */
   .lock{position:absolute; inset:0; background:rgba(5, 5, 16, 0.5); display:flex; align-items:center; justify-content:center; padding:20px; z-index:5; border-radius: 14px;}
   .lockBox{width:100%; max-width: 280px; padding:20px; text-align:center; background: rgba(10, 15, 30, 0.7); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
   .lockBox .icon {font-size: 32px; margin-bottom: 5px;}
   
-  /* Smoother Comment Modal (Optimized for Mobile Keyboard) */
-  .comment-modal-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; display: none; opacity: 0; transition: opacity 0.3s; }
-  .comment-modal { position: fixed; bottom: 0; left: 0; width: 100%; height: 85dvh; background: var(--bg); border-radius: 24px 24px 0 0; z-index: 1001; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); border-top: 1px solid var(--border); box-shadow: 0 -10px 30px rgba(0,0,0,0.5); }
+  /* --- FULL SCREEN COMMENT MODAL (Fixed Keyboard Stuttering) --- */
+  .comment-modal { 
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+      background: var(--bg); z-index: 10000; 
+      display: flex; flex-direction: column; 
+      transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); 
+  }
   .comment-modal.active { transform: translateY(0); }
-  .comment-modal-bg.active { display: block; opacity: 1; }
-  .cm-header { padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-weight: 800; }
-  .cm-close { background: rgba(255,255,255,0.1); border: none; width: 30px; height: 30px; border-radius: 50%; color: #fff; cursor: pointer; font-size: 16px; display:flex; align-items:center; justify-content:center;}
+  
+  .cm-header { padding: 15px 20px; background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 16px;}
+  .cm-close { background: rgba(255,255,255,0.1); border: none; width: 32px; height: 32px; border-radius: 50%; color: #fff; cursor: pointer; font-size: 14px; display:flex; align-items:center; justify-content:center;}
   .cm-body { flex: 1; overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
-  .cm-footer { padding: 12px 15px; border-top: 1px solid var(--border); background: var(--bg); display: flex; gap: 10px; }
+  
+  .cm-footer { padding: 12px 15px; border-top: 1px solid var(--border); background: var(--bg); display: flex; gap: 10px; align-items: center;}
+  .c-input { flex: 1; padding: 12px 18px; border-radius: 24px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: #fff; font-family: 'Poppins'; font-size: 13px; outline: none; }
+  .c-input:focus { border-color: var(--primary); }
+  .c-send { background: linear-gradient(135deg, var(--accent), var(--primary)); border: none; border-radius: 50%; width: 42px; height: 42px; color: #fff; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 16px;}
+  
   .c-comment { display: flex; gap: 10px; margin-bottom: 15px; }
   .c-avatar { width: 35px; height: 35px; background: linear-gradient(45deg, var(--accent), var(--primary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; font-size: 14px;}
   .c-text-box { background: rgba(255,255,255,0.08); padding: 10px 14px; border-radius: 4px 18px 18px 18px; font-size: 13px; max-width: 85%; }
   .c-name { font-weight: 800; font-size: 12px; margin-bottom: 4px; color: var(--accent); }
+  
+  .toast{position:fixed; left:50%; transform:translateX(-50%); top:20px; background:var(--ok); color:#000; padding:10px 24px; border-radius:999px; font-weight:800; font-size:13px; opacity:0; transition:.3s; z-index:9999; box-shadow: 0 5px 20px rgba(0,0,0,0.3); pointer-events: none;}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(10px);}
   
   .nav{position:fixed; left:50%; transform:translateX(-50%); bottom:16px; display:flex; justify-content:space-around; gap:10px; padding:10px; border-radius:999px; background:rgba(15, 20, 35, 0.95); border:1px solid var(--border); backdrop-filter: blur(20px); width: 90%; max-width: 450px; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
   .nav button{background:transparent; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:12px 20px; border-radius:999px; font-weight:900; transition:0.3s; display: flex; align-items: center; gap: 8px;}
@@ -134,7 +147,7 @@
 </head>
 
 <body>
-<div id="toast" class="toast" style="position:fixed; left:50%; transform:translateX(-50%); top:20px; bottom:auto; background:var(--ok); color:#000; padding:10px 20px; border-radius:999px; font-weight:800; font-size:13px; opacity:0; transition:0.3s; z-index:9999;">OK</div>
+<div id="toast" class="toast">OK</div>
 
 <div class="wrap">
   <div class="top glass">
@@ -213,7 +226,6 @@
 
 </div>
 
-<div class="comment-modal-bg" id="cm-bg" onclick="closeComment()"></div>
 <div class="comment-modal" id="cm-box">
     <div class="cm-header">
         <span>Comments</span>
@@ -221,8 +233,8 @@
     </div>
     <div class="cm-body" id="cm-list"></div>
     <div class="cm-footer">
-        <input type="text" id="cm-input" class="input" placeholder="Write a comment..." style="margin:0; border-radius: 20px;">
-        <button class="btn btnP" style="width: 50px; border-radius: 50%; display:flex; justify-content:center; align-items:center; padding:0;" onclick="sendComment()">➤</button>
+        <input type="text" id="cm-input" class="c-input" placeholder="Write a comment...">
+        <button class="c-send" onclick="sendComment()">➤</button>
     </div>
 </div>
 
@@ -259,8 +271,8 @@
 
   function toast(msg){
     const t = document.getElementById("toast");
-    t.textContent = msg; t.style.top = "20px"; t.style.opacity = "1";
-    setTimeout(()=> t.style.opacity = "0", 2000);
+    t.textContent = msg; t.classList.add("show");
+    setTimeout(()=> t.classList.remove("show"), 2500);
   }
 
   function esc(s){ return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
@@ -291,7 +303,7 @@
     if(name==="videos") { document.getElementById("tab-videos").style.display = "block"; document.getElementById("nVideos").classList.add("active"); loadVideos(); }
     if(name==="posts") { document.getElementById("tab-posts").style.display = "block"; document.getElementById("nPosts").classList.add("active"); loadPosts(); }
     if(name==="account") { document.getElementById("tab-account").style.display = "block"; document.getElementById("nAccount").classList.add("active"); }
-    window.scrollTo(0, 0); // Reset scroll on tab change
+    window.scrollTo(0, 0); 
   };
 
   function updateAuthUI() {
@@ -389,7 +401,6 @@
   // --- Reactions Logic ---
   window.showReactOptions = (postId) => {
       if(!me) return toast("Please Login First!");
-      // Hide others
       document.querySelectorAll('.react-popover').forEach(p => { if(p.id !== `react-pop-${postId}`) p.classList.remove('show'); });
       const pop = document.getElementById(`react-pop-${postId}`);
       pop.classList.toggle('show');
@@ -404,11 +415,8 @@
       
       let reactions = allPostsData[postIndex].reactions || {};
       
-      if(reactions[me.uid] === type) {
-          delete reactions[me.uid]; // Remove reaction if clicked same
-      } else {
-          reactions[me.uid] = type; // Add/Change reaction
-      }
+      if(reactions[me.uid] === type) delete reactions[me.uid]; 
+      else reactions[me.uid] = type; 
       
       allPostsData[postIndex].reactions = reactions;
       renderPostFeed(document.querySelector('#post-cat-list .active')?.innerText || "All Updates");
@@ -422,13 +430,9 @@
       if(keys.length === 0) return { count: 0, text: "🤍 React" };
       
       const myReact = me && reactionsObj[me.uid] ? reactionsObj[me.uid] : null;
-      const types = [...new Set(Object.values(reactionsObj))].slice(0, 3).join(""); // unique icons
+      const types = [...new Set(Object.values(reactionsObj))].slice(0, 3).join(""); 
       
-      return { 
-          count: keys.length, 
-          icons: types,
-          myReact: myReact 
-      };
+      return { count: keys.length, icons: types, myReact: myReact };
   }
 
   // --- Swipe Logic for Feed Categories ---
@@ -438,8 +442,8 @@
   feedArea.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; }, {passive: true});
   feedArea.addEventListener('touchend', e => {
       touchendX = e.changedTouches[0].screenX;
-      if (touchendX < touchstartX - 70) shiftCategory(1); // Swipe Left
-      if (touchendX > touchstartX + 70) shiftCategory(-1); // Swipe Right
+      if (touchendX < touchstartX - 70) shiftCategory(1); 
+      if (touchendX > touchstartX + 70) shiftCategory(-1); 
   }, {passive: true});
 
   function shiftCategory(direction) {
@@ -494,7 +498,7 @@
       document.querySelectorAll('#post-cat-list .cat-pill').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
       renderPostFeed(cat);
-      window.scrollTo({top: 0, behavior: 'smooth'}); // Scroll to top on category change
+      window.scrollTo({top: 0, behavior: 'smooth'}); 
   };
 
   function renderPostFeed(category) {
@@ -539,24 +543,29 @@
       feed.innerHTML = html || `<div class="muted" style="text-align:center; padding:20px;">No posts found.</div>`;
   }
 
-  // --- Comment Modal Logic (No Keyboard Stuttering) ---
+  // --- Full Screen Comment Modal Logic ---
   let commentUnsubscribe = null;
 
   window.openComment = (postId) => {
-      if(!me) return toast("Login required");
+      if(!me) return toast("Please Login First!");
       currentActivePostForComment = postId;
-      document.getElementById('cm-bg').classList.add('active');
       document.getElementById('cm-box').classList.add('active');
-      document.body.style.overflow = 'hidden'; // Prevent background scrolling
       
       const list = document.getElementById('cm-list');
       list.innerHTML = "<div class='muted' style='text-align:center;'>Loading comments...</div>";
       
-      const q = query(collection(db, "comments"), where("postId", "==", postId), orderBy("createdAt", "asc"));
+      // FIXED: Removed orderBy("createdAt") to avoid missing Index error
+      const q = query(collection(db, "comments"), where("postId", "==", postId));
+      
       commentUnsubscribe = onSnapshot(q, (snap) => {
-          list.innerHTML = snap.empty ? "<div class='muted' style='text-align:center; margin-top:20px;'>Be the first to comment!</div>" : "";
-          snap.forEach(doc => {
-              const d = doc.data();
+          let comments = [];
+          snap.forEach(doc => comments.push({id: doc.id, ...doc.data()}));
+          // Sort manually in JS to prevent Firebase Index Error
+          comments.sort((a,b) => (a.createdAt?.toMillis() || 0) - (b.createdAt?.toMillis() || 0));
+          
+          list.innerHTML = comments.length === 0 ? "<div class='muted' style='text-align:center; margin-top:20px;'>Be the first to comment!</div>" : "";
+          
+          comments.forEach(d => {
               const initial = d.email ? d.email.charAt(0).toUpperCase() : "U";
               const name = d.email ? d.email.split('@')[0] : "User";
               list.innerHTML += `
@@ -574,9 +583,7 @@
   };
 
   window.closeComment = () => {
-      document.getElementById('cm-bg').classList.remove('active');
       document.getElementById('cm-box').classList.remove('active');
-      document.body.style.overflow = 'auto';
       currentActivePostForComment = null;
       if(commentUnsubscribe) { commentUnsubscribe(); commentUnsubscribe = null; }
   };
@@ -592,7 +599,7 @@
           await addDoc(collection(db, "comments"), {
               postId: currentActivePostForComment, text: text, uid: me.uid, email: me.email, createdAt: serverTimestamp()
           });
-      } catch(e) { toast("Failed to comment. Make sure rules are updated."); }
+      } catch(e) { toast("Failed to comment"); }
   };
 
   // --- LOAD VIDEOS (PRO) ---
