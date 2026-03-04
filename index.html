@@ -3,151 +3,111 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Kazeno+</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+<title>Kazeno Admin Console</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0b1222; --card:#111b33; --card2:#0f172a; --border:rgba(255,255,255,.10);
-    --text:#fff; --muted:rgba(255,255,255,.65);
+    --bg:#090e17; --card:#111b33; --border:rgba(255,255,255,.1);
+    --text:#fff; --muted:#8b9bb4;
     --primary:#ffb300; --danger:#ff4d4d; --ok:#00e676;
-    --r:18px;
+    --r:16px;
   }
-  body{margin:0; font-family:Poppins,Arial; background:radial-gradient(900px 520px at 20% 10%, rgba(255,179,0,.14), transparent 55%), var(--bg); color:var(--text); padding-bottom:90px;}
-  .wrap{max-width:520px; margin:0 auto; padding:16px;}
-  .top{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 14px; border-radius:22px; background:rgba(255,255,255,.06); border:1px solid var(--border); position:sticky; top:10px; z-index:10; backdrop-filter: blur(14px);}
-  .brand{font-weight:800; letter-spacing:.2px;}
-  .pill{padding:6px 10px; border-radius:999px; font-size:12px; font-weight:800; border:1px solid var(--border); color:var(--muted);}
-  .pill.pro{background:rgba(0,230,118,.12); border-color:rgba(0,230,118,.25); color:#bfffdc;}
-  .pill.free{background:rgba(255,179,0,.12); border-color:rgba(255,179,0,.25); color:#ffe4a3;}
-  .card{background:rgba(255,255,255,.06); border:1px solid var(--border); border-radius:var(--r); padding:14px; margin-top:14px; backdrop-filter: blur(14px);}
-  .title{margin:0 0 8px; font-weight:800; font-size:14px;}
-  .muted{color:var(--muted); font-size:12px; line-height:1.6;}
-  .input{width:100%; padding:12px 12px; border-radius:14px; border:1px solid var(--border); background:rgba(255,255,255,.06); color:var(--text); outline:none;}
-  .btn{width:100%; padding:12px 12px; border-radius:14px; border:none; cursor:pointer; font-weight:800;}
-  .btnP{background:linear-gradient(180deg,#ffb300,#e69500); color:#111;}
-  .btnS{background:rgba(255,255,255,.08); color:var(--text); border:1px solid var(--border);}
-  .btnD{background:var(--danger); color:#fff;}
+  body{margin:0; font-family:'Poppins', Arial; background:var(--bg); color:var(--text); padding:20px;}
+  .wrap{max-width:900px; margin:0 auto;}
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .card{background:var(--card); border:1px solid var(--border); border-radius:var(--r); padding:24px; margin-bottom:20px;}
+  .title{margin:0 0 16px; font-weight:800; font-size: 18px; color: var(--primary);}
+  .muted{color:var(--muted); font-size:13px; line-height:1.6;}
+  
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media(max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+  
+  input,textarea,select{
+    width:100%; padding:14px; border-radius:12px; border:1px solid var(--border);
+    background:rgba(0,0,0,.2); color:var(--text); outline:none; font-family:'Poppins'; box-sizing:border-box; margin-bottom: 12px;
+  }
+  input:focus, textarea:focus { border-color: var(--primary); }
+  textarea{min-height:100px; resize: vertical;}
+  
+  .btn{padding:12px 20px; border-radius:12px; border:none; cursor:pointer; font-weight:800; font-family:'Poppins'; transition:0.2s;}
+  .btn:active {transform:scale(0.95);}
+  .btnP{background:var(--primary); color:#000;}
+  .btnS{background:rgba(255,255,255,.1); color:var(--text); border:1px solid var(--border);}
+  .btnD{background:rgba(255,77,77,0.2); color:var(--danger); border:1px solid var(--danger);}
+  .btnOK{background:rgba(0,230,118,0.2); color:var(--ok); border:1px solid var(--ok);}
+  
   .row{display:flex; gap:10px;}
-  .row > *{flex:1;}
-  .tabs{display:flex; gap:10px;}
-  .tab{flex:1; padding:12px; border-radius:14px; border:1px solid var(--border); background:rgba(255,255,255,.06); color:var(--muted); font-weight:800; cursor:pointer;}
-  .tab.active{background:rgba(255,179,0,.14); color:#ffe4a3; border-color:rgba(255,179,0,.30);}
-  .post{padding:12px; border-radius:16px; border:1px solid var(--border); background:rgba(0,0,0,.18); margin-top:10px;}
-  .post h4{margin:0 0 6px; font-size:14px;}
-  .imgs{display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:10px;}
-  .imgs img{width:100%; border-radius:12px; border:1px solid var(--border); object-fit:cover; height:140px;}
-  .video{position:relative; padding:12px; border-radius:16px; border:1px solid var(--border); background:rgba(0,0,0,.18); margin-top:12px; overflow:hidden;}
-  .iframeWrap{position:relative; width:100%; padding-bottom:56.25%; border-radius:14px; overflow:hidden; border:1px solid var(--border); background:#000;}
-  .iframeWrap iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
-  .vmeta{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-top:10px;}
-  .lock{position:absolute; inset:0; background:rgba(0,0,0,.62); display:flex; align-items:center; justify-content:center; padding:14px;}
-  .lockBox{width:100%; border-radius:16px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.08); padding:12px; text-align:center; backdrop-filter: blur(14px);}
-  .lockBox .big{font-weight:900; font-size:16px;}
-  .watermark{position:absolute; right:10px; top:10px; padding:6px 10px; border-radius:999px; font-size:11px; font-weight:900;
-    background:rgba(0,0,0,.45); border:1px solid rgba(255,255,255,.18); color:rgba(255,255,255,.85); pointer-events:none;}
-  .toast{position:fixed; left:50%; transform:translateX(-50%); bottom:84px; background:rgba(0,0,0,.78); border:1px solid rgba(255,255,255,.14);
-    color:#fff; padding:10px 12px; border-radius:999px; font-weight:900; font-size:12px; opacity:0; transition:.2s; z-index:9999;}
-  .toast.show{opacity:1; transform:translateX(-50%) translateY(-3px);}
-  .nav{position:fixed; left:16px; right:16px; bottom:14px; display:flex; justify-content:space-around; gap:10px;
-    padding:12px; border-radius:26px; background:rgba(255,255,255,.06); border:1px solid var(--border); backdrop-filter: blur(14px);}
-  .nav button{background:transparent; border:none; color:var(--muted); font-size:18px; cursor:pointer; padding:10px 12px; border-radius:18px; font-weight:900;}
-  .nav button.active{color:#ffe4a3; background:rgba(255,179,0,.14); border:1px solid rgba(255,179,0,.25);}
+  .item{padding:16px; border-radius:14px; border:1px solid var(--border); background:rgba(0,0,0,.3); margin-top:12px;}
+  .item-header { display: flex; justify-content: space-between; margin-bottom: 8px;}
+  .badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; background: rgba(255,255,255,0.1); }
 </style>
 </head>
-
 <body>
-<div id="toast" class="toast">OK</div>
-
 <div class="wrap">
 
-  <div class="top">
-    <div class="brand">Kazeno+</div>
-    <div id="status" class="pill free">FREE</div>
+  <div class="card" id="loginBox" style="max-width: 400px; margin: 100px auto;">
+    <h2 class="title" style="text-align:center;">Kazeno Admin</h2>
+    <input id="email" placeholder="Admin Email" type="email">
+    <input id="pass" type="password" placeholder="Password">
+    <button class="btn btnP" style="width:100%;" onclick="login()">Enter Console</button>
+    <div id="err" style="color:var(--danger); margin-top:10px; font-size:13px; text-align:center;"></div>
   </div>
 
-  <div class="tabs card">
-    <button id="tPosts" class="tab active" onclick="showTab('posts')">📝 Posts</button>
-    <button id="tVideos" class="tab" onclick="showTab('videos')">🎬 Premium Videos</button>
-    <button id="tAccount" class="tab" onclick="showTab('account')">👤 Account</button>
-  </div>
-
-  <!-- POSTS (PUBLIC) -->
-  <div id="tab-posts" class="card">
-    <h3 class="title">Public Posts</h3>
-    <div class="muted">ဒီနေရာမှာ ပုံတွေ၊စာတွေ အများမြင်အောင်တင်နိုင်ပါတယ် (Public) ✅</div>
-    <div id="postsFeed" style="margin-top:10px;">Loading...</div>
-  </div>
-
-  <!-- VIDEOS (PREMIUM ONLY) -->
-  <div id="tab-videos" class="card" style="display:none;">
-    <h3 class="title">Premium Videos</h3>
-    <div class="muted">Premium video တွေကို ကြည့်ရန် Login + Pro Access လိုပါတယ် 🔒</div>
-
-    <div id="videoFeed" style="margin-top:10px;">Loading...</div>
-  </div>
-
-  <!-- ACCOUNT -->
-  <div id="tab-account" class="card" style="display:none;">
-    <h3 class="title">Login / Sign Up</h3>
-
-    <input id="email" class="input" placeholder="Email" autocomplete="email">
-    <div style="height:10px;"></div>
-    <input id="password" class="input" type="password" placeholder="Password (min 6 chars)" autocomplete="current-password">
-
-    <div style="height:10px;"></div>
-    <div class="row">
-      <button class="btn btnP" onclick="login()">Login</button>
-      <button class="btn btnS" onclick="signup()">Sign Up</button>
+  <div id="panel" style="display:none;">
+    
+    <div class="header">
+        <h2>Dashboard</h2>
+        <button class="btn btnS" onclick="logout()">Log Out</button>
     </div>
 
-    <div style="height:10px;"></div>
-    <button class="btn btnD" onclick="logout()">Log Out</button>
-
-    <div id="who" class="muted" style="margin-top:10px;">Not logged in</div>
-
-    <hr style="border:0; border-top:1px solid var(--border); margin:14px 0;">
-
-    <h3 class="title">💳 Buy Pro (KBZPay / WavePay)</h3>
-    <div class="muted">
-      Payment လုပ်ပြီး <b>Transaction ID</b> နဲ့ submit လုပ်ပါ။ Admin အတည်ပြုလိုက်တာနဲ့ Pro Unlock ဖြစ်ပါမယ်။
+    <div class="card" style="border-color: var(--primary);">
+      <h2 class="title">💳 Pending Purchase Requests</h2>
+      <div class="muted" style="margin-bottom: 15px;">Approve users here to unlock PRO access.</div>
+      <div id="reqList">Loading...</div>
     </div>
 
-    <div style="height:10px;"></div>
-    <select id="provider" class="input">
-      <option value="KBZPay">KBZPay</option>
-      <option value="WavePay">WavePay</option>
-    </select>
+    <div class="grid-2">
+        <div class="card">
+          <h2 class="title">🎬 Upload Premium Video</h2>
+          <input id="vCategory" placeholder="Category (e.g. Module 1)">
+          <input id="vTitle" placeholder="Video Title">
+          <input id="vThumbnail" placeholder="Thumbnail Image URL (Optional)">
+          <input id="vLink" placeholder="Cloudinary Embed URL">
+          <textarea id="vNotes" placeholder="Additional Notes or Download Links"></textarea>
+          <button class="btn btnP" onclick="addVideo()">Publish Video</button>
+          
+          <div style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 15px;">
+              <h3 style="font-size: 15px; margin-bottom: 10px;">Manage Videos</h3>
+              <div id="videoList" class="muted">Loading...</div>
+          </div>
+        </div>
 
-    <div style="height:10px;"></div>
-    <input id="phone" class="input" placeholder="Phone (example: 09xxxxxxx)">
+        <div class="card">
+          <h2 class="title">📝 Publish Public Post</h2>
+          <input id="pTitle" placeholder="Post Title">
+          <textarea id="pBody" placeholder="Post content..."></textarea>
+          <input id="pImages" placeholder="Image URLs (comma separated)">
+          <button class="btn btnP" onclick="addPost()">Publish Post</button>
 
-    <div style="height:10px;"></div>
-    <input id="txRef" class="input" placeholder="Transaction ID / Reference">
+          <div style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 15px;">
+              <h3 style="font-size: 15px; margin-bottom: 10px;">Manage Posts</h3>
+              <div id="postList" class="muted">Loading...</div>
+          </div>
+        </div>
+    </div>
 
-    <div style="height:10px;"></div>
-    <button class="btn btnP" onclick="submitPayment()">Submit Payment Request</button>
+    <div class="card">
+      <h2 class="title">📊 User Progress (Logs)</h2>
+      <div id="progList" class="muted">Loading...</div>
+    </div>
 
-    <div id="payMsg" class="muted" style="margin-top:10px;"></div>
   </div>
-
-</div>
-
-<div class="nav">
-  <button id="n1" class="active" onclick="showTab('posts')">📝</button>
-  <button id="n2" onclick="showTab('videos')">🎬</button>
-  <button id="n3" onclick="showTab('account')">👤</button>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import {
-    getFirestore, collection, getDocs, addDoc, query, orderBy,
-    doc, getDoc, setDoc, updateDoc, serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-  import {
-    getAuth, onAuthStateChanged,
-    signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut
-  } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+  import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, setDoc, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDV8UNUW7CVvJy2k5_6OMrRz197c1A7uKU",
@@ -158,279 +118,140 @@
     appId: "1:356111425732:web:fd5b3a7429372ec41da991"
   };
 
+  const ADMIN_UID = "4ZPJde1L9uUd6LbRLpQJvw5lYda2";
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const auth = getAuth(app);
 
-  let isPro = false;
-  let me = null;
-
-  // ---------- UI helpers ----------
-  const toastEl = document.getElementById("toast");
-  function toast(msg){
-    toastEl.textContent = msg;
-    toastEl.classList.add("show");
-    setTimeout(()=>toastEl.classList.remove("show"), 1400);
-  }
-  function esc(s){
-    return String(s ?? "")
-      .replaceAll("&","&amp;").replaceAll("<","&lt;")
-      .replaceAll(">","&gt;").replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-
-  // ---------- Tabs ----------
-  window.showTab = (name)=>{
-    document.getElementById("tab-posts").style.display = name==="posts" ? "block" : "none";
-    document.getElementById("tab-videos").style.display = name==="videos" ? "block" : "none";
-    document.getElementById("tab-account").style.display = name==="account" ? "block" : "none";
-
-    document.getElementById("tPosts").classList.toggle("active", name==="posts");
-    document.getElementById("tVideos").classList.toggle("active", name==="videos");
-    document.getElementById("tAccount").classList.toggle("active", name==="account");
-
-    document.getElementById("n1").classList.toggle("active", name==="posts");
-    document.getElementById("n2").classList.toggle("active", name==="videos");
-    document.getElementById("n3").classList.toggle("active", name==="account");
-  };
-
-  // ---------- Auth ----------
-  window.signup = async ()=>{
-    const email = document.getElementById("email").value.trim();
-    const pass  = document.getElementById("password").value;
-
-    if(!email.includes("@") || !email.includes(".")) return toast("Email format မမှန်ပါ");
-    if(pass.length < 6) return toast("Password အနည်းဆုံး 6 လုံးလိုပါတယ်");
-
-    try{
-      await createUserWithEmailAndPassword(auth, email, pass);
-      toast("Account created ✅");
-    }catch(e){
-      toast("Signup error: " + (e.code || e.message));
-      alert(e.code || e.message);
-    }
-  };
-
   window.login = async ()=>{
-    const email = document.getElementById("email").value.trim();
-    const pass  = document.getElementById("password").value;
-
-    try{
-      await signInWithEmailAndPassword(auth, email, pass);
-      toast("Login success ✅");
-    }catch(e){
-      toast("Login failed: " + (e.code || e.message));
-      alert(e.code || e.message);
-    }
+    document.getElementById("err").textContent = "";
+    try{ await signInWithEmailAndPassword(auth, document.getElementById("email").value.trim(), document.getElementById("pass").value); }
+    catch(e){ document.getElementById("err").textContent = "Login Failed"; }
   };
 
-  window.logout = async ()=>{
-    await signOut(auth);
-    toast("Logged out");
-  };
+  window.logout = async ()=>{ await signOut(auth); };
 
-  async function refreshPro(){
-    isPro = false;
-    if(!me) return;
-    try{
-      const snap = await getDoc(doc(db, "paidUsers", me.uid));
-      isPro = snap.exists() && snap.data().active === true;
-    }catch{
-      isPro = false;
-    }
-  }
-
-  function renderStatus(){
-    const st = document.getElementById("status");
-    if(isPro){
-      st.textContent = "PRO";
-      st.className = "pill pro";
-    }else{
-      st.textContent = "FREE";
-      st.className = "pill free";
-    }
-
-    const who = document.getElementById("who");
-    who.innerHTML = me
-      ? `Logged in as <b>${esc(me.email || "")}</b><br><span class="muted">UID: ${esc(me.uid)}</span>`
-      : "Not logged in";
-  }
-
-  // ---------- Posts (Public) ----------
-  async function loadPosts(){
-    const feed = document.getElementById("postsFeed");
-    feed.innerHTML = "Loading...";
-    try{
-      const q = query(collection(db, "posts"), orderBy("createdAt","desc"));
-      const snap = await getDocs(q);
-      let html = "";
-      snap.forEach(d=>{
-        const p = d.data();
-        if(p.isPublic !== true) return;
-        html += `
-          <div class="post">
-            <h4>${esc(p.title || "Untitled")}</h4>
-            <div class="muted">${esc(p.body || "")}</div>
-            ${Array.isArray(p.images) && p.images.length ? `
-              <div class="imgs">
-                ${p.images.slice(0,4).map(u=>`<img src="${esc(u)}" alt="">`).join("")}
-              </div>
-            ` : ""}
-          </div>
-        `;
-      });
-      feed.innerHTML = html || `<div class="muted">No posts yet.</div>`;
-    }catch(e){
-      feed.innerHTML = `<div class="muted">Posts load failed.</div>`;
-    }
-  }
-
-  // ---------- Videos (Premium only) ----------
-  async function loadVideos(){
-    const feed = document.getElementById("videoFeed");
-    feed.innerHTML = "Loading...";
-    try{
-      const q = query(collection(db, "videos"), orderBy("timestamp","desc"));
-      const snap = await getDocs(q);
-
-      let html = "";
-      snap.forEach(d=>{
-        const v = d.data();
-        const id = d.id;
-
-        // watermark text
-        const wm = me ? (me.email || me.uid) : "KAZENO";
-
-        html += `
-          <div class="video" id="v-${id}">
-            <div class="watermark">${esc(wm)}</div>
-
-            <div class="iframeWrap">
-              <iframe src="${esc(v.link || "")}" allowfullscreen></iframe>
-            </div>
-
-            <div class="vmeta">
-              <div style="min-width:0;">
-                <div style="font-weight:900;">${esc(v.title || "Untitled")}</div>
-                <div class="muted">${esc(v.category || "General")}</div>
-                <div class="muted">${esc(v.notes || "")}</div>
-              </div>
-              <div style="display:flex; flex-direction:column; gap:8px; width:140px;">
-                <button class="btn btnS" onclick="markComplete('${id}')">✅ Complete</button>
-                <button class="btn btnS" onclick="saveLater('${id}','${esc((v.title||"").replaceAll("'",""))}')">🔖 Save</button>
-              </div>
-            </div>
-          </div>
-        `;
-      });
-
-      feed.innerHTML = html || `<div class="muted">No videos.</div>`;
-    }catch(e){
-      feed.innerHTML = `<div class="muted">Load failed. (Check rules/index)</div>`;
-    }
-  }
-
-  // progress helpers (simple completion + saved)
-  window.markComplete = async (videoId)=>{
-    if(!me) return toast("Login required");
-    try{
-      await setDoc(doc(db, "progress", `${me.uid}_${videoId}`), {
-        uid: me.uid,
-        videoId,
-        completed: true,
-        updatedAt: serverTimestamp()
-      }, { merge: true });
-      toast("Completed ✅");
-    }catch(e){
-      toast("Failed");
-    }
-  };
-
-  window.saveLater = async (videoId, title)=>{
-    if(!me) return toast("Login required");
-    try{
-      await setDoc(doc(db, "progress", `${me.uid}_${videoId}`), {
-        uid: me.uid,
-        videoId,
-        saved: true,
-        title: title || "",
-        updatedAt: serverTimestamp()
-      }, { merge: true });
-      toast("Saved ✅");
-    }catch(e){
-      toast("Failed");
-    }
-  };
-
-  // ---------- Payment request (Manual approve) ----------
-  window.submitPayment = async ()=>{
-    if(!me) return toast("Login required");
-    const provider = document.getElementById("provider").value;
-    const phone = document.getElementById("phone").value.trim();
-    const txRef = document.getElementById("txRef").value.trim();
-    const msg = document.getElementById("payMsg");
-
-    if(phone.length < 6) return toast("Phone ထည့်ပါ");
-    if(txRef.length < 4) return toast("Transaction ID ထည့်ပါ");
-
-    try{
-      await addDoc(collection(db, "purchaseRequests"), {
-        uid: me.uid,
-        email: me.email || "",
-        provider,
-        phone,
-        txRef,
-        status: "pending",
-        createdAt: serverTimestamp()
-      });
-      msg.innerHTML = `<span style="color:#bfffdc; font-weight:900;">Submitted ✅</span> Admin approve လုပ်ပြီးတာနဲ့ PRO unlock ဖြစ်ပါမယ်။`;
-      toast("Submitted ✅");
-    }catch(e){
-      msg.innerHTML = `<span style="color:#ffbdbd; font-weight:900;">Submit failed</span>`;
-      toast("Submit failed");
-    }
-  };
-
-  // right-click deterrence
-  document.addEventListener("contextmenu", (e)=> e.preventDefault());
-
-  // Auth state
   onAuthStateChanged(auth, async (user)=>{
-    me = user || null;
-    await refreshPro();
-    renderStatus();
-
-    // Posts always load
-    loadPosts();
-
-    // Videos: only show if logged in and pro
-    if(me && isPro){
-      loadVideos();
-    }else{
-      // locked screen message
-      const feed = document.getElementById("videoFeed");
-      feed.innerHTML = `
-        <div class="video">
-          <div class="lock">
-            <div class="lockBox">
-              <div class="big">🔒 Premium Only</div>
-              <div class="muted" style="margin-top:6px;">
-                Video တွေကြည့်ရန် <b>Login + Pro Access</b> လိုပါတယ်။<br>
-                Account tab ထဲမှာ payment request submit လုပ်ပါ။
-              </div>
-              <div style="height:10px;"></div>
-              <button class="btn btnP" onclick="showTab('account')">Go to Account</button>
-            </div>
-          </div>
-          <div class="iframeWrap" style="filter:blur(10px); transform:scale(1.02);">
-            <iframe src="about:blank"></iframe>
-          </div>
-          <div class="muted" style="margin-top:10px;">(Locked)</div>
-        </div>
-      `;
-    }
+    if(!user) return;
+    if(user.uid !== ADMIN_UID){ alert("Access Denied: Not an Admin"); await signOut(auth); return; }
+    document.getElementById("loginBox").style.display="none";
+    document.getElementById("panel").style.display="block";
+    loadAll();
   });
 
+  function esc(s){ return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
+
+  // --- Videos ---
+  window.addVideo = async ()=>{
+    const title = document.getElementById("vTitle").value.trim();
+    const link = document.getElementById("vLink").value.trim();
+    if(!title || !link) return alert("Title & Link required");
+
+    await addDoc(collection(db,"videos"), {
+      category: document.getElementById("vCategory").value.trim() || "General",
+      title, link,
+      thumbnail: document.getElementById("vThumbnail").value.trim(),
+      notes: document.getElementById("vNotes").value.trim(),
+      isFree: false, timestamp: Date.now()
+    });
+    alert("Video Published ✅"); location.reload();
+  };
+
+  async function loadVideos(){
+    const box = document.getElementById("videoList");
+    const snap = await getDocs(query(collection(db,"videos"), orderBy("timestamp","desc")));
+    let html = "";
+    snap.forEach(d=>{
+      const v = d.data();
+      html += `
+        <div class="item" style="padding: 12px;">
+          <div class="item-header"><b>${esc(v.title)}</b> <span class="badge">${esc(v.category)}</span></div>
+          <button class="btn btnD" style="padding: 6px 12px; font-size:12px;" onclick="delDoc('videos','${d.id}')">Delete</button>
+        </div>`;
+    });
+    box.innerHTML = html || "No videos found.";
+  }
+
+  // --- Posts ---
+  window.addPost = async ()=>{
+    const title = document.getElementById("pTitle").value.trim();
+    if(!title) return alert("Title required");
+    const imagesRaw = document.getElementById("pImages").value.trim();
+    
+    await addDoc(collection(db,"posts"), {
+      title, body: document.getElementById("pBody").value.trim(),
+      images: imagesRaw ? imagesRaw.split(",").map(x=>x.trim()).filter(Boolean) : [],
+      isPublic: true, createdAt: Date.now() // Changed to Date.now() for universal sorting
+    });
+    alert("Post Published ✅"); location.reload();
+  };
+
+  async function loadPosts(){
+    const box = document.getElementById("postList");
+    const snap = await getDocs(query(collection(db,"posts"), orderBy("createdAt","desc")));
+    let html = "";
+    snap.forEach(d=>{
+      html += `
+        <div class="item" style="padding: 12px;">
+          <div style="font-weight:bold; margin-bottom:8px;">${esc(d.data().title)}</div>
+          <button class="btn btnD" style="padding: 6px 12px; font-size:12px;" onclick="delDoc('posts','${d.id}')">Delete</button>
+        </div>`;
+    });
+    box.innerHTML = html || "No posts found.";
+  }
+
+  // --- Purchase Requests ---
+  async function loadRequests(){
+    const box = document.getElementById("reqList");
+    const snap = await getDocs(query(collection(db,"purchaseRequests"), orderBy("createdAt","desc")));
+    let html = "";
+    snap.forEach(d=>{
+      const r = d.data();
+      if(r.status !== "pending") return; // Only show pending
+      html += `
+        <div class="item">
+          <div class="item-header">
+            <span>Provider: <b>${esc(r.provider)}</b></span>
+            <span>Phone: <b>${esc(r.phone)}</b></span>
+          </div>
+          <div style="margin: 8px 0; font-family: monospace; font-size: 15px;">TX ID: <b style="color:var(--primary);">${esc(r.txRef)}</b></div>
+          <div class="muted">Email: ${esc(r.email)} | UID: ${esc(r.uid)}</div>
+          <div class="row" style="margin-top:12px;">
+            <button class="btn btnOK" onclick="approve('${r.uid}','${d.id}')">Approve & Grant PRO</button>
+            <button class="btn btnD" onclick="reject('${d.id}')">Reject</button>
+          </div>
+        </div>`;
+    });
+    box.innerHTML = html || "No pending requests.";
+  }
+
+  window.approve = async (uid, reqId)=>{
+    await setDoc(doc(db,"paidUsers", uid), { active:true, plan:"lifetime", updatedAt: Date.now() }, { merge:true });
+    await updateDoc(doc(db,"purchaseRequests", reqId), { status:"approved" });
+    alert("Approved ✅"); loadRequests();
+  };
+
+  window.reject = async (reqId)=>{
+    await updateDoc(doc(db,"purchaseRequests", reqId), { status:"rejected" });
+    alert("Rejected"); loadRequests();
+  };
+
+  // --- Progress ---
+  async function loadProgress(){
+    const box = document.getElementById("progList");
+    const snap = await getDocs(query(collection(db,"progress"), orderBy("updatedAt","desc")));
+    let html = "";
+    snap.forEach(d=>{
+      const p = d.data();
+      html += `<div class="item" style="padding:10px; font-size:12px;">UID: ${esc(p.uid)} | Video: ${esc(p.videoId)} | Done: ${p.completed?"Yes":"No"} | Saved: ${p.saved?"Yes":"No"}</div>`;
+    });
+    box.innerHTML = html || "No activity yet.";
+  }
+
+  window.delDoc = async (col, id)=>{ if(confirm("Delete this item?")){ await deleteDoc(doc(db,col,id)); location.reload(); } };
+
+  function loadAll(){ loadVideos(); loadPosts(); loadRequests(); loadProgress(); }
 </script>
 </body>
 </html>
+
