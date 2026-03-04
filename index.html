@@ -112,28 +112,33 @@
   .lockBox{width:100%; max-width: 280px; padding:20px; text-align:center; background: rgba(10, 15, 30, 0.7); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
   .lockBox .icon {font-size: 32px; margin-bottom: 5px;}
   
-  /* --- FULL SCREEN COMMENT MODAL (Fixed Keyboard Stuttering) --- */
+  /* --- FIXED: FULL SCREEN COMMENT MODAL (Anti-Keyboard Glitch) --- */
   .comment-modal { 
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; /* Cover Full Screen */
       background: var(--bg); z-index: 10000; 
       display: flex; flex-direction: column; 
       transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); 
   }
   .comment-modal.active { transform: translateY(0); }
   
-  .cm-header { padding: 15px 20px; background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 16px;}
+  .cm-header { flex-shrink: 0; padding: 15px 20px; background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 16px;}
   .cm-close { background: rgba(255,255,255,0.1); border: none; width: 32px; height: 32px; border-radius: 50%; color: #fff; cursor: pointer; font-size: 14px; display:flex; align-items:center; justify-content:center;}
+  
   .cm-body { flex: 1; overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
   
-  .cm-footer { padding: 12px 15px; border-top: 1px solid var(--border); background: var(--bg); display: flex; gap: 10px; align-items: center;}
+  .cm-footer { flex-shrink: 0; padding: 12px 15px; border-top: 1px solid var(--border); background: var(--bg); display: flex; gap: 10px; align-items: center; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
   .c-input { flex: 1; padding: 12px 18px; border-radius: 24px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: #fff; font-family: 'Poppins'; font-size: 13px; outline: none; }
   .c-input:focus { border-color: var(--primary); }
   .c-send { background: linear-gradient(135deg, var(--accent), var(--primary)); border: none; border-radius: 50%; width: 42px; height: 42px; color: #fff; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 16px;}
   
+  /* Comments & Reply UI */
   .c-comment { display: flex; gap: 10px; margin-bottom: 15px; }
   .c-avatar { width: 35px; height: 35px; background: linear-gradient(45deg, var(--accent), var(--primary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; font-size: 14px;}
-  .c-text-box { background: rgba(255,255,255,0.08); padding: 10px 14px; border-radius: 4px 18px 18px 18px; font-size: 13px; max-width: 85%; }
+  .c-content-wrap { display: flex; flex-direction: column; align-items: flex-start; max-width: 85%; }
+  .c-text-box { background: rgba(255,255,255,0.08); padding: 10px 14px; border-radius: 4px 18px 18px 18px; font-size: 13px; width: 100%; word-wrap: break-word;}
   .c-name { font-weight: 800; font-size: 12px; margin-bottom: 4px; color: var(--accent); }
+  .c-reply-btn { font-size: 11px; color: var(--muted); margin-left: 10px; margin-top: 5px; cursor: pointer; font-weight: 600; transition: 0.2s;}
+  .c-reply-btn:active { color: var(--primary); }
   
   .toast{position:fixed; left:50%; transform:translateX(-50%); top:20px; background:var(--ok); color:#000; padding:10px 24px; border-radius:999px; font-weight:800; font-size:13px; opacity:0; transition:.3s; z-index:9999; box-shadow: 0 5px 20px rgba(0,0,0,0.3); pointer-events: none;}
   .toast.show{opacity:1; transform:translateX(-50%) translateY(10px);}
@@ -543,24 +548,23 @@
       feed.innerHTML = html || `<div class="muted" style="text-align:center; padding:20px;">No posts found.</div>`;
   }
 
-  // --- Full Screen Comment Modal Logic ---
+  // --- FULL SCREEN COMMENT MODAL LOGIC & REPLY FEATURE ---
   let commentUnsubscribe = null;
 
   window.openComment = (postId) => {
       if(!me) return toast("Please Login First!");
       currentActivePostForComment = postId;
       document.getElementById('cm-box').classList.add('active');
+      document.body.style.overflow = 'hidden'; 
       
       const list = document.getElementById('cm-list');
       list.innerHTML = "<div class='muted' style='text-align:center;'>Loading comments...</div>";
       
-      // FIXED: Removed orderBy("createdAt") to avoid missing Index error
       const q = query(collection(db, "comments"), where("postId", "==", postId));
       
       commentUnsubscribe = onSnapshot(q, (snap) => {
           let comments = [];
           snap.forEach(doc => comments.push({id: doc.id, ...doc.data()}));
-          // Sort manually in JS to prevent Firebase Index Error
           comments.sort((a,b) => (a.createdAt?.toMillis() || 0) - (b.createdAt?.toMillis() || 0));
           
           list.innerHTML = comments.length === 0 ? "<div class='muted' style='text-align:center; margin-top:20px;'>Be the first to comment!</div>" : "";
@@ -571,9 +575,12 @@
               list.innerHTML += `
                   <div class="c-comment">
                       <div class="c-avatar">${initial}</div>
-                      <div class="c-text-box">
-                          <div class="c-name">${esc(name)}</div>
-                          ${esc(d.text)}
+                      <div class="c-content-wrap">
+                          <div class="c-text-box">
+                              <div class="c-name">${esc(name)}</div>
+                              ${esc(d.text)}
+                          </div>
+                          <div class="c-reply-btn" onclick="replyToUser('${esc(name)}')">Reply</div>
                       </div>
                   </div>
               `;
@@ -582,8 +589,16 @@
       });
   };
 
+  // Reply Function (Adds @username to input)
+  window.replyToUser = (name) => {
+      const input = document.getElementById('cm-input');
+      input.value = `@${name} `;
+      input.focus();
+  };
+
   window.closeComment = () => {
       document.getElementById('cm-box').classList.remove('active');
+      document.body.style.overflow = 'auto';
       currentActivePostForComment = null;
       if(commentUnsubscribe) { commentUnsubscribe(); commentUnsubscribe = null; }
   };
