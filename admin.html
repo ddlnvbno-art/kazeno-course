@@ -48,7 +48,7 @@
   .menu-btn { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; padding: 0; }
 
   /* Sidebar */
-  .sidebar { width: 280px; height: 100vh; background: rgba(10, 10, 15, 0.8); backdrop-filter: blur(30px); border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; padding: 30px 20px; z-index: 99; transition: transform 0.3s ease; }
+  .sidebar { width: 280px; height: 100vh; background: rgba(10, 10, 15, 0.8); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; padding: 30px 20px; z-index: 99; transition: transform 0.3s ease; }
   .brand-logo { font-size: 22px; font-weight: 800; margin-bottom: 40px; padding: 0 10px; display: flex; align-items: center; gap:10px;}
   .brand-logo::before { content:''; width:12px; height:12px; background:var(--accent); border-radius:50%; box-shadow: 0 0 10px var(--accent);}
   
@@ -125,7 +125,7 @@
   /* Modals */
   .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px);}
   .modal-bg.active { display: flex; animation: fadeIn 0.3s; }
-  .modal-content { width: 90%; max-width: 500px; max-height: 85vh; overflow-y: auto; padding: 25px; animation: scaleUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .modal-content { width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto; padding: 30px; animation: scaleUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
   @keyframes scaleUp { from { transform: scale(0.95); opacity: 0;} to { transform: scale(1); opacity: 1;} }
 
   @media(max-width: 768px) {
@@ -148,7 +148,7 @@
 
 <div id="login-view">
     <div class="login-box glass-panel">
-        <h2>Kazeno Pro Admin</h2>
+        <h2>Kazeno Admin</h2>
         <input type="email" id="admin-email" placeholder="Admin Email">
         <input type="password" id="admin-pass" placeholder="Password">
         <button class="btn btn-primary" onclick="login()">Access Console</button>
@@ -317,10 +317,10 @@
         
         <input type="text" id="p-title" placeholder="Post Title">
         <textarea id="p-body" placeholder="Main Caption..."></textarea>
-        <textarea id="p-notes" placeholder="Quote / Special Note (Optional)" style="min-height: 80px;"></textarea>
+        <textarea id="p-notes" placeholder="Quote Note (Optional)" style="min-height: 80px;"></textarea>
         
         <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 16px; margin-bottom: 15px; border: 1px dashed var(--glass-border);">
-            <label style="font-size:13px; color:var(--text-muted); display:block; margin-bottom:10px;">Images (Swipeable)</label>
+            <label style="font-size:13px; color:var(--text-muted); display:block; margin-bottom:10px;">Images (Upload from phone)</label>
             <div id="p-img-container"></div>
             <button class="btn btn-ghost" style="font-size:12px; padding:8px 16px;" onclick="addImgField()">+ Add Image</button>
         </div>
@@ -331,7 +331,7 @@
             <button class="btn btn-ghost" style="font-size:12px; padding:8px 16px;" onclick="addDlField('p')">+ Add Link</button>
         </div>
         
-        <button class="btn btn-primary" onclick="savePost()">Publish Post</button>
+        <button class="btn btn-primary" style="width:100%;" onclick="savePost()">Publish Post</button>
     </div>
 </div>
 
@@ -370,8 +370,8 @@
   // --- 🔥 BULLETPROOF TIME PARSER ---
   function safeTime(ts) {
       if (!ts) return 0;
-      if (typeof ts === 'number') return ts; // Old Date.now() format
-      if (typeof ts.toMillis === 'function') return ts.toMillis(); // Firestore serverTimestamp
+      if (typeof ts === 'number') return ts; 
+      if (typeof ts.toMillis === 'function') return ts.toMillis(); 
       if (ts.seconds) return ts.seconds * 1000;
       return 0;
   }
@@ -764,57 +764,65 @@
       const box = document.getElementById("admin-comment-list");
       let html = "";
       comments.forEach(c => {
-          const initial = c.email ? c.email.charAt(0).toUpperCase() : "U";
-          const timeVal = safeTime(c.createdAt);
-          const timeStr = timeVal ? new Date(timeVal).toLocaleString() : "Just now";
-          
-          const pContext = globalPosts.find(p => p.id === c.postId);
-          const vContext = globalVideos.find(v => v.id === c.postId);
-          let contextHtml = "";
-          
-          if(pContext) {
-              const img = (pContext.images && pContext.images.length > 0) ? pContext.images[0] : 'https://via.placeholder.com/60';
-              contextHtml = `<div class="sc-context"><img src="${esc(img)}" class="sc-context-img"><div class="sc-context-title">Post: ${esc(pContext.title)}</div></div>`;
-          } else if (vContext) {
-              const img = vContext.thumbnail || 'https://via.placeholder.com/60';
-              contextHtml = `<div class="sc-context"><img src="${esc(img)}" class="sc-context-img"><div class="sc-context-title">Vid: ${esc(vContext.title)}</div></div>`;
+          try {
+              // Safe Fallbacks for old/corrupted data
+              const safeEmail = c.email ? String(c.email) : "Unknown User";
+              const displayName = safeEmail.includes('@') ? safeEmail.split('@')[0] : safeEmail;
+              const initial = displayName.charAt(0).toUpperCase();
+              
+              const timeVal = safeTime(c.createdAt);
+              const timeStr = timeVal ? new Date(timeVal).toLocaleString() : "Just now";
+              
+              const pContext = globalPosts.find(p => p.id === c.postId);
+              const vContext = globalVideos.find(v => v.id === c.postId);
+              let contextHtml = "";
+              
+              if(pContext) {
+                  const img = (pContext.images && pContext.images.length > 0) ? pContext.images[0] : 'https://via.placeholder.com/60';
+                  contextHtml = `<div class="sc-context"><img src="${esc(img)}" class="sc-context-img"><div class="sc-context-title">Post: ${esc(pContext.title)}</div></div>`;
+              } else if (vContext) {
+                  const img = vContext.thumbnail || 'https://via.placeholder.com/60';
+                  contextHtml = `<div class="sc-context"><img src="${esc(img)}" class="sc-context-img"><div class="sc-context-title">Vid: ${esc(vContext.title)}</div></div>`;
+              }
+
+              html += `
+                  <div class="studio-comment glass-panel" style="margin-bottom:15px;">
+                      <div class="sc-avatar">${initial}</div>
+                      <div class="sc-body">
+                          <div class="sc-header">
+                              <span class="sc-name">${esc(displayName)}</span>
+                              <span class="sc-time">${timeStr}</span>
+                              ${c.parentId ? '<span class="item-badge">Reply</span>' : ''}
+                          </div>
+                          <div class="sc-text">${esc(c.text || '')}</div>
+                          
+                          <div style="display:flex; gap:10px; margin-bottom:15px;">
+                              <input type="text" id="admin-rep-${c.id}" placeholder="Reply..." style="margin:0; padding:10px 15px; font-size:12px;">
+                              <button class="btn btn-primary" style="padding:10px 20px; width:auto;" onclick="adminReply('${c.postId}', '${c.id}', '${esc(displayName)}')">Reply</button>
+                          </div>
+
+                          ${contextHtml}
+                      </div>
+                      <div class="item-actions" style="flex-direction:column;">
+                          <button class="btn btn-danger" style="background:transparent; border:none; font-size: 18px; padding: 0; width: 40px; height: 40px; display:flex; justify-content:center; align-items:center;" onclick="delDoc('comments','${c.id}')">🗑️</button>
+                      </div>
+                  </div>
+              `;
+          } catch(err) {
+              console.error("Skipped a corrupted comment entry.");
           }
-
-          html += `
-              <div class="studio-comment glass-panel" style="margin-bottom:15px;">
-                  <div class="sc-avatar">${initial}</div>
-                  <div class="sc-body">
-                      <div class="sc-header">
-                          <span class="sc-name">${esc(c.email.split('@')[0])}</span>
-                          <span class="sc-time">${timeStr}</span>
-                          ${c.parentId ? '<span class="item-badge">Reply</span>' : ''}
-                      </div>
-                      <div class="sc-text">${esc(c.text)}</div>
-                      
-                      <div style="display:flex; gap:10px; margin-bottom:15px;">
-                          <input type="text" id="admin-rep-${c.id}" placeholder="Reply..." style="margin:0; padding:10px 15px; font-size:12px;">
-                          <button class="btn btn-primary" style="padding:10px 20px; width:auto;" onclick="adminReply('${c.postId}', '${c.id}', '${esc(c.email)}')">Reply</button>
-                      </div>
-
-                      ${contextHtml}
-                  </div>
-                  <div class="item-actions" style="flex-direction:column;">
-                      <button class="btn btn-danger" style="background:transparent; border:none; font-size: 18px; padding: 0; width: 40px; height: 40px; display:flex; justify-content:center; align-items:center;" onclick="delDoc('comments','${c.id}')">🗑️</button>
-                  </div>
-              </div>
-          `;
       });
       box.innerHTML = html || "<div class='muted' style='padding:20px; text-align:center;'>No comments yet.</div>";
   }
 
-  window.adminReply = async (postId, parentId, userEmail) => {
+  window.adminReply = async (postId, parentId, userName) => {
       const input = document.getElementById(`admin-rep-${parentId}`);
       const text = input.value.trim();
       if(!text) return;
       
       try {
           await addDoc(collection(db, "comments"), {
-              postId: postId, text: `@${userEmail.split('@')[0]} ${text}`, 
+              postId: postId, text: `@${userName} ${text}`, 
               uid: me.uid, email: "Admin 👑", parentId: parentId, 
               createdAt: serverTimestamp()
           });
