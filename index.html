@@ -75,7 +75,7 @@
   .dot.active { background: var(--accent); width: 16px; border-radius: 4px; }
   
   /* Category Bar */
-  .cat-wrapper { position: sticky; top: 65px; z-index: 9; transition: 0.4s; margin: 0 -16px; padding: 10px 16px; background: rgba(5, 5, 16, 0.85); backdrop-filter: blur(15px); }
+  .cat-wrapper { position: sticky; top: 65px; z-index: 9; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; margin: 0 -16px; padding: 10px 16px; background: rgba(5, 5, 16, 0.85); backdrop-filter: blur(15px); }
   .cat-wrapper.hidden { transform: translateY(-150%); opacity: 0; pointer-events: none; }
   .cat-scroll { display: flex; overflow-x: auto; gap: 10px; scrollbar-width: none; }
   .cat-scroll::-webkit-scrollbar { display: none; }
@@ -89,6 +89,7 @@
   .post-date { font-size: 11px; color: var(--muted); display: block; margin-top:2px; }
   
   .post-img-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; border-radius: 14px; margin-bottom: 12px; border: 1px solid var(--border); background: #000; position: relative;}
+  .post-img-carousel::-webkit-scrollbar { display: none; }
   .post-img-carousel img { flex: 0 0 100%; width: 100%; height: 220px; object-fit: cover; scroll-snap-align: center; cursor: pointer; }
   .multi-img-badge { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: #fff; font-size: 10px; padding: 4px 8px; border-radius: 12px; font-weight: bold; pointer-events: none; z-index: 2; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px);}
   
@@ -96,7 +97,8 @@
   .quote-block { border-left: 3px solid var(--accent); background: rgba(79, 172, 254, 0.1); padding: 10px 14px; border-radius: 0 8px 8px 0; margin-top: 10px; font-size: 12.5px; color: #d4e8ff; white-space: pre-wrap; display: block; }
   
   .dl-btn-container { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 15px; }
-  .dl-btn { background: rgba(59, 130, 246, 0.15); color: var(--accent); border: 1px solid rgba(59, 130, 246, 0.4); padding: 8px 14px; border-radius: 12px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+  .dl-btn { background: rgba(59, 130, 246, 0.15); color: var(--accent); border: 1px solid rgba(59, 130, 246, 0.4); padding: 8px 14px; border-radius: 12px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: 0.2s; }
+  .dl-btn:active { transform: scale(0.95); }
 
   .reaction-counts { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
   .post-actions { display: flex; position: relative; gap: 5px; margin-top: 5px; padding-top: 5px;}
@@ -112,15 +114,15 @@
   .v-info { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; min-width: 0; }
   .v-title { font-weight: 700; font-size: 13.5px; color: #fff; margin-bottom: 4px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   
-  /* VIDEO DETAIL PAGE WITH WATERMARK */
+  /* VIDEO DETAIL PAGE WITH GLASS WATERMARK */
   #tab-video-detail { position: fixed; inset:0; background: var(--bg); z-index: 50; overflow-y: auto; padding-bottom: 80px; display: none; }
   .vd-header { position: sticky; top: 0; padding: 15px; background: rgba(5,5,16,0.8); backdrop-filter: blur(15px); z-index: 10; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid var(--border); }
   .vd-player-wrap { width: 100%; aspect-ratio: 16/9; background: #000; position: sticky; top: 60px; z-index: 9; overflow: hidden;}
   .vd-player-wrap video { width: 100%; height: 100%; outline: none; }
   
-  /* Anti-Piracy Watermark */
-  .watermark { position: absolute; font-size: 14px; font-weight: bold; color: rgba(255,255,255,0.4); text-shadow: 1px 1px 2px #000; pointer-events: none; z-index: 11; animation: moveWatermark 15s linear infinite alternate; display: none;}
-  @keyframes moveWatermark { 0% { top: 10%; left: 10%; transform: rotate(-10deg); } 100% { top: 80%; left: 60%; transform: rotate(10deg); } }
+  /* FIXED Anti-Piracy Watermark */
+  .watermark { position: absolute; font-size: 18px; font-weight: 800; color: rgba(255,255,255,0.12); text-shadow: 0 2px 10px rgba(0,0,0,0.5); pointer-events: none; z-index: 11; animation: moveWatermark 20s linear infinite alternate; display: none; white-space: nowrap;}
+  @keyframes moveWatermark { 0% { top: 10%; left: 5%; transform: rotate(-5deg); } 100% { top: 80%; left: 55%; transform: rotate(5deg); } }
 
   .vd-info-card { padding: 15px; border-bottom: 1px solid var(--border); }
   .vd-actions-row { display: flex; gap: 10px; margin-top: 15px; overflow-x: auto; scrollbar-width: none; padding-bottom: 5px;}
@@ -150,11 +152,43 @@
   .toast{position:fixed; left:50%; transform:translateX(-50%); bottom:80px; background:var(--ok); color:#000; padding:10px 24px; border-radius:999px; font-weight:800; font-size:13px; opacity:0; transition:.3s; z-index:30000; pointer-events:none;}
   .toast.show{opacity:1; transform:translateX(-50%) translateY(-10px);}
   
-  .nav{position:fixed; left:50%; transform:translateX(-50%); bottom:16px; display:flex; justify-content:space-around; gap:10px; padding:10px; border-radius:999px; background:rgba(15, 20, 35, 0.95); border:1px solid var(--border); backdrop-filter: blur(20px); width: 90%; max-width: 450px; z-index: 100;}
+  /* FIXED: Bottom Nav Fade Out */
+  .nav{position:fixed; left:50%; transform:translateX(-50%); bottom:16px; display:flex; justify-content:space-around; gap:10px; padding:10px; border-radius:999px; background:rgba(15, 20, 35, 0.95); border:1px solid var(--border); backdrop-filter: blur(20px); width: 90%; max-width: 450px; z-index: 100; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;}
+  .nav.hidden { transform: translate(-50%, 150%); opacity: 0; pointer-events: none;}
   .nav button{background:transparent; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:12px 20px; border-radius:999px; transition:0.3s; display: flex; align-items: center; gap: 8px;}
   .nav button.active{color:#fff; background:rgba(138,43,226,.2); box-shadow: inset 0 0 10px rgba(138,43,226,0.5);}
   .nav button span { font-size: 12px; display: none; font-weight:800; }
   .nav button.active span { display: inline-block; }
+
+  /* COMMENT MODAL */
+  .comment-modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10000; display: none; opacity: 0; transition: opacity 0.3s; }
+  .comment-modal-bg.active { display: block; opacity: 1; }
+  .comment-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; height: -webkit-fill-available; background: var(--bg); z-index: 10001; display: none; flex-direction: column; transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .comment-modal.active { transform: translateY(0); display: flex; }
+  .comment-modal.closing { animation: slideDown 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+  @keyframes slideDown { from { transform: translateY(0); } to { transform: translateY(100%); } }
+  .cm-header { flex-shrink: 0; padding: 15px 20px; background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 16px;}
+  .cm-close { background: rgba(255,255,255,0.1); border: none; width: 32px; height: 32px; border-radius: 50%; color: #fff; cursor: pointer; display:flex; align-items:center; justify-content:center;}
+  .cm-body { flex: 1; overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
+  .cm-footer { flex-shrink: 0; padding: 12px 15px; border-top: 1px solid var(--border); background: rgba(15, 23, 42, 0.95); display: flex; flex-direction: column; gap: 8px; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+  .replying-indicator { display: none; justify-content: space-between; align-items: center; font-size: 12px; color: var(--accent); padding: 0 10px; font-weight: 600; }
+  .replying-indicator.active { display: flex; }
+  .c-input-row { display: flex; gap: 10px; width: 100%; align-items: center; }
+  .c-input { flex: 1; padding: 12px 18px; border-radius: 24px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: #fff; font-family: 'Poppins'; font-size: 16px; outline: none; }
+  .c-send { width: 42px !important; height: 42px !important; min-width: 42px !important; min-height: 42px !important; background: linear-gradient(135deg, var(--accent), var(--primary)); border: none; border-radius: 50%; color: #fff; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 16px; flex-shrink: 0 !important; padding: 0 !important; }
+  
+  .c-comment { display: flex; gap: 10px; margin-bottom: 18px; }
+  .c-comment.is-reply { margin-left: 35px; margin-top: -5px; margin-bottom: 12px; position: relative;}
+  .c-comment.is-reply::before { content: ''; position: absolute; left: -22px; top: -15px; width: 15px; height: 30px; border-left: 2px solid var(--border); border-bottom: 2px solid var(--border); border-bottom-left-radius: 8px; }
+  .c-avatar { width: 32px; height: 32px; background: linear-gradient(45deg, var(--accent), var(--primary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; font-size: 13px;}
+  .c-content-wrap { display: flex; flex-direction: column; align-items: flex-start; max-width: 88%; }
+  .c-text-box { background: rgba(255,255,255,0.08); padding: 10px 14px; border-radius: 4px 18px 18px 18px; font-size: 13px; width: 100%; word-wrap: break-word; line-height: 1.5;}
+  .c-name { font-weight: 800; font-size: 12px; margin-bottom: 4px; color: var(--accent); }
+  .c-actions-row { display: flex; align-items: center; gap: 15px; margin-top: 6px; margin-left: 5px; }
+  .c-reply-btn { font-size: 11px; color: var(--muted); cursor: pointer; font-weight: 600; transition: 0.2s;}
+  .c-date { font-size: 10px; color: rgba(255,255,255,0.3); }
+  .view-replies-btn { font-size: 12px; color: var(--primary); font-weight: 600; cursor: pointer; margin-top: 5px; margin-left: 40px; display: flex; align-items: center; gap: 5px; }
+
 </style>
 </head>
 
@@ -293,6 +327,25 @@
     <div style="position:absolute; top:20px; right:20px; color:#fff; font-size:24px; background:rgba(255,255,255,0.2); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center;">✕</div>
 </div>
 
+<div class="comment-modal-bg" id="cm-bg" onclick="closeComment()"></div>
+<div class="comment-modal" id="cm-box">
+    <div class="cm-header">
+        <span>Comments</span>
+        <button class="cm-close" onclick="closeComment()">✕</button>
+    </div>
+    <div class="cm-body" id="cm-list"></div>
+    <div class="cm-footer">
+        <div class="replying-indicator" id="reply-indicator">
+            <span>Replying to <b id="reply-to-name">@User</b></span>
+            <span style="font-size:16px; cursor:pointer;" onclick="cancelReply()">✖</span>
+        </div>
+        <div class="c-input-row">
+            <input type="text" id="cm-input" class="c-input" placeholder="Write a comment...">
+            <button class="c-send" onclick="sendComment()">➤</button>
+        </div>
+    </div>
+</div>
+
 <div class="nav" id="bottom-nav">
   <button id="nHome" class="active" onclick="showTab('home')">🏠 <span>Home</span></button>
   <button id="nPosts" onclick="showTab('posts')">📝 <span>Feed</span></button>
@@ -327,6 +380,9 @@
   let activeTabName = 'home';
   let isSearchActive = false;
   let globalSettings = {};
+  
+  let currentActivePostForComment = null;
+  let activeReplyParentId = null; 
 
   function toast(msg){
     const t = document.getElementById("toast");
@@ -337,16 +393,79 @@
   function esc(s){ return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
   function safeTime(ts) { if(!ts) return 0; if(typeof ts==='number') return ts; if(typeof ts.toMillis==='function') return ts.toMillis(); return ts.seconds*1000||0; }
   function formatDate(ts) { let t=safeTime(ts); return t ? new Date(t).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : "Just now"; }
+  function formatTime(ts) { let t=safeTime(ts); return t ? new Date(t).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : "Now"; }
+
+  // --- FIXED SCROLL ANIMATIONS ---
+  let lastScrollY = window.scrollY;
+  window.addEventListener('scroll', () => {
+      const topHeader = document.getElementById('top-header');
+      const postCat = document.getElementById('post-cat-container');
+      const vidCat = document.getElementById('vid-cat-container');
+      const bottomNav = document.getElementById('bottom-nav');
+
+      if (window.scrollY > 30) { topHeader.classList.add('compact'); } 
+      else { topHeader.classList.remove('compact'); }
+
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY && currentScrollY > 80) {
+          // Scrolling Down (Hide things)
+          if(postCat) postCat.classList.add('hidden');
+          if(vidCat) vidCat.classList.add('hidden');
+          if(activeTabName === 'posts' || activeTabName === 'videos') {
+              if(bottomNav) bottomNav.classList.add('hidden');
+          }
+      } else {
+          // Scrolling Up (Show things)
+          if(postCat) postCat.classList.remove('hidden');
+          if(vidCat) vidCat.classList.remove('hidden');
+          if(bottomNav) bottomNav.classList.remove('hidden');
+      }
+      lastScrollY = currentScrollY;
+  }, {passive: true});
+
+  // --- FIXED CATEGORY SWIPING ---
+  let swipeStartX = 0;
+  document.addEventListener('touchstart', e => { 
+      if(e.target.closest('.cat-scroll') || e.target.closest('.comment-modal') || e.target.closest('.post-img-carousel') || e.target.closest('.carousel-track') || e.target.closest('#tab-video-detail')) return;
+      swipeStartX = e.changedTouches[0].screenX; 
+  }, {passive: true});
+
+  document.addEventListener('touchend', e => {
+      if(e.target.closest('.cat-scroll') || e.target.closest('.comment-modal') || e.target.closest('.post-img-carousel') || e.target.closest('.carousel-track') || e.target.closest('#tab-video-detail')) return;
+      let swipeEndX = e.changedTouches[0].screenX;
+      let diff = swipeStartX - swipeEndX;
+      if (Math.abs(diff) > 60) {
+          if (diff > 0) shiftInnerCategory(1); 
+          else shiftInnerCategory(-1); 
+      }
+  }, {passive: true});
+
+  function shiftInnerCategory(direction) {
+      let listId = '';
+      if (activeTabName === 'posts') listId = '#post-cat-list';
+      else if (activeTabName === 'videos') listId = '#vid-cat-list';
+      else return;
+
+      const pills = Array.from(document.querySelectorAll(`${listId} .cat-pill`));
+      if(pills.length === 0) return;
+      const currentIndex = pills.findIndex(p => p.classList.contains('active'));
+      let nextIndex = currentIndex + direction;
+      if(nextIndex < 0) nextIndex = 0;
+      if(nextIndex >= pills.length) nextIndex = pills.length - 1;
+      
+      if(currentIndex !== nextIndex) {
+          pills[nextIndex].click();
+          pills[nextIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+  }
 
   // --- APP CONTROL LISTENERS ---
   onSnapshot(doc(db, "appSettings", "controls"), (docSnap) => {
       if(docSnap.exists()) {
           globalSettings = docSnap.data();
-          // Maintenance Mode
           if(globalSettings.maintenance) { document.getElementById('maintenance-screen').style.display = 'flex'; } 
           else { document.getElementById('maintenance-screen').style.display = 'none'; }
           
-          // Pop-up Announcement
           if(globalSettings.popup && globalSettings.popup.show) {
               const popupSeen = localStorage.getItem('popupSeenId');
               const currentPopupId = globalSettings.popup.title + globalSettings.popup.msg;
@@ -368,14 +487,13 @@
           const noti = snap.docs[0];
           const data = noti.data();
           const lastNotiId = localStorage.getItem('lastNotiId');
-          // Only show if it's a new notification and within the last 24 hours
           if(lastNotiId !== noti.id && (Date.now() - safeTime(data.createdAt) < 86400000)) {
               document.getElementById('noti-title').innerText = data.title;
               document.getElementById('noti-msg').innerText = data.body;
               const notiBox = document.getElementById('global-noti');
               notiBox.classList.add('show');
               localStorage.setItem('lastNotiId', noti.id);
-              setTimeout(()=> notiBox.classList.remove('show'), 5000); // Hide after 5s
+              setTimeout(()=> notiBox.classList.remove('show'), 5000); 
           }
       }
   });
@@ -409,7 +527,7 @@
           sInput.style.display = 'none';
           sInput.value = '';
           sBtn.innerText = '🔍';
-          executeSearch(); // Reset filters
+          executeSearch(); 
       }
   };
 
@@ -417,7 +535,6 @@
       const q = document.getElementById('global-search').value.toLowerCase();
       if(activeTabName === 'posts') renderPostFeed(null, q);
       if(activeTabName === 'videos') renderVideoFeed(null, q);
-      // Auto-switch tab if searching from home
       if(activeTabName === 'home' && q.length > 0) showTab('posts');
   };
 
@@ -449,7 +566,6 @@
   };
   window.logout = async ()=>{ await signOut(auth); toast("Logged Out"); };
 
-  // Profile Edit
   window.editUsername = async () => {
       const newName = prompt("Enter new username (e.g. @kyawkyaw):", meData.username || "");
       if(newName && newName.trim() !== "") {
@@ -639,15 +755,22 @@
             
             <div class="reaction-counts" style="margin-top:12px;">
                 <span>${rKeys.length > 0 ? '❤️ ' + rKeys.length : ''}</span>
+                <span id="ccount-${p.id}">Comments</span>
             </div>
             
             <div class="post-actions">
                 <button class="action-btn ${myReact ? 'liked':''}" onclick="reactPost('${p.id}')">❤️ React</button>
-                <button class="action-btn" onclick="alert('Comments comming soon')">💬 Comment</button>
+                <button class="action-btn" onclick="openComment('${p.id}')">💬 Comment</button>
                 <button class="action-btn ${isSaved ? 'saved':''}" onclick="toggleSave('post', '${p.id}')">🔖 Save</button>
             </div>
           </div>
         `;
+        
+        // Fetch Comments Count for Post
+        getDocs(query(collection(db, "comments"), where("postId", "==", p.id))).then(snap => {
+            const cEl = document.getElementById(`ccount-${p.id}`);
+            if(cEl) cEl.innerText = `${snap.size} Comments`;
+        });
       });
       feed.innerHTML = html || `<div class="muted" style="text-align:center; padding:20px;">No posts found.</div>`;
   }
@@ -658,6 +781,124 @@
       let r = p.reactions || {};
       if(r[me.uid]) delete r[me.uid]; else r[me.uid] = '❤️';
       await updateDoc(doc(db, "posts", id), { reactions: r });
+  };
+
+  // --- NESTED COMMENT MODAL ---
+  let commentUnsubscribe = null;
+  window.openComment = (postId) => {
+      if(!me) return toast("Please Login First!");
+      currentActivePostForComment = postId;
+      activeReplyParentId = null; 
+      
+      const bg = document.getElementById('cm-bg');
+      const box = document.getElementById('cm-box');
+      
+      bg.classList.add('active');
+      box.style.display = 'flex';
+      void box.offsetWidth; 
+      box.classList.add('active');
+      document.body.style.overflow = 'hidden'; 
+      
+      const list = document.getElementById('cm-list');
+      list.innerHTML = "<div class='muted' style='text-align:center;'>Loading...</div>";
+      
+      const q = query(collection(db, "comments"), where("postId", "==", postId));
+      commentUnsubscribe = onSnapshot(q, (snap) => {
+          let comments = [];
+          snap.forEach(doc => comments.push({id: doc.id, ...doc.data()}));
+          comments.sort((a,b) => safeTime(a.createdAt) - safeTime(b.createdAt));
+          
+          const parents = comments.filter(c => !c.parentId);
+          const replies = comments.filter(c => c.parentId);
+          
+          list.innerHTML = parents.length === 0 ? "<div class='muted' style='text-align:center; margin-top:20px;'>Be the first to comment!</div>" : "";
+          
+          parents.forEach(p => {
+              const safeEmail = p.email ? String(p.email) : "Unknown";
+              const name = safeEmail.includes('@') ? safeEmail.split('@')[0] : safeEmail;
+              const initial = name.charAt(0).toUpperCase();
+              
+              const childReplies = replies.filter(r => r.parentId === p.id);
+              let repliesHtml = ""; let viewRepliesBtn = "";
+              
+              if(childReplies.length > 0) {
+                  viewRepliesBtn = `<div class="view-replies-btn" onclick="toggleRepliesGroup('${p.id}', this)">View ${childReplies.length} replies</div>`;
+                  repliesHtml = `<div id="reply-grp-${p.id}" style="display:none; margin-top: 10px;">`;
+                  childReplies.forEach(r => {
+                      const rSafeEmail = r.email ? String(r.email) : "Unknown";
+                      const rName = rSafeEmail.includes('@') ? rSafeEmail.split('@')[0] : rSafeEmail;
+                      repliesHtml += `
+                          <div class="c-comment is-reply">
+                              <div class="c-avatar" style="width:26px; height:26px; font-size:11px;">${rName.charAt(0).toUpperCase()}</div>
+                              <div class="c-content-wrap">
+                                  <div class="c-text-box"><div class="c-name">${esc(rName)}</div>${esc(r.text)}</div>
+                                  <div class="c-actions-row"><span class="c-date">${formatTime(r.createdAt)}</span></div>
+                              </div>
+                          </div>`;
+                  });
+                  repliesHtml += `</div>`;
+              }
+              
+              list.innerHTML += `
+                  <div class="c-comment">
+                      <div class="c-avatar">${initial}</div>
+                      <div class="c-content-wrap" style="width:100%;">
+                          <div class="c-text-box">
+                              <div class="c-name">${esc(name)}</div>
+                              ${esc(p.text)}
+                          </div>
+                          <div class="c-actions-row">
+                              <span class="c-date">${formatTime(p.createdAt)}</span>
+                              <span class="c-reply-btn" onclick="startReply('${p.id}', '${esc(name)}')">Reply</span>
+                          </div>
+                          ${viewRepliesBtn}
+                          ${repliesHtml}
+                      </div>
+                  </div>`;
+          });
+          if(!activeReplyParentId) list.scrollTop = list.scrollHeight;
+      });
+  };
+
+  window.toggleRepliesGroup = (parentId, btn) => {
+      const grp = document.getElementById(`reply-grp-${parentId}`);
+      if(grp.style.display === "none") { grp.style.display = "block"; btn.innerText = "Hide replies"; } 
+      else { grp.style.display = "none"; const count = grp.querySelectorAll('.is-reply').length; btn.innerText = `View ${count} replies`; }
+  }
+  window.startReply = (parentId, userName) => {
+      activeReplyParentId = parentId;
+      document.getElementById('reply-indicator').classList.add('active');
+      document.getElementById('reply-to-name').innerText = `@${userName}`;
+      document.getElementById('cm-input').focus();
+  };
+  window.cancelReply = () => {
+      activeReplyParentId = null;
+      document.getElementById('reply-indicator').classList.remove('active');
+  };
+  window.closeComment = () => {
+      const box = document.getElementById('cm-box');
+      box.classList.add('closing');
+      box.classList.remove('active');
+      document.getElementById('cm-bg').classList.remove('active');
+      setTimeout(() => { box.classList.remove('closing'); box.style.display = 'none'; }, 350);
+      document.body.style.overflow = 'auto';
+      currentActivePostForComment = null;
+      cancelReply();
+      if(commentUnsubscribe) { commentUnsubscribe(); commentUnsubscribe = null; }
+  };
+  window.sendComment = async () => {
+      if(!currentActivePostForComment || !me) return;
+      const input = document.getElementById('cm-input');
+      const text = input.value.trim();
+      if(!text) return;
+      const parentToSave = activeReplyParentId; 
+      input.value = ""; cancelReply(); 
+      try {
+          await addDoc(collection(db, "comments"), {
+              postId: currentActivePostForComment, text: text, uid: me.uid, 
+              email: meData.username || me.email, parentId: parentToSave, createdAt: serverTimestamp()
+          });
+      } catch(e) { toast("Failed to comment"); }
   };
 
   // --- VIDEOS RENDER ---
@@ -717,10 +958,10 @@
       detailPage.style.display = 'block';
       window.scrollTo(0,0);
       
-      // Watermark Logic
+      // FIXED WATERMARK
       const wm = document.getElementById('vd-watermark');
       if(globalSettings.watermark) {
-          wm.innerText = meData.username || me.email;
+          wm.innerText = meData.username || (me.email ? me.email.split('@')[0] : "User");
           wm.style.display = 'block';
       } else { wm.style.display = 'none'; }
       
@@ -771,7 +1012,6 @@
         const uDoc = await getDoc(doc(db, "users", me.uid));
         if(uDoc.exists()) {
             meData = { ...meData, ...uDoc.data() };
-            // Activity Tracker (Last Login)
             setDoc(doc(db, "users", me.uid), { lastLogin: Date.now() }, { merge: true });
         } else {
             setDoc(doc(db, "users", me.uid), { email: me.email, uid: me.uid, createdAt: Date.now() }, { merge: true });
