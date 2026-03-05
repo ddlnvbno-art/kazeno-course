@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>Kazeno Admin | Pro Console</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
   :root {
     --bg-color: #000000;
@@ -16,6 +18,7 @@
     --accent: #0a84ff;
     --danger: #ff453a;
     --success: #32d74b;
+    --warning: #ff9f0a;
     --radius: 24px;
   }
 
@@ -27,12 +30,7 @@
   body::before { content: ''; position: fixed; top: -20%; left: -10%; width: 60vw; height: 60vh; background: radial-gradient(circle, rgba(94, 92, 230, 0.15) 0%, transparent 60%); filter: blur(80px); z-index: -1; }
   body::after { content: ''; position: fixed; bottom: -20%; right: -10%; width: 60vw; height: 60vh; background: radial-gradient(circle, rgba(10, 132, 255, 0.1) 0%, transparent 60%); filter: blur(80px); z-index: -1; }
 
-  /* Universal Glass Class */
-  .glass-panel {
-    background: var(--glass-bg); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-    border: 1px solid var(--glass-border); border-radius: var(--radius);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-  }
+  .glass-panel { background: var(--glass-bg); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid var(--glass-border); border-radius: var(--radius); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); }
 
   /* --- LOGIN --- */
   #login-view { height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
@@ -42,13 +40,12 @@
   /* --- APP LAYOUT --- */
   #app-view { display: none; height: 100vh; width: 100vw; overflow: hidden; }
   
-  /* Mobile Header */
   .mobile-header { display: none; padding: 15px 20px; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.5); backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border); z-index: 100; position: fixed; width: 100%; top: 0; }
   .mobile-header h1 { margin: 0; font-size: 18px; font-weight: 800; background: linear-gradient(90deg, var(--accent), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
   .menu-btn { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; padding: 0; }
 
   /* Sidebar */
-  .sidebar { width: 280px; height: 100vh; background: rgba(10, 10, 15, 0.8); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; padding: 30px 20px; z-index: 99; transition: transform 0.3s ease; }
+  .sidebar { width: 280px; height: 100vh; background: rgba(10, 10, 15, 0.8); backdrop-filter: blur(30px); border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; padding: 30px 20px; z-index: 99; transition: transform 0.3s ease; }
   .brand-logo { font-size: 22px; font-weight: 800; margin-bottom: 40px; padding: 0 10px; display: flex; align-items: center; gap:10px;}
   .brand-logo::before { content:''; width:12px; height:12px; background:var(--accent); border-radius:50%; box-shadow: 0 0 10px var(--accent);}
   
@@ -66,7 +63,7 @@
   h2.section-title { font-size: 28px; font-weight: 800; margin-bottom: 30px; letter-spacing: -0.5px;}
   h3 { margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: #fff; }
 
-  /* --- INPUTS & BUTTONS --- */
+  /* --- INPUTS, BUTTONS & TOGGLES --- */
   input, textarea, select {
     width: 100%; padding: 16px 20px; border-radius: 16px; margin-bottom: 16px;
     background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1);
@@ -81,16 +78,21 @@
   .btn-danger { background: rgba(255, 69, 58, 0.15); color: var(--danger); border: 1px solid rgba(255, 69, 58, 0.3); }
   .btn-ghost { background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid var(--glass-border); }
 
-  /* Suggestion Chips for Category */
-  .chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: -8px; margin-bottom: 20px; }
-  .chip { padding: 6px 14px; background: rgba(255,255,255,0.08); border-radius: 20px; font-size: 12px; cursor: pointer; border: 1px solid transparent; transition: 0.2s; color: var(--text-muted);}
-  .chip:hover, .chip:active { background: rgba(10, 132, 255, 0.2); color: #fff; border-color: var(--accent); }
+  /* iOS Style Toggle Switch */
+  .switch-container { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid var(--glass-border); margin-bottom: 15px;}
+  .switch { position: relative; display: inline-block; width: 50px; height: 28px; flex-shrink: 0;}
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 34px; }
+  .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+  input:checked + .slider { background-color: var(--success); }
+  input:checked + .slider:before { transform: translateX(22px); }
 
   /* --- DASHBOARD --- */
   .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
   .stat-card { padding: 30px 20px; text-align: center; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center;}
   .stat-num { font-size: 42px; font-weight: 800; margin-bottom: 5px; line-height: 1; }
   .stat-label { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+  .chart-container { width: 100%; height: 250px; display: flex; justify-content: center; align-items: center; margin-top: 10px;}
 
   /* --- LISTS --- */
   .filter-bar { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; scrollbar-width: none; padding-bottom: 5px;}
@@ -99,25 +101,17 @@
 
   .content-list { display: flex; flex-direction: column; gap: 15px; }
   .list-item { padding: 20px; display: flex; justify-content: space-between; align-items: center; gap: 15px; transition: transform 0.2s; }
-  .list-item:hover { background: rgba(255,255,255,0.08); }
   .item-main { flex: 1; min-width: 0; }
   .item-title { font-weight: 600; font-size: 15px; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff;}
-  .item-meta { font-size: 12px; color: var(--text-muted); display: flex; gap: 10px;}
+  .item-meta { font-size: 12px; color: var(--text-muted); display: flex; gap: 10px; align-items: center; flex-wrap: wrap;}
   .item-badge { background: rgba(10, 132, 255, 0.15); color: var(--accent); padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: bold; border: 1px solid rgba(10,132,255,0.3);}
   .item-actions { display: flex; gap: 10px; flex-shrink: 0; }
 
-  /* Studio Comment Item */
-  .studio-comment { display: flex; gap: 15px; padding: 20px; align-items: flex-start; }
-  .sc-avatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; font-size: 16px;}
-  .sc-body { flex: 1; min-width: 0; }
-  .sc-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-  .sc-name { font-weight: 600; font-size: 14px; color: #fff;}
-  .sc-time { font-size: 11px; color: var(--text-muted); }
-  .sc-text { font-size: 14px; color: #e5e7eb; margin-bottom: 15px; line-height: 1.5; word-wrap: break-word;}
-  .sc-context { display: flex; gap: 12px; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 12px; align-items: center; border: 1px solid rgba(255,255,255,0.05); max-width: 100%;}
-  .sc-context-img { width: 70px; height: 45px; border-radius: 8px; object-fit: cover; }
-  .sc-context-title { font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
+  /* Custom Chips */
+  .chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
+  .chip { padding: 6px 14px; background: rgba(255,255,255,0.08); border-radius: 20px; font-size: 12px; cursor: pointer; border: 1px solid transparent; transition: 0.2s; color: var(--text-muted);}
+  .chip:hover, .chip:active { background: rgba(10, 132, 255, 0.2); color: #fff; border-color: var(--accent); }
+  
   .dynamic-input-row { display: flex; gap: 10px; margin-bottom: 12px; align-items: center; }
   .dynamic-input-row input { margin-bottom: 0; }
   .remove-btn { background: rgba(255,69,58,0.15); border:1px solid rgba(255,69,58,0.3); width: 50px; height: 50px; border-radius: 16px; color: var(--danger); cursor:pointer; flex-shrink: 0;}
@@ -134,8 +128,6 @@
       .sidebar { position: fixed; left: -100%; top: 0; width: 280px; height: 100vh; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); border-right: 1px solid var(--glass-border); box-shadow: 20px 0 50px rgba(0,0,0,0.5); z-index: 1000; }
       .sidebar.open { left: 0; }
       .main-content { padding: 90px 20px 40px; height: auto; overflow-y: visible;}
-      .grid-2 { grid-template-columns: 1fr; }
-      .item-actions { flex-direction: column; }
       .dynamic-input-row { flex-direction: column; align-items: stretch; }
       .dynamic-input-row input { width: 100%; }
       .remove-btn { width: 100%; height: 40px; }
@@ -165,12 +157,12 @@
 
     <div class="sidebar" id="sidebar">
         <div class="brand-logo" style="margin-top: 10px;">Kazeno Admin</div>
-        <div class="nav-item active" onclick="switchTab('tab-dash', this)">📊 Dashboard</div>
+        <div class="nav-item active" onclick="switchTab('tab-dash', this)">📊 Analytics</div>
+        <div class="nav-item" onclick="switchTab('tab-controls', this)">⚙️ App Controls <span style="background:var(--danger); color:#fff; font-size:9px; padding:2px 6px; border-radius:10px; margin-left:auto;">NEW</span></div>
         <div class="nav-item" onclick="switchTab('tab-home', this)">🌟 Home UI</div>
         <div class="nav-item" onclick="switchTab('tab-users', this)">👥 Pro Users</div>
         <div class="nav-item" onclick="switchTab('tab-videos', this)">🎬 Videos Course</div>
         <div class="nav-item" onclick="switchTab('tab-posts', this)">📝 Feed Posts</div>
-        <div class="nav-item" onclick="switchTab('tab-comments', this)">💬 Comments</div>
         <div class="nav-item logout-btn" onclick="logout()">🚪 Log Out</div>
     </div>
     
@@ -179,22 +171,79 @@
     <div class="main-content">
         
         <div id="tab-dash" class="page-section active">
-            <h2 class="section-title">Overview</h2>
+            <h2 class="section-title">Visual Analytics</h2>
+            
             <div class="dash-grid">
                 <div class="stat-card glass-panel" style="grid-column: 1 / -1; flex-direction: row; justify-content: space-around; padding: 40px 20px;">
                     <div><div class="stat-num" id="s-total">0</div><div class="stat-label">Total Users</div></div>
                     <div style="width: 1px; height: 50px; background: var(--glass-border);"></div>
                     <div><div class="stat-num" id="s-pro" style="color: var(--success);">0</div><div class="stat-label">Pro Users</div></div>
                     <div style="width: 1px; height: 50px; background: var(--glass-border);"></div>
-                    <div><div class="stat-num" id="s-free" style="color: var(--text-muted);">0</div><div class="stat-label">Free Users</div></div>
+                    <div><div class="stat-num" id="s-vid">0</div><div class="stat-label">Videos</div></div>
+                    <div style="width: 1px; height: 50px; background: var(--glass-border);"></div>
+                    <div><div class="stat-num" id="s-post">0</div><div class="stat-label">Posts</div></div>
                 </div>
-                <div class="stat-card glass-panel"><div class="stat-num" id="s-vid">0</div><div class="stat-label">Videos</div></div>
-                <div class="stat-card glass-panel"><div class="stat-num" id="s-post">0</div><div class="stat-label">Posts</div></div>
+            </div>
+
+            <div class="glass-panel" style="padding: 20px; display:flex; flex-direction:column; align-items:center;">
+                <h3 style="align-self:flex-start; color:var(--text-muted); font-size:14px; text-transform:uppercase;">User Distribution</h3>
+                <div class="chart-container">
+                    <canvas id="userChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-controls" class="page-section">
+            <h2 class="section-title">App Controls & Noti</h2>
+            
+            <div class="dash-grid">
+                <div class="glass-panel switch-container">
+                    <div>
+                        <div style="font-weight:600; font-size:15px;">🚧 Maintenance Mode</div>
+                        <div style="font-size:11px; color:var(--text-muted); max-width:200px;">Block access to the app for server updates.</div>
+                    </div>
+                    <label class="switch">
+                      <input type="checkbox" id="toggle-maintenance" onchange="updateAppControl('maintenance', this.checked)">
+                      <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="glass-panel switch-container">
+                    <div>
+                        <div style="font-weight:600; font-size:15px;">🛡️ Anti-Piracy Watermark</div>
+                        <div style="font-size:11px; color:var(--text-muted); max-width:200px;">Show user's email floating on videos.</div>
+                    </div>
+                    <label class="switch">
+                      <input type="checkbox" id="toggle-watermark" onchange="updateAppControl('watermark', this.checked)">
+                      <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="glass-panel" style="padding: 25px; margin-bottom: 25px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+                    <h3>📢 App-Open Pop-up (ကြေညာချက်)</h3>
+                    <label class="switch">
+                      <input type="checkbox" id="toggle-popup" onchange="updateAppControl('popup.show', this.checked)">
+                      <span class="slider"></span>
+                    </label>
+                </div>
+                <input type="text" id="popup-title" placeholder="Title (e.g. Advance Server Update!)">
+                <textarea id="popup-msg" placeholder="Message content..." style="min-height: 80px;"></textarea>
+                <button class="btn btn-ghost" style="width:auto;" onclick="savePopupData()">Save Message</button>
+            </div>
+
+            <div class="glass-panel" style="padding: 25px; border: 1px solid var(--accent);">
+                <h3 style="color:var(--accent);">🔔 Send Push Notification</h3>
+                <p style="font-size:12px; color:var(--text-muted); margin-bottom:15px;">App ကို အသုံးပြုနေသူတိုင်း၏ စခရင်ပေါ်တွင် ချက်ချင်း Notification တက်လာမည်ဖြစ်ပါသည်။</p>
+                <input type="text" id="noti-title" placeholder="Notification Title">
+                <input type="text" id="noti-body" placeholder="Notification Message">
+                <button class="btn btn-primary" style="width:auto;" onclick="sendNotification()">Send Blast 🚀</button>
             </div>
         </div>
 
         <div id="tab-home" class="page-section">
-            <h2 class="section-title">Home Page Customization</h2>
+            <h2 class="section-title">Home Layout Settings</h2>
             <div class="glass-panel" style="padding: 30px;">
                 <label style="font-size:13px; color:var(--text-muted); font-weight:600;">Marquee Text (စာတန်းပြေး)</label>
                 <textarea id="home-marquee" style="margin-top:8px;"></textarea>
@@ -202,9 +251,8 @@
                 <label style="font-size:13px; color:var(--text-muted); font-weight:600; display:block; margin: 15px 0 10px;">Banner Images (Upload from Phone)</label>
                 <div id="banner-inputs"></div>
                 <button class="btn btn-ghost" style="margin-bottom: 20px;" onclick="addBannerField()">+ Add Another Banner</button>
-                
                 <hr style="border-color: var(--glass-border); margin-bottom:20px;">
-                <button class="btn btn-primary" onclick="saveHomeUI()">Save Home Config</button>
+                <button class="btn btn-primary" onclick="saveHomeUI()">Save Config</button>
             </div>
         </div>
 
@@ -246,31 +294,32 @@
             </div>
         </div>
 
-        <div id="tab-comments" class="page-section">
-            <h2 class="section-title">Channel Comments</h2>
-            <div class="glass-panel" style="padding: 10px;">
-                <div id="admin-comment-list" style="display:flex; flex-direction:column;"><div class='muted' style='padding:20px; text-align:center;'>Loading comments...</div></div>
-            </div>
-        </div>
-
     </div>
 </div>
 
 <div class="modal-bg" id="modal-user" onclick="closeModal('modal-user')">
     <div class="glass-panel modal-content" onclick="event.stopPropagation()">
         <h3 id="mu-email" style="font-size:22px; margin-bottom: 5px;">user@email.com</h3>
-        <p id="mu-uid" style="font-size:12px; color:var(--text-muted); font-family:monospace; margin-bottom: 25px;"></p>
+        <p id="mu-uid" style="font-size:11px; color:var(--text-muted); font-family:monospace; margin-bottom: 25px;"></p>
         
         <div style="background:rgba(0,0,0,0.4); padding:20px; border-radius:16px; margin-bottom:25px; border: 1px solid rgba(255,255,255,0.05);">
             <div style="margin-bottom:12px; font-size:14px; display:flex; justify-content:space-between;">
                 <span>Account Status:</span> 
                 <span id="mu-status" style="font-weight:bold; letter-spacing:1px;">FREE</span>
             </div>
+            <div style="font-size:14px; display:flex; justify-content:space-between; margin-bottom:12px;">
+                <span>Joined Date:</span> 
+                <span id="mu-joined" style="color:var(--text-muted);">Unknown</span>
+            </div>
+            <div style="font-size:14px; display:flex; justify-content:space-between;">
+                <span>Last Active:</span> 
+                <span id="mu-last" style="color:var(--warning);">Never</span>
+            </div>
         </div>
         
         <div style="display:flex; gap:15px; flex-direction: column;">
             <button class="btn btn-primary" id="btn-toggle-pro">Grant Pro Access</button>
-            <button class="btn btn-danger" id="btn-del-user-db">Delete Firestore Data</button>
+            <button class="btn btn-danger" id="btn-del-user-db">Delete User Data</button>
         </div>
     </div>
 </div>
@@ -358,6 +407,7 @@
   let globalProUsers = [];
   let globalVideos = [];
   let globalPosts = [];
+  let myChartInstance = null; // Chart.js instance
 
   function esc(s){ return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
   
@@ -369,7 +419,6 @@
       }
   }
 
-  // --- 🔥 BULLETPROOF TIME PARSER ---
   function safeTime(ts) {
       if (!ts) return 0;
       if (typeof ts === 'number') return ts; 
@@ -399,6 +448,7 @@
     document.getElementById("login-view").style.display="none";
     document.getElementById("app-view").style.display="flex";
     initRealtimeListeners();
+    loadAppControls(); // Load Maintenance, Watermark etc
   });
 
   window.switchTab = (tabId, btn) => {
@@ -411,42 +461,25 @@
 
   window.closeModal = (id) => { document.getElementById(id).classList.remove('active'); }
 
-  // --- IMAGE UPLOAD TO IMGBB ---
+  // --- BASE64 UPLOAD ---
   window.uploadImageToImgBB = (fileInput, targetInputId) => {
       const file = fileInput.files[0];
       if(!file) return;
-      
       const targetInput = document.getElementById(targetInputId);
-      targetInput.value = "Uploading to Cloud... ⏳";
+      targetInput.value = "Uploading... ⏳";
       
       const API_KEY = "f0d759dd374df91104867c6701e199f2"; 
-      
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = async () => {
           const base64data = reader.result.split(',')[1];
-          const formData = new FormData();
-          formData.append("image", base64data);
-          
+          const formData = new FormData(); formData.append("image", base64data);
           try {
-              const response = await fetch(`https://api.imgbb.com/1/upload?key=${API_KEY}`, {
-                  method: 'POST',
-                  body: formData
-              });
+              const response = await fetch(`https://api.imgbb.com/1/upload?key=${API_KEY}`, { method: 'POST', body: formData });
               const data = await response.json();
-              
-              if(data.success) {
-                  targetInput.value = data.data.url;
-                  showToast("Image Uploaded! ✅");
-              } else {
-                  throw new Error(data.error.message || "Upload failed");
-              }
-          } catch(e) {
-              targetInput.value = "";
-              alert("Error: " + e.message + " (Check Internet)");
-          } finally {
-              fileInput.value = ""; 
-          }
+              if(data.success) { targetInput.value = data.data.url; showToast("Uploaded!"); } 
+              else { throw new Error("Upload failed"); }
+          } catch(e) { targetInput.value = ""; alert("Error: " + e.message); }
       };
   };
 
@@ -463,50 +496,32 @@
                       data.banners.forEach((url, i) => bContainer.insertAdjacentHTML('beforeend', createImgInputRow(url, `banner-img-${i}`)));
                   } else { bContainer.insertAdjacentHTML('beforeend', createImgInputRow('', 'banner-img-0')); }
               }
-          }).catch(e => console.log(e));
+          });
       } catch(e) {}
 
       onSnapshot(collection(db, "users"), (snap) => {
-          try {
-              globalUsers = []; snap.forEach(d => globalUsers.push({id: d.id, ...d.data()}));
-              updateDashboard(); 
-              let activeTab = document.querySelector('#tab-users .filter-pill.active')?.innerText || 'All';
-              renderUserList(activeTab.split(' ')[0]);
-          } catch(e) { console.error(e); }
-      }, (err) => console.log(err));
+          globalUsers = []; snap.forEach(d => globalUsers.push({id: d.id, ...d.data()}));
+          updateDashboard(); 
+          renderUserList(document.querySelector('#tab-users .filter-pill.active')?.innerText.split(' ')[0] || 'All');
+      });
 
       onSnapshot(query(collection(db, "paidUsers"), where("active", "==", true)), (snap) => {
-          try {
-              globalProUsers = []; snap.forEach(d => globalProUsers.push(d.id));
-              updateDashboard(); 
-              let activeTab = document.querySelector('#tab-users .filter-pill.active')?.innerText || 'All';
-              renderUserList(activeTab.split(' ')[0]);
-          } catch(e) { console.error(e); }
-      }, (err) => console.log(err));
+          globalProUsers = []; snap.forEach(d => globalProUsers.push(d.id));
+          updateDashboard(); 
+          renderUserList(document.querySelector('#tab-users .filter-pill.active')?.innerText.split(' ')[0] || 'All');
+      });
 
       onSnapshot(collection(db, "videos"), (snap) => {
-          try {
-              globalVideos = []; snap.forEach(d => globalVideos.push({id: d.id, ...d.data()}));
-              globalVideos.sort((a,b) => safeTime(b.timestamp) - safeTime(a.timestamp)); 
-              updateDashboard(); renderVideoSection();
-          } catch(e) { console.error(e); }
-      }, (err) => console.log(err));
+          globalVideos = []; snap.forEach(d => globalVideos.push({id: d.id, ...d.data()}));
+          globalVideos.sort((a,b) => safeTime(b.timestamp) - safeTime(a.timestamp)); 
+          updateDashboard(); renderVideoSection();
+      });
 
       onSnapshot(collection(db, "posts"), (snap) => {
-          try {
-              globalPosts = []; snap.forEach(d => globalPosts.push({id: d.id, ...d.data()}));
-              globalPosts.sort((a,b) => safeTime(b.createdAt) - safeTime(a.createdAt)); 
-              updateDashboard(); renderPostSection();
-          } catch(e) { console.error(e); }
-      }, (err) => console.log(err));
-
-      onSnapshot(collection(db, "comments"), (snap) => {
-          try {
-              let comments = []; snap.forEach(d => comments.push({id: d.id, ...d.data()}));
-              comments.sort((a,b) => safeTime(b.createdAt) - safeTime(a.createdAt));
-              renderCommentsUI(comments);
-          } catch(e) { console.error(e); }
-      }, (err) => console.log(err));
+          globalPosts = []; snap.forEach(d => globalPosts.push({id: d.id, ...d.data()}));
+          globalPosts.sort((a,b) => safeTime(b.createdAt) - safeTime(a.createdAt)); 
+          updateDashboard(); renderPostSection();
+      });
   }
 
   function updateDashboard() {
@@ -515,9 +530,76 @@
       if(document.getElementById('s-free')) document.getElementById('s-free').innerText = globalUsers.length - globalProUsers.length;
       if(document.getElementById('s-vid')) document.getElementById('s-vid').innerText = globalVideos.length;
       if(document.getElementById('s-post')) document.getElementById('s-post').innerText = globalPosts.length;
+      
+      // Update Chart
+      const ctx = document.getElementById('userChart');
+      if(ctx) {
+          if(myChartInstance) myChartInstance.destroy();
+          myChartInstance = new Chart(ctx, {
+              type: 'doughnut',
+              data: {
+                  labels: ['Pro Users', 'Free Users'],
+                  datasets: [{
+                      data: [globalProUsers.length, globalUsers.length - globalProUsers.length],
+                      backgroundColor: ['#32d74b', '#86868b'],
+                      borderWidth: 0,
+                      hoverOffset: 4
+                  }]
+              },
+              options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#fff' } } } }
+          });
+      }
   }
 
-  // --- USERS MANAGEMENT ---
+  // --- APP CONTROLS & NOTI (NEW) ---
+  async function loadAppControls() {
+      const snap = await getDoc(doc(db, "appSettings", "controls"));
+      if(snap.exists()) {
+          const d = snap.data();
+          document.getElementById('toggle-maintenance').checked = d.maintenance || false;
+          document.getElementById('toggle-watermark').checked = d.watermark || false;
+          if(d.popup) {
+              document.getElementById('toggle-popup').checked = d.popup.show || false;
+              document.getElementById('popup-title').value = d.popup.title || "";
+              document.getElementById('popup-msg').value = d.popup.msg || "";
+          }
+      }
+  }
+
+  window.updateAppControl = async (field, value) => {
+      try {
+          if(field === 'popup.show') {
+              await setDoc(doc(db, "appSettings", "controls"), { popup: { show: value } }, { merge: true });
+          } else {
+              await setDoc(doc(db, "appSettings", "controls"), { [field]: value }, { merge: true });
+          }
+          showToast("Control Updated!");
+      } catch(e) { alert("Update failed"); }
+  };
+
+  window.savePopupData = async () => {
+      const title = document.getElementById('popup-title').value.trim();
+      const msg = document.getElementById('popup-msg').value.trim();
+      const show = document.getElementById('toggle-popup').checked;
+      try {
+          await setDoc(doc(db, "appSettings", "controls"), { popup: { show, title, msg } }, { merge: true });
+          showToast("Pop-up Saved!");
+      } catch(e) { alert("Failed to save"); }
+  };
+
+  window.sendNotification = async () => {
+      const title = document.getElementById('noti-title').value.trim();
+      const body = document.getElementById('noti-body').value.trim();
+      if(!title || !body) return alert("Please fill title and message.");
+      try {
+          await addDoc(collection(db, "notifications"), { title, body, createdAt: serverTimestamp() });
+          document.getElementById('noti-title').value = "";
+          document.getElementById('noti-body').value = "";
+          showToast("Notification Sent! 🚀");
+      } catch(e) { alert("Failed to send"); }
+  };
+
+  // --- USERS MANAGEMENT (WITH ACTIVITY) ---
   window.filterUsers = (type, btn) => {
       document.querySelectorAll('#tab-users .filter-pill').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
@@ -536,13 +618,16 @@
       let html = "";
       filtered.forEach(u => {
           const isPro = globalProUsers.includes(u.uid);
+          const lastActive = u.lastLogin ? new Date(u.lastLogin).toLocaleDateString() : 'Never';
           html += `
             <div class="list-item glass-panel" style="cursor:pointer;" onclick="openUserModal('${u.uid}')">
                 <div class="item-main">
                     <div class="item-title">${esc(u.email)}</div>
-                    <div class="item-meta">UID: ${esc(u.uid).substring(0,8)}...</div>
+                    <div class="item-meta">
+                        <span class="item-badge" style="background:${isPro?'rgba(50,215,75,0.1)':'rgba(255,255,255,0.1)'}; color:${isPro?'var(--success)':'var(--text-muted)'}; border-color:${isPro?'var(--success)':'var(--glass-border)'}">${isPro ? 'PRO' : 'FREE'}</span>
+                        <span>Activity: ${lastActive}</span>
+                    </div>
                 </div>
-                <div style="font-size:12px; font-weight:bold; color:${isPro ? 'var(--success)' : 'var(--text-muted)'}">${isPro ? 'PRO' : 'FREE'}</div>
             </div>`;
       });
       box.innerHTML = html || "<div class='muted'>No users found.</div>";
@@ -556,6 +641,9 @@
       document.getElementById('mu-uid').innerText = uid;
       document.getElementById('mu-status').innerText = isPro ? "PRO MEMBER" : "FREE ACCOUNT";
       document.getElementById('mu-status').style.color = isPro ? "var(--success)" : "var(--text-main)";
+      
+      document.getElementById('mu-joined').innerText = u.createdAt ? new Date(u.createdAt).toLocaleString() : "Unknown";
+      document.getElementById('mu-last').innerText = u.lastLogin ? new Date(u.lastLogin).toLocaleString() : "Never active";
       
       const btnToggle = document.getElementById('btn-toggle-pro');
       if(isPro) { btnToggle.innerText = "Revoke PRO Access"; btnToggle.className = "btn btn-ghost"; btnToggle.onclick = () => togglePro(uid, false); } 
@@ -585,7 +673,7 @@
       const marquee = document.getElementById('home-marquee').value.trim();
       let banners = [];
       document.querySelectorAll('#banner-inputs .p-img-url').forEach(i => { if(i.value.trim() !== '') banners.push(i.value.trim()); });
-      await setDoc(doc(db, "appSettings", "homeConfig"), { marquee: marquee, banners: banners });
+      await setDoc(doc(db, "appSettings", "homeConfig"), { marquee: marquee, banners: banners }, { merge: true });
       showToast("Home Settings Saved! ✅");
   };
 
@@ -764,83 +852,6 @@
               </div>`;
       });
       box.innerHTML = html || "<div class='muted'>Empty list.</div>";
-  };
-
-  // --- STUDIO COMMENTS ---
-  function renderCommentsUI(comments) {
-      const box = document.getElementById("admin-comment-list");
-      if(!box) return;
-      let html = "";
-      comments.forEach(c => {
-          try {
-              const safeEmail = c.email ? String(c.email) : "Unknown User";
-              const displayName = safeEmail.includes('@') ? safeEmail.split('@')[0] : safeEmail;
-              const initial = displayName.charAt(0).toUpperCase();
-              
-              const timeVal = safeTime(c.createdAt);
-              const timeStr = timeVal ? new Date(timeVal).toLocaleString() : "Just now";
-              
-              const pContext = globalPosts.find(p => p.id === c.postId);
-              const vContext = globalVideos.find(v => v.id === c.postId);
-              let contextHtml = "";
-              
-              if(pContext) {
-                  const img = (pContext.images && pContext.images.length > 0) ? pContext.images[0] : 'https://via.placeholder.com/60';
-                  contextHtml = `<div class="sc-context"><img src="${esc(img)}" class="sc-context-img"><div class="sc-context-title">Post: ${esc(pContext.title)}</div></div>`;
-              } else if (vContext) {
-                  const img = vContext.thumbnail || 'https://via.placeholder.com/60';
-                  contextHtml = `<div class="sc-context"><img src="${esc(img)}" class="sc-context-img"><div class="sc-context-title">Vid: ${esc(vContext.title)}</div></div>`;
-              }
-
-              html += `
-                  <div class="studio-comment glass-panel" style="margin-bottom:15px;">
-                      <div class="sc-avatar">${initial}</div>
-                      <div class="sc-body">
-                          <div class="sc-header">
-                              <span class="sc-name">${esc(displayName)}</span>
-                              <span class="sc-time">${timeStr}</span>
-                              ${c.parentId ? '<span class="item-badge">Reply</span>' : ''}
-                          </div>
-                          <div class="sc-text">${esc(c.text || '')}</div>
-                          
-                          <div style="display:flex; gap:10px; margin-bottom:15px;">
-                              <input type="text" id="admin-rep-${c.id}" placeholder="Reply..." style="margin:0; padding:10px 15px; font-size:12px;">
-                              <button class="btn btn-primary" style="padding:10px 20px; width:auto;" onclick="adminReply('${c.postId}', '${c.id}', '${esc(displayName)}')">Reply</button>
-                          </div>
-
-                          ${contextHtml}
-                      </div>
-                      <div class="item-actions" style="flex-direction:column;">
-                          <button class="btn btn-danger" style="background:transparent; border:none; font-size: 18px; padding: 0; width: 40px; height: 40px; display:flex; justify-content:center; align-items:center;" onclick="delDoc('comments','${c.id}')">🗑️</button>
-                      </div>
-                  </div>
-              `;
-          } catch(err) { console.error("Skipped a comment."); }
-      });
-      box.innerHTML = html || "<div class='muted' style='padding:20px; text-align:center;'>No comments yet.</div>";
-  }
-
-  // --- 🔥 FIXED REPLY FUNCTION ---
-  window.adminReply = async (postId, parentId, userName) => {
-      const input = document.getElementById(`admin-rep-${parentId}`);
-      const text = input.value.trim();
-      if(!text) return;
-      
-      try {
-          await addDoc(collection(db, "comments"), {
-              postId: postId, 
-              text: `@${userName} ${text}`, 
-              uid: auth.currentUser.uid, 
-              email: "Admin 👑", 
-              parentId: parentId, 
-              createdAt: serverTimestamp()
-          });
-          input.value = "";
-          showToast("Replied!");
-      } catch(e) { 
-          console.error(e);
-          alert("Failed to reply."); 
-      }
   };
 
   // Global Delete
