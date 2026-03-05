@@ -63,6 +63,9 @@
   .carousel-track { display: flex; transition: transform 0.5s ease-in-out; }
   .carousel-slide { min-width: 100%; height: 180px; }
   .carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
+  .carousel-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); transition: 0.3s; }
+  .dot.active { background: var(--accent); width: 16px; border-radius: 4px; }
   
   /* Category Bar */
   .cat-wrapper { position: sticky; top: 65px; z-index: 9; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; margin: 0 -16px; padding: 10px 16px; background: rgba(5, 5, 16, 0.85); backdrop-filter: blur(15px); }
@@ -72,18 +75,15 @@
   .cat-pill { padding: 8px 18px; background: rgba(0,0,0,0.4); border-radius: 20px; font-size: 13px; white-space: nowrap; border: 1px solid var(--border); cursor: pointer; font-weight: 500; color: var(--muted); transition: 0.3s;}
   .cat-pill.active { background: linear-gradient(45deg, var(--accent), var(--primary)); color: #fff; border-color: transparent; box-shadow: 0 4px 10px rgba(138,43,226,0.3);}
   
-  /* --- POST UI (Facebook/TikTok Style) --- */
+  /* --- POST UI --- */
   .post{padding:16px; margin-top:16px; transition: 0.3s;}
   .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
   .post-header h4{margin:0; font-size:15px; font-weight: 800; color:#fff;}
   .post-date { font-size: 11px; color: var(--muted); display: block; margin-top:2px; }
   
-  /* New Image Carousel inside Post */
   .post-img-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; border-radius: 14px; margin-bottom: 12px; border: 1px solid var(--border); background: #000; position: relative;}
   .post-img-carousel::-webkit-scrollbar { display: none; }
   .post-img-carousel img { flex: 0 0 100%; width: 100%; height: 220px; object-fit: cover; scroll-snap-align: center; cursor: pointer; }
-  
-  /* Multiple image indicator */
   .multi-img-badge { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: #fff; font-size: 10px; padding: 4px 8px; border-radius: 12px; font-weight: bold; pointer-events: none; z-index: 2; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px);}
   
   .post-body-text { font-size: 13.5px; color: rgba(255,255,255,0.9); line-height: 1.6; white-space: pre-wrap; display: inline; }
@@ -126,7 +126,7 @@
   .vd-action-btn { background: rgba(255,255,255,0.08); border: 1px solid var(--border); padding: 8px 15px; border-radius: 20px; color: #fff; font-size: 12px; font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 6px; cursor: pointer; }
   .vd-action-btn.active { background: rgba(138,43,226,0.2); color: var(--accent); border-color: var(--primary); }
   
-  /* --- FULL SCREEN IMAGE LIGHTBOX --- */
+  /* FULL SCREEN IMAGE LIGHTBOX */
   .img-lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 20000; display: none; justify-content: center; align-items: center; opacity: 0; transition: 0.3s; flex-direction: column;}
   .img-lightbox.active { display: flex; opacity: 1; }
   .lb-img { max-width: 100%; max-height: 80vh; object-fit: contain; }
@@ -185,20 +185,18 @@
 
   <div id="tab-home">
     <div class="marquee-box">
-      <div class="marquee-text">
+      <div class="marquee-text" id="h-marquee-text">
         🔥 ကြိုဆိုပါတယ်။ Kazeno+ Premium မှ Mobile Legends, PUBG စသည့် ဂိမ်းများအတွက် Top-up နှင့် Phone Optimization လျှို့ဝှက်ချက်များကို လေ့လာနိုင်ပါပြီ။
       </div>
     </div>
+    
     <div class="carousel-container">
       <div class="carousel-track" id="carousel-track">
-        <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop" alt="Banner 1"></div>
-        <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=2070&auto=format&fit=crop" alt="Banner 2"></div>
-        <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?q=80&w=2071&auto=format&fit=crop" alt="Banner 3"></div>
-      </div>
+        </div>
       <div class="carousel-dots" id="carousel-dots">
-        <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
-      </div>
+        </div>
     </div>
+    
     <div class="card glass">
       <h3 class="title">Welcome to Premium Hub</h3>
       <div class="muted">အောက်ပါ Menu များမှတဆင့် Premium Video များနှင့် Community Post များကို လေ့လာနိုင်ပါသည်။</div>
@@ -239,6 +237,14 @@
       <div id="who" style="font-weight:bold; margin-bottom: 5px;">user@email.com</div>
       <div class="pill free" id="profile-status" style="display:inline-block; margin-bottom: 15px;">FREE MEMBER</div>
       <button class="btn btnD" onclick="logout()">Log Out</button>
+    </div>
+
+    <div class="card glass">
+      <h3 class="title">🌟 Upgrade to PRO</h3>
+      <div class="muted" style="margin-bottom: 16px;">
+        Premium Video များကြည့်ရှုနိုင်ရန် Telegram တွင် Admin နှင့် ဆက်သွယ်ပြီး PRO အကောင့် ဝယ်ယူနိုင်ပါသည်။
+      </div>
+      <button class="btn btnP" onclick="window.open('https://t.me/m/9v6d11GuZWY9', '_blank')">📱 Contact on Telegram</button>
     </div>
   </div>
 </div>
@@ -461,6 +467,26 @@
     if(pSt) { pSt.textContent = isPro ? "PRO MEMBER" : "FREE MEMBER"; pSt.className = isPro ? "pill pro" : "pill free"; }
   }
 
+  // --- DYNAMIC HOME CONFIG ---
+  async function loadHomeConfig() {
+      try {
+          const snap = await getDoc(doc(db, "appSettings", "homeConfig"));
+          if(snap.exists()) {
+              const data = snap.data();
+              if(data.marquee) document.getElementById('h-marquee-text').innerText = data.marquee;
+              if(data.banners && data.banners.length > 0) {
+                  const track = document.getElementById('carousel-track');
+                  const dotsBox = document.getElementById('carousel-dots');
+                  track.innerHTML = ""; dotsBox.innerHTML = "";
+                  data.banners.forEach((url, i) => {
+                      track.innerHTML += `<div class="carousel-slide"><img src="${esc(url)}"></div>`;
+                      dotsBox.innerHTML += `<div class="dot ${i===0 ? 'active':''}"></div>`;
+                  });
+              }
+          }
+      } catch(e) {}
+  }
+
   // --- LIGHTBOX ---
   window.openLightbox = (url) => {
       document.getElementById('lb-image').src = url;
@@ -628,7 +654,6 @@
       });
       feed.innerHTML = html || `<div class="muted" style="text-align:center; padding:20px;">No posts found.</div>`;
       
-      // Update badge on scroll for carousels
       document.querySelectorAll('.post-img-carousel').forEach(car => {
           car.addEventListener('scroll', (e) => {
               const imgs = e.target.querySelectorAll('img');
@@ -946,6 +971,7 @@
     if(me) { try { await setDoc(doc(db, "users", me.uid), { email: me.email, uid: me.uid }, { merge: true }); } catch(e){} }
     updateAuthUI(); 
     await refreshPro();
+    loadHomeConfig();
     if(document.getElementById("tab-posts").style.display === "block") loadPosts();
     if(document.getElementById("tab-videos").style.display === "block") loadVideos();
   });
