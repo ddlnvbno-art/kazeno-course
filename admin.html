@@ -337,7 +337,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, setDoc, getDoc, query, onSnapshot, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, setDoc, query, onSnapshot, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
   import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
   const firebaseConfig = {
@@ -367,7 +367,7 @@
       setTimeout(()=> t.style.display = 'none', 2500);
   }
 
-  // --- 🔥 BULLETPROOF TIME PARSER ---
+  // --- 🔥 BULLETPROOF TIME PARSER (FIXES LOADING BUG) ---
   function safeTime(ts) {
       if (!ts) return 0;
       if (typeof ts === 'number') return ts; 
@@ -397,7 +397,6 @@
     document.getElementById("login-view").style.display="none";
     document.getElementById("app-view").style.display="flex";
     initRealtimeListeners();
-    loadHomeConfig();
   });
 
   window.switchTab = (tabId, btn) => {
@@ -449,44 +448,53 @@
       };
   };
 
-  // --- REAL-TIME DATA FETCHING (SAFE ERROR HANDLING) ---
+  // --- REAL-TIME DATA FETCHING ---
   function initRealtimeListeners() {
-      try {
-          onSnapshot(collection(db, "users"), (snap) => {
-              globalUsers = []; snap.forEach(d => globalUsers.push({id: d.id, ...d.data()}));
-              updateDashboard(); 
-              let activeTab = document.querySelector('#tab-users .filter-pill.active')?.innerText || 'All';
-              renderUserList(activeTab.split(' ')[0]);
-          }, (err) => console.error("Users load error"));
+      // Note: Removed the unneeded 'appSettings' listener as it only needs to be fetched once.
+      // Fetch Home UI manually once
+      getDoc(doc(db, "appSettings", "homeConfig")).then(docSnap => {
+          if(docSnap.exists()) {
+              const data = docSnap.data();
+              if(data.marquee) document.getElementById('home-marquee').value = data.marquee;
+              const bContainer = document.getElementById('banner-inputs');
+              bContainer.innerHTML = '';
+              if(data.banners && data.banners.length > 0) {
+                  data.banners.forEach((url, i) => bContainer.insertAdjacentHTML('beforeend', createImgInputRow(url, `banner-img-${i}`)));
+              } else { bContainer.insertAdjacentHTML('beforeend', createImgInputRow('', 'banner-img-0')); }
+          }
+      });
 
-          onSnapshot(query(collection(db, "paidUsers"), where("active", "==", true)), (snap) => {
-              globalProUsers = []; snap.forEach(d => globalProUsers.push(d.id));
-              updateDashboard(); 
-              let activeTab = document.querySelector('#tab-users .filter-pill.active')?.innerText || 'All';
-              renderUserList(activeTab.split(' ')[0]);
-          }, (err) => console.error("ProUsers load error. Check Rules!"));
+      onSnapshot(collection(db, "users"), (snap) => {
+          globalUsers = []; snap.forEach(d => globalUsers.push({id: d.id, ...d.data()}));
+          updateDashboard(); 
+          let activeTab = document.querySelector('#tab-users .filter-pill.active')?.innerText || 'All';
+          renderUserList(activeTab.split(' ')[0]);
+      });
 
-          onSnapshot(collection(db, "videos"), (snap) => {
-              globalVideos = []; snap.forEach(d => globalVideos.push({id: d.id, ...d.data()}));
-              globalVideos.sort((a,b) => safeTime(b.timestamp) - safeTime(a.timestamp)); 
-              updateDashboard(); renderVideoSection();
-          }, (err) => document.getElementById('admin-vid-list').innerHTML = "Error loading videos.");
+      onSnapshot(query(collection(db, "paidUsers"), where("active", "==", true)), (snap) => {
+          globalProUsers = []; snap.forEach(d => globalProUsers.push(d.id));
+          updateDashboard(); 
+          let activeTab = document.querySelector('#tab-users .filter-pill.active')?.innerText || 'All';
+          renderUserList(activeTab.split(' ')[0]);
+      });
 
-          onSnapshot(collection(db, "posts"), (snap) => {
-              globalPosts = []; snap.forEach(d => globalPosts.push({id: d.id, ...d.data()}));
-              globalPosts.sort((a,b) => safeTime(b.createdAt) - safeTime(a.createdAt)); 
-              updateDashboard(); renderPostSection();
-          }, (err) => document.getElementById('admin-post-list').innerHTML = "Error loading posts.");
+      onSnapshot(collection(db, "videos"), (snap) => {
+          globalVideos = []; snap.forEach(d => globalVideos.push({id: d.id, ...d.data()}));
+          globalVideos.sort((a,b) => safeTime(b.timestamp) - safeTime(a.timestamp)); 
+          updateDashboard(); renderVideoSection();
+      });
 
-          onSnapshot(collection(db, "comments"), (snap) => {
-              let comments = []; snap.forEach(d => comments.push({id: d.id, ...d.data()}));
-              comments.sort((a,b) => safeTime(b.createdAt) - safeTime(a.createdAt));
-              document.getElementById('stat-com').innerText = comments.length;
-              renderCommentsUI(comments);
-          }, (err) => document.getElementById('admin-comment-list').innerHTML = "Error loading comments.");
-      } catch (e) {
-          console.error("Init Error", e);
-      }
+      onSnapshot(collection(db, "posts"), (snap) => {
+          globalPosts = []; snap.forEach(d => globalPosts.push({id: d.id, ...d.data()}));
+          globalPosts.sort((a,b) => safeTime(b.createdAt) - safeTime(a.createdAt)); 
+          updateDashboard(); renderPostSection();
+      });
+
+      onSnapshot(collection(db, "comments"), (snap) => {
+          let comments = []; snap.forEach(d => comments.push({id: d.id, ...d.data()}));
+          comments.sort((a,b) => safeTime(b.createdAt) - safeTime(a.createdAt));
+          renderCommentsUI(comments);
+      });
   }
 
   function updateDashboard() {
@@ -558,21 +566,6 @@
   };
 
   // --- HOME UI CONFIG ---
-  async function loadHomeConfig() {
-      try {
-          const docSnap = await getDoc(doc(db, "appSettings", "homeConfig"));
-          if(docSnap.exists()) {
-              const data = docSnap.data();
-              if(data.marquee) document.getElementById('home-marquee').value = data.marquee;
-              const bContainer = document.getElementById('banner-inputs');
-              bContainer.innerHTML = '';
-              if(data.banners && data.banners.length > 0) {
-                  data.banners.forEach((url, i) => bContainer.insertAdjacentHTML('beforeend', createImgInputRow(url, `banner-img-${i}`)));
-              } else { bContainer.insertAdjacentHTML('beforeend', createImgInputRow('', 'banner-img-0')); }
-          }
-      } catch(e) {}
-  }
-
   window.addBannerField = () => document.getElementById('banner-inputs').insertAdjacentHTML('beforeend', createImgInputRow('', `banner-img-${Date.now()}`));
 
   window.saveHomeUI = async () => {
