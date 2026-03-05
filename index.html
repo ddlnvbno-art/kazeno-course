@@ -77,7 +77,7 @@
   
   /* --- POST UI --- */
   .post{padding:16px; margin-top:16px; transition: 0.3s;}
-  .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
   .post-header h4{margin:0; font-size:15px; font-weight: 800; color:#fff;}
   .post-date { font-size: 11px; color: var(--muted); display: block; margin-top:2px; }
   
@@ -90,6 +90,11 @@
   .quote-block { border-left: 3px solid var(--accent); background: rgba(79, 172, 254, 0.1); padding: 10px 14px; border-radius: 0 8px 8px 0; margin-top: 10px; font-size: 12.5px; color: #d4e8ff; white-space: pre-wrap; display: block; }
   .see-more-btn { color: var(--accent); cursor: pointer; font-size: 13.5px; font-weight: 600; display: inline; margin-left: 5px; }
   
+  /* Dynamic Download Buttons */
+  .dl-btn-container { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 15px; }
+  .dl-btn { background: rgba(59, 130, 246, 0.15); color: var(--accent); border: 1px solid rgba(59, 130, 246, 0.4); padding: 8px 14px; border-radius: 12px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: 0.2s; }
+  .dl-btn:active { transform: scale(0.95); }
+
   /* Reactions & Actions */
   .reaction-counts { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
   .post-actions { display: flex; position: relative; gap: 5px; margin-top: 5px; padding-top: 5px;}
@@ -148,6 +153,7 @@
   .c-input-row { display: flex; gap: 10px; width: 100%; align-items: center; }
   .c-input { flex: 1; padding: 12px 18px; border-radius: 24px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: #fff; font-family: 'Poppins'; font-size: 16px; outline: none; }
   .c-send { width: 42px !important; height: 42px !important; min-width: 42px !important; min-height: 42px !important; background: linear-gradient(135deg, var(--accent), var(--primary)); border: none; border-radius: 50%; color: #fff; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 16px; flex-shrink: 0 !important; padding: 0 !important; }
+  
   .c-comment { display: flex; gap: 10px; margin-bottom: 18px; }
   .c-comment.is-reply { margin-left: 35px; margin-top: -5px; margin-bottom: 12px; position: relative;}
   .c-comment.is-reply::before { content: ''; position: absolute; left: -22px; top: -15px; width: 15px; height: 30px; border-left: 2px solid var(--border); border-bottom: 2px solid var(--border); border-bottom-left-radius: 8px; }
@@ -177,7 +183,7 @@
 
 <div class="wrap" id="main-wrap">
   <div class="top-wrapper" id="top-wrapper">
-      <div class="top glass" id="top-header">
+      <div class="top" id="top-header">
         <div class="brand">Kazeno+</div>
         <div id="status" class="pill free">FREE</div>
       </div>
@@ -192,9 +198,9 @@
     
     <div class="carousel-container">
       <div class="carousel-track" id="carousel-track">
-        </div>
-      <div class="carousel-dots" id="carousel-dots">
-        </div>
+        <div class="carousel-slide"><img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop" alt="Banner 1"></div>
+      </div>
+      <div class="carousel-dots" id="carousel-dots"></div>
     </div>
     
     <div class="card glass">
@@ -260,15 +266,17 @@
     <div class="vd-info-card glass" style="margin: 16px; border-radius: 16px;">
         <div id="vd-title" class="vd-title">Loading...</div>
         <div class="pill free" id="vd-cat" style="display:inline-block; margin-bottom: 10px; font-size:10px; padding:3px 8px;">Category</div>
-        <div id="vd-notes" class="quote-block" style="display:block;"></div>
+        <div id="vd-notes" class="quote-block" style="display:block; margin-bottom: 15px;"></div>
         
-        <div class="vd-actions-row">
+        <div class="vd-actions-row" id="vd-actions-row">
             <button class="vd-action-btn" id="vd-btn-like" onclick="reactToVideo()"><span style="font-size:16px;">❤️</span> <span id="vd-like-count">Like</span></button>
-            <button class="vd-action-btn" id="vd-btn-dl" style="display:none;" onclick="downloadVideoResource()"><span style="font-size:16px;">📥</span> Download Tools</button>
             <button class="vd-action-btn" onclick="openComment(currentPlayingVideoId)"><span style="font-size:16px;">💬</span> Comments</button>
             <button class="vd-action-btn" onclick="markComplete(currentPlayingVideoId)"><span style="font-size:16px;">✅</span> Done</button>
         </div>
+        
+        <div class="dl-btn-container" id="vd-dl-container" style="display:none; margin-top: 15px;"></div>
     </div>
+    
     <div style="padding: 0 16px;">
         <h4 style="margin:20px 0 10px 0; font-size:14px; color:var(--muted);">Suggested for you</h4>
         <div id="vd-suggested-list"></div>
@@ -619,6 +627,19 @@
             let badge = p.images.length > 1 ? `<div class="multi-img-badge">1/${p.images.length}</div>` : '';
             imagesHtml = `<div style="position:relative;">${badge}<div class="post-img-carousel">${imgSlides}</div></div>`;
         }
+        
+        // Render Multiple Download Links for Post
+        let dlHtml = "";
+        if(p.downloadLinks && p.downloadLinks.length > 0) {
+            dlHtml = `<div class="dl-btn-container">`;
+            p.downloadLinks.forEach(dl => {
+                dlHtml += `<button class="dl-btn" onclick="window.open('${esc(dl.url)}', '_blank')">📥 ${esc(dl.title)}</button>`;
+            });
+            dlHtml += `</div>`;
+        } else if (p.downloadLink) {
+            // Fallback for older data
+            dlHtml = `<div class="dl-btn-container"><button class="dl-btn" onclick="window.open('${esc(p.downloadLink)}', '_blank')">📥 Get Tools</button></div>`;
+        }
 
         html += `
           <div class="post glass">
@@ -634,6 +655,7 @@
             
             <div style="margin-bottom: 10px;">${renderText(p.body, `body-${p.id}`, false)}</div>
             ${p.notes ? renderText(p.notes, `note-${p.id}`, true) : ''}
+            ${dlHtml}
             
             <div class="reaction-counts" style="margin-top:12px;">
                 ${countHtml}
@@ -816,17 +838,27 @@
       
       document.getElementById('vd-title').innerText = v.title || "Untitled";
       document.getElementById('vd-cat').innerText = v.category || "General";
-      document.getElementById('vd-notes').innerText = v.notes || "No notes available.";
+      document.getElementById('vd-notes').innerText = v.notes || "";
+      document.getElementById('vd-notes').style.display = v.notes ? "block" : "none";
       
       const videoEl = document.getElementById('vd-video-element');
       videoEl.src = v.link;
       videoEl.play().catch(e=>{});
       
-      const dlBtn = document.getElementById('vd-btn-dl');
-      if(v.downloadLink && v.downloadLink !== "") {
-          dlBtn.style.display = 'flex';
-          dlBtn.onclick = () => window.open(v.downloadLink, '_blank');
-      } else { dlBtn.style.display = 'none'; }
+      // Multi Download Links for Video
+      const dlContainer = document.getElementById('vd-dl-container');
+      dlContainer.innerHTML = "";
+      if (v.downloadLinks && v.downloadLinks.length > 0) {
+          v.downloadLinks.forEach(dl => {
+              dlContainer.innerHTML += `<button class="dl-btn" onclick="window.open('${esc(dl.url)}', '_blank')">📥 ${esc(dl.title)}</button>`;
+          });
+          dlContainer.style.display = 'flex';
+      } else if (v.downloadLink && v.downloadLink !== "") { // Fallback legacy
+          dlContainer.innerHTML = `<button class="dl-btn" onclick="window.open('${esc(v.downloadLink)}', '_blank')">📥 Download Tools</button>`;
+          dlContainer.style.display = 'flex';
+      } else {
+          dlContainer.style.display = 'none';
+      }
       
       const likes = v.reactions || {};
       const isLiked = likes[me.uid] ? true : false;
@@ -942,7 +974,7 @@
         const id = v.id;
         const thumb = v.thumbnail || 'https://via.placeholder.com/600x337/111b33/8a2be2?text=Kazeno+Premium';
         html += `
-          <div class="glass v-list-item" id="v-item-${id}" onclick="openVideoDetail('${id}')">
+          <div class="glass v-list-item" onclick="openVideoDetail('${id}')">
               <div class="v-thumb-wrap">
                   <img class="thumb-image" src="${thumb}" alt="Thumbnail">
                   <div class="play-btn">▶</div>
@@ -950,7 +982,6 @@
               <div class="v-info">
                   <div class="v-title">${esc(v.title || "Untitled")}</div>
                   <div class="v-cat">${esc(v.category || "General")}</div>
-                  <div class="v-notes">${esc(v.notes || "")}</div>
               </div>
           </div>
         `;
@@ -978,4 +1009,3 @@
 </script>
 </body>
 </html>
-
