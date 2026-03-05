@@ -9,7 +9,7 @@
   :root{
     --bg: #050510; 
     --glass-bg: rgba(20, 25, 45, 0.4); 
-    --border: rgba(255, 255, 255, 0.15);
+    --border: rgba(255, 255, 255, 0.12);
     --text: #ffffff; 
     --muted: #a0b0c0;
     --primary: #8a2be2; 
@@ -27,7 +27,7 @@
   
   .wrap{max-width:520px; margin:0 auto; padding:16px;}
   
-  .glass { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: var(--r); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
+  .glass { background: var(--glass-bg); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid var(--border); border-radius: var(--r); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); }
 
   /* --- TOP HEADER WITH SEARCH --- */
   .top-wrapper { position:sticky; top:10px; z-index:20; transition: transform 0.3s ease; }
@@ -107,54 +107,76 @@
   
   /* --- VIDEOS --- */
   .v-list-item { display: flex; gap: 12px; padding: 12px; margin-top: 12px; align-items: stretch; transition: all 0.3s ease; cursor: pointer; }
-  .v-thumb-wrap { width: 140px; flex-shrink: 0; position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 16/9; background: #000; }
+  .v-thumb-wrap { width: 140px; flex-shrink: 0; position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 16/9; background: #000; border: 1px solid rgba(255,255,255,0.05);}
   .v-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
   .play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 30px; background: rgba(255,255,255,0.2); backdrop-filter: blur(4px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; border: 1px solid rgba(255,255,255,0.5); }
   .v-info { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; min-width: 0; }
   .v-title { font-weight: 700; font-size: 13.5px; color: #fff; margin-bottom: 4px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   
-  /* --- 🔥 ULTRA GLASS VIDEO DETAIL & PLAYER --- */
+  /* =========================================
+     🔥 NEW: ULTRA GLASS VIDEO DETAIL UI
+     ========================================= */
   #tab-video-detail { position: fixed; inset:0; background: #000; z-index: 50; overflow-y: auto; overflow-x: hidden; padding-bottom: 80px; display: none; }
-  #vd-dynamic-bg { position: fixed; inset: -20px; background-size: cover; background-position: center; filter: blur(40px) brightness(0.3); z-index: 1; transition: 0.5s; }
+  
+  /* Dynamic Blurred Background */
+  #vd-dynamic-bg { position: fixed; inset: -30px; background-size: cover; background-position: center; filter: blur(50px) brightness(0.4); z-index: 1; transition: 0.5s; opacity: 0.8;}
   .vd-content-layer { position: relative; z-index: 5; }
   
-  .vd-header { position: sticky; top: 0; padding: 15px; background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); z-index: 10; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-  .vd-back { background: rgba(255,255,255,0.1); border: none; width: 36px; height: 36px; border-radius: 50%; color: #fff; font-size: 18px; display:flex; justify-content:center; align-items:center; cursor: pointer; }
+  /* Floating Header */
+  .vd-header { position: absolute; top: 15px; left: 15px; right: 15px; display: flex; align-items: center; gap: 15px; z-index: 20; pointer-events: none;}
+  .vd-back { background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); width: 40px; height: 40px; border-radius: 50%; color: #fff; font-size: 20px; display:flex; justify-content:center; align-items:center; cursor: pointer; pointer-events: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.3);}
   
-  /* Custom Video Player Container */
-  .custom-player-wrap { width: 100%; aspect-ratio: 16/9; background: #000; position: relative; overflow: hidden; user-select: none; }
+  /* Custom Player Wrap */
+  .custom-player-wrap { width: 100%; aspect-ratio: 16/9; background: #000; position: sticky; top: 0; z-index: 10; overflow: hidden; user-select: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
+  /* HIDE DEFAULT CONTROLS */
   .custom-player-wrap video { width: 100%; height: 100%; outline: none; object-fit: contain; }
+  .custom-player-wrap video::-webkit-media-controls { display: none !important; }
   
   /* Gestures Overlays */
-  .gesture-overlay { position: absolute; inset: 0; display: flex; z-index: 10; }
+  .gesture-overlay { position: absolute; inset: 0; display: flex; z-index: 11; }
   .gesture-half { flex: 1; height: 100%; }
   
-  /* Player UI */
-  .player-ui { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, transparent 40%, rgba(0,0,0,0.3) 100%); z-index: 15; display: flex; flex-direction: column; justify-content: space-between; padding: 10px 15px; opacity: 1; transition: opacity 0.3s; pointer-events: none;}
+  /* Minimalist Player UI */
+  .player-ui { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, transparent 30%, rgba(0,0,0,0.4) 100%); z-index: 15; display: flex; flex-direction: column; justify-content: flex-end; padding: 15px; opacity: 1; transition: opacity 0.3s; pointer-events: none;}
   .player-ui.hidden { opacity: 0; }
+  
   .player-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; gap: 40px; align-items: center; pointer-events: auto;}
-  .p-btn { background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); color: #fff; border-radius: 50%; width: 50px; height: 50px; font-size: 20px; display:flex; justify-content:center; align-items:center; cursor: pointer;}
+  .p-btn { background: rgba(255,255,255,0.15); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); color: #fff; border-radius: 50%; width: 55px; height: 55px; font-size: 24px; display:flex; justify-content:center; align-items:center; cursor: pointer; transition: 0.2s;}
+  .p-btn:active { transform: scale(0.9); background: rgba(255,255,255,0.3);}
   
-  .player-bottom { display: flex; align-items: center; gap: 10px; width: 100%; pointer-events: auto; }
-  .p-time { font-size: 12px; font-weight: 600; color: #fff; font-variant-numeric: tabular-nums; }
-  .p-progress-container { flex: 1; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; position: relative; cursor: pointer; }
+  .player-bottom { display: flex; align-items: center; gap: 12px; width: 100%; pointer-events: auto; }
+  .p-time { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.8); font-variant-numeric: tabular-nums; }
+  .p-progress-container { flex: 1; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; position: relative; cursor: pointer; transition: height 0.2s;}
+  .p-progress-container:hover { height: 6px; }
   .p-progress-filled { position: absolute; top: 0; left: 0; height: 100%; background: var(--accent); border-radius: 2px; width: 0%; pointer-events: none;}
-  .p-progress-thumb { position: absolute; top: 50%; left: 0%; transform: translate(-50%, -50%); width: 12px; height: 12px; background: #fff; border-radius: 50%; box-shadow: 0 0 5px rgba(0,0,0,0.5); pointer-events: none;}
+  .p-progress-thumb { position: absolute; top: 50%; left: 0%; transform: translate(-50%, -50%); width: 14px; height: 14px; background: #fff; border-radius: 50%; box-shadow: 0 0 8px rgba(0,0,0,0.5); pointer-events: none; opacity: 0; transition: opacity 0.2s;}
+  .p-progress-container:hover .p-progress-thumb { opacity: 1; }
   
-  /* Dimmer & Toast (For Gestures) */
   #brightness-dimmer { position: absolute; inset: 0; background: rgba(0,0,0,0); z-index: 8; pointer-events: none; transition: background 0.1s;}
-  .gesture-toast { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); color: #fff; padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: bold; z-index: 20; opacity: 0; transition: 0.2s;}
+  .gesture-toast { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); color: #fff; padding: 8px 20px; border-radius: 20px; font-size: 14px; font-weight: bold; z-index: 20; opacity: 0; transition: 0.2s; pointer-events: none;}
 
-  /* Glass Watermark (Fixed) */
-  .watermark { position: absolute; font-size: 22px; font-weight: 900; color: rgba(255,255,255,0.25); text-shadow: none; mix-blend-mode: overlay; pointer-events: none; z-index: 12; animation: moveWatermark 25s linear infinite alternate; display: none; white-space: nowrap;}
-  @keyframes moveWatermark { 0% { top: 10%; left: 5%; transform: rotate(-5deg); } 100% { top: 80%; left: 55%; transform: rotate(5deg); } }
+  /* Glass Watermark (Clean) */
+  .watermark { position: absolute; font-size: 16px; font-weight: 800; color: rgba(255,255,255,0.15); mix-blend-mode: overlay; pointer-events: none; z-index: 12; animation: moveWatermark 25s linear infinite alternate; display: none; white-space: nowrap; letter-spacing: 1px;}
+  @keyframes moveWatermark { 0% { top: 15%; left: 5%; transform: rotate(-5deg); } 100% { top: 75%; left: 65%; transform: rotate(5deg); } }
 
-  .vd-info-card { margin: 20px 16px; padding: 25px; border-radius: 24px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.4); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); }
-  .vd-actions-row { display: flex; gap: 10px; margin-top: 20px; overflow-x: auto; scrollbar-width: none; padding-bottom: 5px;}
-  .vd-action-btn { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); padding: 10px 18px; border-radius: 20px; color: #fff; font-size: 13px; font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);}
+  /* Glass Info Card below player */
+  .vd-info-card { margin: -15px 15px 20px 15px; padding: 25px 20px; border-radius: 24px; background: rgba(20, 20, 30, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 15px 35px rgba(0,0,0,0.3); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: relative; z-index: 15;}
+  
+  .vd-title { font-size: 18px; font-weight: 800; line-height: 1.4; margin-bottom: 8px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);}
+  .vd-notes { background: rgba(255,255,255,0.03); border-left: 3px solid var(--accent); padding: 12px 15px; border-radius: 0 12px 12px 0; font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.6; margin-bottom: 20px; font-style: italic;}
+  
+  /* Neumorphic / Glass Action Row */
+  .vd-actions-row { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; padding-bottom: 5px; margin-top: 15px;}
+  .vd-actions-row::-webkit-scrollbar { display: none; }
+  .vd-action-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 24px; color: #fff; font-size: 13px; font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.3s;}
   .vd-action-btn:active { transform: scale(0.95); }
-  .vd-action-btn.active { background: rgba(255, 77, 77, 0.15); border-color: rgba(255, 77, 77, 0.4); color: var(--danger); }
-  .vd-action-btn.saved { color: var(--ok); border-color: rgba(0, 230, 118, 0.4); background: rgba(0, 230, 118, 0.1); }
+  
+  /* State Colors for Details Buttons */
+  .vd-action-btn .icon { font-size: 16px; transition: 0.3s; }
+  .vd-action-btn.liked { border-color: rgba(255, 77, 77, 0.3); background: rgba(255, 77, 77, 0.05); }
+  .vd-action-btn.liked .icon { color: var(--danger); text-shadow: 0 0 10px rgba(255, 77, 77, 0.5); }
+  .vd-action-btn.saved { border-color: rgba(0, 230, 118, 0.3); background: rgba(0, 230, 118, 0.05); }
+  .vd-action-btn.saved .icon { color: var(--ok); text-shadow: 0 0 10px rgba(0, 230, 118, 0.5); }
   
   /* --- PROFILE & SAVED --- */
   .profile-head { display:flex; flex-direction:column; align-items:center; text-align:center; padding:20px; }
@@ -324,9 +346,9 @@
 <div id="tab-video-detail">
     <div id="vd-dynamic-bg"></div>
     <div class="vd-content-layer">
+        
         <div class="vd-header">
             <button class="vd-back" onclick="closeVideoDetail()">←</button>
-            <div style="font-weight:bold; font-size:16px;">Now Playing</div>
         </div>
         
         <div class="custom-player-wrap" id="vd-player-wrap">
@@ -354,20 +376,26 @@
                         <div class="p-progress-thumb" id="p-thumb"></div>
                     </div>
                     <span class="p-time" id="p-time-dur">0:00</span>
-                    <button style="background:none; border:none; color:#fff; font-size:18px; cursor:pointer;" onclick="toggleFullscreen(event)">🔲</button>
+                    <button style="background:none; border:none; color:#fff; font-size:16px; cursor:pointer;" onclick="toggleFullscreen(event)">🔲</button>
                 </div>
             </div>
         </div>
         
         <div class="vd-info-card">
-            <div id="vd-title" class="title" style="font-size:18px; margin-bottom:8px;">Loading...</div>
-            <div class="pill free" id="vd-cat" style="display:inline-block; margin-bottom: 15px; font-size:11px; padding:4px 10px;">Category</div>
-            <div id="vd-notes" class="quote-block" style="display:block; margin-bottom: 20px;"></div>
+            <div id="vd-title" class="vd-title">Loading...</div>
+            <div class="pill free" id="vd-cat" style="display:inline-block; margin-bottom: 15px; font-size:10px; padding:3px 8px;">Category</div>
+            <div id="vd-notes" class="vd-notes" style="display:block;"></div>
             
             <div class="vd-actions-row">
-                <button class="vd-action-btn" id="vd-btn-like" onclick="reactToVideo()"><span style="font-size:18px;">🤍</span> React</button>
-                <button class="vd-action-btn" id="vd-btn-comment" onclick="openComment(currentPlayingVideoId)"><span style="font-size:18px;">💬</span> Comment</button>
-                <button class="vd-action-btn" id="vd-btn-save" onclick="toggleSave('vid', currentPlayingVideoId)"><span style="font-size:18px;">🔖</span> Save</button>
+                <button class="vd-action-btn" id="vd-btn-like" onclick="reactToVideo()">
+                    <span class="icon">🤍</span> <span id="v-like-text">React</span>
+                </button>
+                <button class="vd-action-btn" id="vd-btn-comment" onclick="openComment(currentPlayingVideoId)">
+                    <span class="icon">💬</span> <span id="v-com-text">Comment</span>
+                </button>
+                <button class="vd-action-btn" id="vd-btn-save" onclick="toggleSave('vid', currentPlayingVideoId)">
+                    <span class="icon">🔖</span> Save
+                </button>
             </div>
             
             <div class="dl-btn-container" id="vd-dl-container" style="display:none; margin-top: 20px;"></div>
@@ -717,8 +745,6 @@
       allVideosData.sort((a,b) => safeTime(b.timestamp) - safeTime(a.timestamp));
       renderVidCategories();
       if(activeTabName === 'videos') renderVideoFeed();
-      
-      // Update running Video UI if active
       if(currentPlayingVideoId) renderVideoDetailUI();
   });
   
@@ -803,7 +829,9 @@
             </div>
             
             <div class="post-actions">
-                <button class="action-btn ${myReact ? 'liked':''}" onclick="reactPost('${p.id}')">❤️ React</button>
+                <button class="action-btn ${myReact ? 'liked':''}" onclick="reactPost('${p.id}')">
+                    <span style="font-size:16px; margin-right:5px;">${myReact?'❤️':'🤍'}</span> React
+                </button>
                 <button class="action-btn" onclick="openComment('${p.id}')">💬 Comment</button>
                 <button class="action-btn ${isSaved ? 'saved':''}" onclick="toggleSave('post', '${p.id}')">🔖 Save</button>
             </div>
@@ -998,14 +1026,14 @@
       const isSaved = (meData.savedVids || []).includes(currentPlayingVideoId);
       
       const likeBtn = document.getElementById('vd-btn-like');
-      likeBtn.innerHTML = `<span style="font-size:18px;">${isLiked?'❤️':'🤍'}</span> React ${Object.keys(likes).length > 0 ? Object.keys(likes).length : ''}`;
+      likeBtn.innerHTML = `<span class="icon">${isLiked?'❤️':'🤍'}</span> <span>${Object.keys(likes).length || 'React'}</span>`;
       if(isLiked) likeBtn.classList.add('active'); else likeBtn.classList.remove('active');
       
       const saveBtn = document.getElementById('vd-btn-save');
       if(isSaved) saveBtn.classList.add('saved'); else saveBtn.classList.remove('saved');
       
       getDocs(query(collection(db, "comments"), where("postId", "==", v.id))).then(snap => {
-          document.getElementById('vd-btn-comment').innerHTML = `<span style="font-size:18px;">💬</span> Comment ${snap.size>0 ? snap.size : ''}`;
+          document.getElementById('v-com-text').innerText = snap.size > 0 ? snap.size : 'Comment';
       });
   };
 
@@ -1022,10 +1050,10 @@
       detailPage.style.display = 'block';
       window.scrollTo(0,0);
       
-      // Ultra Glass Background
+      // Dynamic Blur Background
       document.getElementById('vd-dynamic-bg').style.backgroundImage = `url('${esc(v.thumbnail)}')`;
       
-      // FIXED WATERMARK (Name without @gmail.com)
+      // Transparent Watermark (No @gmail.com)
       const wm = document.getElementById('vd-watermark');
       if(globalSettings.watermark) {
           let markName = meData.username || (me.email ? me.email.split('@')[0] : "Premium User");
@@ -1079,7 +1107,7 @@
   const dimmer = document.getElementById('brightness-dimmer');
   
   let uiTimeout;
-  let currentBright = 1; // Simulated Brightness 1.0 (Full) to 0.1 (Dark)
+  let currentBright = 1; 
   
   function formatPTime(sec) {
       if(isNaN(sec)) return "0:00";
@@ -1098,7 +1126,7 @@
       gToast.innerText = msg;
       gToast.style.opacity = '1';
       clearTimeout(gToast.timeout);
-      gToast.timeout = setTimeout(() => gToast.style.opacity = '0', 1500);
+      gToast.timeout = setTimeout(() => gToast.style.opacity = '0', 1000);
   }
   
   window.togglePlay = (e) => {
@@ -1146,7 +1174,7 @@
       if(now - lastTap < 300) { videoEl.currentTime -= 10; showGToast("⏪ -10s"); showPUi(); isDoubleTap = true; } 
       else { isDoubleTap = false; showPUi(); }
       lastTap = now;
-  });
+  }, {passive: true});
   leftZone.addEventListener('touchmove', e => {
       if(isDoubleTap) return;
       e.preventDefault();
@@ -1163,7 +1191,7 @@
       if(now - lastTap < 300) { videoEl.currentTime += 10; showGToast("⏩ +10s"); showPUi(); isDoubleTap = true; } 
       else { isDoubleTap = false; showPUi(); }
       lastTap = now;
-  });
+  }, {passive: true});
   rightZone.addEventListener('touchmove', e => {
       if(isDoubleTap) return;
       e.preventDefault();
