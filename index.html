@@ -9,7 +9,7 @@
   :root{
     --bg: #050510; 
     --glass-bg: rgba(20, 25, 45, 0.4); 
-    --border: rgba(255, 255, 255, 0.15);
+    --border: rgba(255, 255, 255, 0.12);
     --text: #ffffff; 
     --muted: #a0b0c0;
     --primary: #8a2be2; 
@@ -27,7 +27,7 @@
   
   .wrap{max-width:520px; margin:0 auto; padding:16px;}
   
-  .glass { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: var(--r); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
+  .glass { background: var(--glass-bg); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid var(--border); border-radius: var(--r); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); }
 
   /* --- TOP HEADER WITH SEARCH --- */
   .top-wrapper { position:sticky; top:10px; z-index:20; transition: transform 0.3s ease; }
@@ -114,12 +114,12 @@
   .v-title { font-weight: 700; font-size: 13.5px; color: #fff; margin-bottom: 4px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   
   /* =========================================
-     🔥 NEW: ULTRA GLASS VIDEO DETAIL UI (CLEAN)
+     💎 NEW: REFINED PREMIUM VIDEO DETAIL UI
      ========================================= */
   #tab-video-detail { position: fixed; inset:0; background: #000; z-index: 50; overflow-y: auto; overflow-x: hidden; padding-bottom: 80px; display: none; }
   
   /* Dynamic Blurred Background */
-  #vd-dynamic-bg { position: fixed; inset: -30px; background-size: cover; background-position: center; filter: blur(50px) brightness(0.3); z-index: 1; transition: 0.5s; opacity: 0.9;}
+  #vd-dynamic-bg { position: fixed; inset: -30px; background-size: cover; background-position: center; filter: blur(40px) brightness(0.4); z-index: 1; transition: 0.5s; opacity: 0.9;}
   .vd-content-layer { position: relative; z-index: 5; }
   
   /* Floating Header */
@@ -127,7 +127,7 @@
   .vd-back { background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); width: 40px; height: 40px; border-radius: 50%; color: #fff; font-size: 20px; display:flex; justify-content:center; align-items:center; cursor: pointer; pointer-events: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.3);}
   
   /* Custom Player Wrap */
-  .custom-player-wrap { width: 100%; aspect-ratio: 16/9; background: #000; position: sticky; top: 0; z-index: 10; overflow: hidden; user-select: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
+  .custom-player-wrap { width: 100%; aspect-ratio: 16/9; background: #000; position: sticky; top: 0; z-index: 10; overflow: hidden; user-select: none; box-shadow: 0 10px 30px rgba(0,0,0,0.6);}
   .custom-player-wrap video { width: 100%; height: 100%; outline: none; object-fit: contain; }
   .custom-player-wrap video::-webkit-media-controls { display: none !important; }
   
@@ -157,26 +157,27 @@
   .watermark { position: absolute; font-size: 16px; font-weight: 800; color: rgba(255,255,255,0.15); mix-blend-mode: overlay; pointer-events: none; z-index: 12; animation: moveWatermark 25s linear infinite alternate; display: none; white-space: nowrap; letter-spacing: 1px;}
   @keyframes moveWatermark { 0% { top: 15%; left: 5%; transform: rotate(-5deg); } 100% { top: 75%; left: 65%; transform: rotate(5deg); } }
 
-  /* 💎 NEW: CLEAN GLASS INFO CARD 💎 */
-  .vd-info-card { margin: 15px; padding: 20px; border-radius: 20px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 30px rgba(0,0,0,0.3); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: relative; z-index: 15;}
+  /* 💎 REFINED: DARK ULTRA-GLASS INFO CARD 💎 */
+  .vd-info-card { margin: 15px; padding: 20px; border-radius: 20px; background: rgba(10, 10, 15, 0.65); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 40px rgba(0,0,0,0.5); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); position: relative; z-index: 15;}
   
   .vd-cat-badge { display: inline-block; background: rgba(138,43,226, 0.15); color: #d4a5ff; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 8px; text-transform: uppercase; margin-bottom: 10px; border: 1px solid rgba(138,43,226, 0.3);}
   .vd-title { font-size: 18px; font-weight: 800; line-height: 1.4; margin-bottom: 15px; color: #fff;}
   
-  /* Neumorphic Rounded Buttons */
-  .vd-actions-row { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding-bottom: 5px; margin-bottom: 15px;}
+  /* 💎 REFINED: GHOST/SOFT BUTTONS ROW 💎 */
+  .vd-actions-row { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding-bottom: 8px; margin-bottom: 15px;}
   .vd-actions-row::-webkit-scrollbar { display: none; }
-  .vd-action-btn { background: rgba(255,255,255,0.08); border: none; padding: 10px 20px; border-radius: 50px; color: #fff; font-size: 13px; font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.3s;}
-  .vd-action-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.15);}
+  .vd-action-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.05); padding: 8px 16px; border-radius: 50px; color: #e5e7eb; font-size: 13px; font-weight: 500; white-space: nowrap; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s;}
+  .vd-action-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.1);}
   
-  .vd-action-btn.liked { color: var(--danger); background: rgba(255, 77, 77, 0.15); }
-  .vd-action-btn.saved { color: var(--ok); background: rgba(0, 230, 118, 0.15); }
+  .vd-action-btn.liked { color: var(--danger); background: rgba(255, 77, 77, 0.1); border-color: rgba(255, 77, 77, 0.2); }
+  .vd-action-btn.saved { color: var(--ok); background: rgba(0, 230, 118, 0.1); border-color: rgba(0, 230, 118, 0.2); }
+  .vd-action-btn.dl-btn-unified { color: var(--accent); background: rgba(79, 172, 254, 0.1); border-color: rgba(79, 172, 254, 0.2); font-weight: 600; }
   
-  /* Read More / Collapsible Box */
-  .vd-desc-box { background: rgba(0,0,0,0.3); border-radius: 16px; padding: 15px; border: 1px solid rgba(255,255,255,0.05); }
-  .vd-desc-text { font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-wrap; transition: all 0.3s ease;}
+  /* 💎 REFINED: BORDERLESS DESCRIPTION 💎 */
+  .vd-desc-wrapper { padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.08); }
+  .vd-desc-text { font-size: 13.5px; color: rgba(255,255,255,0.8); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-wrap; transition: all 0.3s ease;}
   .vd-desc-text.expanded { -webkit-line-clamp: unset; }
-  .see-more-btn { font-size: 13px; font-weight: 600; color: var(--text-main); opacity: 0.8; cursor: pointer; margin-top: 8px; display: inline-block; }
+  .see-more-btn { font-size: 13px; font-weight: 600; color: var(--text-main); opacity: 0.9; cursor: pointer; margin-top: 8px; display: inline-block; }
   
   /* --- PROFILE & SAVED --- */
   .profile-head { display:flex; flex-direction:column; align-items:center; text-align:center; padding:20px; }
@@ -385,7 +386,7 @@
             <div class="vd-cat-badge" id="vd-cat">Category</div>
             <div id="vd-title" class="vd-title">Loading...</div>
             
-            <div class="vd-actions-row">
+            <div class="vd-actions-row" id="vd-unified-actions">
                 <button class="vd-action-btn" id="vd-btn-like" onclick="reactToVideo()">
                     <span class="icon">🤍</span> <span id="v-like-text">React</span>
                 </button>
@@ -395,14 +396,13 @@
                 <button class="vd-action-btn" id="vd-btn-save" onclick="toggleSave('vid', currentPlayingVideoId)">
                     <span class="icon">🔖</span> <span id="v-save-text">Save</span>
                 </button>
+                <span id="vd-dl-anchor"></span>
             </div>
 
-            <div class="vd-desc-box" id="vd-desc-box">
+            <div class="vd-desc-wrapper" id="vd-desc-wrapper" style="display:none;">
                 <div class="vd-desc-text" id="vd-notes"></div>
                 <div class="see-more-btn" id="vd-see-more" onclick="toggleVideoDesc()">... See more</div>
             </div>
-            
-            <div class="dl-btn-container" id="vd-dl-container" style="display:none; margin-top: 20px;"></div>
         </div>
     </div>
 </div>
@@ -1053,10 +1053,8 @@
       detailPage.style.display = 'block';
       window.scrollTo(0,0);
       
-      // Dynamic Blur Background
       document.getElementById('vd-dynamic-bg').style.backgroundImage = `url('${esc(v.thumbnail)}')`;
       
-      // Transparent Watermark
       const wm = document.getElementById('vd-watermark');
       if(globalSettings.watermark) {
           let markName = meData.username || (me.email ? me.email.split('@')[0] : "Premium User");
@@ -1070,7 +1068,7 @@
       
       const notesEl = document.getElementById('vd-notes');
       const seeMoreBtn = document.getElementById('vd-see-more');
-      const descBox = document.getElementById('vd-desc-box');
+      const descWrapper = document.getElementById('vd-desc-wrapper');
       
       notesEl.innerText = v.notes || "";
       notesEl.classList.remove('expanded');
@@ -1078,28 +1076,32 @@
       if(v.notes && v.notes.length > 80) {
           seeMoreBtn.style.display = 'inline-block';
           seeMoreBtn.innerText = "... See more";
-          descBox.style.display = 'block';
+          descWrapper.style.display = 'block';
       } else if (v.notes) {
           seeMoreBtn.style.display = 'none';
-          descBox.style.display = 'block';
+          descWrapper.style.display = 'block';
       } else {
-          descBox.style.display = 'none';
+          descWrapper.style.display = 'none';
       }
       
       const videoEl = document.getElementById('vd-video-element');
       videoEl.src = v.link; videoEl.play().catch(e=>{});
       
-      const dlContainer = document.getElementById('vd-dl-container');
-      dlContainer.innerHTML = "";
+      // Unified Download Buttons inside Action Row
+      const dlAnchor = document.getElementById('vd-dl-anchor');
+      document.querySelectorAll('.dynamic-dl-btn').forEach(el => el.remove());
+      
       if (v.downloadLinks && v.downloadLinks.length > 0) {
-          v.downloadLinks.forEach(dl => dlContainer.innerHTML += `<button class="dl-btn" onclick="window.open('${esc(dl.url)}', '_blank')">📥 ${esc(dl.title)}</button>`);
-          dlContainer.style.display = 'flex';
-      } else { dlContainer.style.display = 'none'; }
+          let dlHtml = "";
+          v.downloadLinks.forEach(dl => {
+              dlHtml += `<button class="vd-action-btn dl-btn-unified dynamic-dl-btn" onclick="window.open('${esc(dl.url)}', '_blank')">📥 ${esc(dl.title)}</button>`;
+          });
+          dlAnchor.insertAdjacentHTML('beforebegin', dlHtml);
+      }
       
       renderVideoDetailUI();
   };
 
-  // Description Toggle Function
   window.toggleVideoDesc = () => {
       const desc = document.getElementById('vd-notes');
       const btn = document.getElementById('vd-see-more');
