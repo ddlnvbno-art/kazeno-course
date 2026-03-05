@@ -123,15 +123,15 @@
   .remove-btn { background: rgba(255,69,58,0.15); border:1px solid rgba(255,69,58,0.3); width: 50px; height: 50px; border-radius: 16px; color: var(--danger); cursor:pointer; flex-shrink: 0;}
 
   /* Modals */
-  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px); padding: 20px;}
+  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px);}
   .modal-bg.active { display: flex; animation: fadeIn 0.3s; }
-  .modal-content { width: 100%; max-width: 600px; max-height: 85vh; overflow-y: auto; padding: 30px; animation: scaleUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .modal-content { width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto; padding: 30px; animation: scaleUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
   @keyframes scaleUp { from { transform: scale(0.95); opacity: 0;} to { transform: scale(1); opacity: 1;} }
 
   @media(max-width: 768px) {
       #app-view { display: block; overflow-y: auto;}
       .mobile-header { display: flex; }
-      .sidebar { position: fixed; left: -100%; top: 0; width: 80vw; max-width: 320px; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); border-right: 1px solid var(--glass-border); box-shadow: 20px 0 50px rgba(0,0,0,0.5); }
+      .sidebar { position: fixed; left: -100%; top: 0; width: 280px; height: 100vh; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); border-right: 1px solid var(--glass-border); box-shadow: 20px 0 50px rgba(0,0,0,0.5); z-index: 1000; }
       .sidebar.open { left: 0; }
       .main-content { padding: 90px 20px 40px; height: auto; overflow-y: visible;}
       .grid-2 { grid-template-columns: 1fr; }
@@ -148,7 +148,7 @@
 
 <div id="login-view">
     <div class="login-box glass-panel">
-        <h2>Kazeno Admin</h2>
+        <h2>Kazeno Pro Admin</h2>
         <input type="email" id="admin-email" placeholder="Admin Email">
         <input type="password" id="admin-pass" placeholder="Password">
         <button class="btn btn-primary" onclick="login()">Access Console</button>
@@ -173,8 +173,8 @@
         <div class="nav-item" onclick="switchTab('tab-comments', this)">💬 Comments</div>
         <div class="nav-item logout-btn" onclick="logout()">🚪 Log Out</div>
     </div>
-
-    <div id="sidebar-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:98;" onclick="toggleSidebar()"></div>
+    
+    <div id="sidebar-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:999;" onclick="toggleSidebar()"></div>
 
     <div class="main-content">
         
@@ -182,31 +182,14 @@
             <h2 class="section-title">Overview</h2>
             <div class="dash-grid">
                 <div class="stat-card glass-panel" style="grid-column: 1 / -1; flex-direction: row; justify-content: space-around; padding: 40px 20px;">
-                    <div>
-                        <div class="stat-num" id="s-total">0</div>
-                        <div class="stat-label">Total Users</div>
-                    </div>
+                    <div><div class="stat-num" id="s-total">0</div><div class="stat-label">Total Users</div></div>
                     <div style="width: 1px; height: 50px; background: var(--glass-border);"></div>
-                    <div>
-                        <div class="stat-num" id="s-pro" style="color: var(--success);">0</div>
-                        <div class="stat-label">Pro Users</div>
-                    </div>
+                    <div><div class="stat-num" id="s-pro" style="color: var(--success);">0</div><div class="stat-label">Pro Users</div></div>
                     <div style="width: 1px; height: 50px; background: var(--glass-border);"></div>
-                    <div>
-                        <div class="stat-num" id="s-free" style="color: var(--text-muted);">0</div>
-                        <div class="stat-label">Free Users</div>
-                    </div>
+                    <div><div class="stat-num" id="s-free" style="color: var(--text-muted);">0</div><div class="stat-label">Free Users</div></div>
                 </div>
-                
-                <div class="stat-card glass-panel">
-                    <div class="stat-num" id="s-vid">0</div>
-                    <div class="stat-label">Total Videos</div>
-                </div>
-                
-                <div class="stat-card glass-panel">
-                    <div class="stat-num" id="s-post">0</div>
-                    <div class="stat-label">Feed Posts</div>
-                </div>
+                <div class="stat-card glass-panel"><div class="stat-num" id="s-vid">0</div><div class="stat-label">Videos</div></div>
+                <div class="stat-card glass-panel"><div class="stat-num" id="s-post">0</div><div class="stat-label">Posts</div></div>
             </div>
         </div>
 
@@ -227,19 +210,17 @@
 
         <div id="tab-users" class="page-section">
             <h2 class="section-title">User Directory</h2>
-            
             <div class="filter-bar">
                 <div class="filter-pill active" onclick="filterUsers('All', this)">All Users</div>
                 <div class="filter-pill" onclick="filterUsers('Pro', this)">Pro Members</div>
                 <div class="filter-pill" onclick="filterUsers('Free', this)">Free Members</div>
             </div>
-            
             <div class="glass-panel" style="padding: 20px;">
                 <div style="display:flex; gap:10px; margin-bottom: 20px;">
                     <input type="text" id="u-search" placeholder="Search by Email..." style="margin:0;">
                     <button class="btn btn-primary" style="width:auto;" onclick="searchUserDB()">Search</button>
                 </div>
-                <div class="content-list" id="user-list-container"></div>
+                <div class="content-list" id="user-list-container"><div class='muted'>Loading users...</div></div>
             </div>
         </div>
 
@@ -248,11 +229,9 @@
                 <h2 class="section-title" style="margin:0;">Video Courses</h2>
                 <button class="btn btn-primary" style="width:auto;" onclick="openVideoModal()">+ Add Video</button>
             </div>
-            
             <div class="filter-bar" id="vid-filter-bar"></div>
-            
             <div class="glass-panel" style="padding: 20px;">
-                <div class="content-list" id="admin-vid-list"></div>
+                <div class="content-list" id="admin-vid-list"><div class='muted'>Loading videos...</div></div>
             </div>
         </div>
 
@@ -261,18 +240,16 @@
                 <h2 class="section-title" style="margin:0;">Community Posts</h2>
                 <button class="btn btn-primary" style="width:auto;" onclick="openPostModal()">+ Create Post</button>
             </div>
-            
             <div class="filter-bar" id="post-filter-bar"></div>
-            
             <div class="glass-panel" style="padding: 20px;">
-                <div class="content-list" id="admin-post-list"></div>
+                <div class="content-list" id="admin-post-list"><div class='muted'>Loading posts...</div></div>
             </div>
         </div>
 
         <div id="tab-comments" class="page-section">
             <h2 class="section-title">Channel Comments</h2>
             <div class="glass-panel" style="padding: 10px;">
-                <div id="admin-comment-list" style="display:flex; flex-direction:column;"></div>
+                <div id="admin-comment-list" style="display:flex; flex-direction:column;"><div class='muted' style='padding:20px; text-align:center;'>Loading comments...</div></div>
             </div>
         </div>
 
@@ -288,10 +265,6 @@
             <div style="margin-bottom:12px; font-size:14px; display:flex; justify-content:space-between;">
                 <span>Account Status:</span> 
                 <span id="mu-status" style="font-weight:bold; letter-spacing:1px;">FREE</span>
-            </div>
-            <div style="font-size:14px; display:flex; justify-content:space-between;">
-                <span>First Login:</span> 
-                <span id="mu-time" style="color:var(--text-muted);">Unknown</span>
             </div>
         </div>
         
@@ -314,7 +287,7 @@
         <input type="text" id="v-title" placeholder="Video Title">
         <input type="text" id="v-link" placeholder="Video Direct Link (MP4)">
         
-        <label style="font-size:13px; color:var(--text-muted); margin-bottom:8px; display:block;">Thumbnail Image</label>
+        <label style="font-size:13px; color:var(--text-muted); margin-bottom:8px; display:block;">Thumbnail Image (Upload)</label>
         <div style="display:flex; gap:10px; margin-bottom:15px;">
             <input type="text" id="v-thumb" placeholder="Image URL" style="margin:0; flex:1;">
             <button class="btn btn-ghost" onclick="document.getElementById('v-thumb-file').click()">📁 Browse</button>
@@ -394,32 +367,32 @@
       setTimeout(()=> t.style.display = 'none', 2000);
   }
 
+  // --- 🔥 FIXED: SAFE TIME PARSER TO PREVENT CRASHES ---
+  function safeTime(ts) {
+      if (!ts) return 0;
+      if (typeof ts === 'number') return ts; // Old Date.now() format
+      if (typeof ts.toMillis === 'function') return ts.toMillis(); // Firestore serverTimestamp
+      if (ts.seconds) return ts.seconds * 1000;
+      return 0;
+  }
+
   window.toggleSidebar = () => {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('sidebar-overlay');
-      if(sidebar.classList.contains('open')) {
-          sidebar.classList.remove('open');
-          overlay.style.display = 'none';
-      } else {
-          sidebar.classList.add('open');
-          overlay.style.display = 'block';
-      }
+      if(sidebar.classList.contains('open')) { sidebar.classList.remove('open'); overlay.style.display = 'none'; } 
+      else { sidebar.classList.add('open'); overlay.style.display = 'block'; }
   };
 
   // --- AUTH ---
   window.login = async ()=>{
-    document.getElementById("err").textContent = "Authenticating...";
+    document.getElementById("err").textContent = "Loading...";
     try{ await signInWithEmailAndPassword(auth, document.getElementById("admin-email").value.trim(), document.getElementById("admin-pass").value); }
-    catch(e){ document.getElementById("err").textContent = "Invalid Credentials"; }
+    catch(e){ document.getElementById("err").textContent = "Access Denied."; }
   };
   window.logout = async ()=>{ await signOut(auth); };
 
   onAuthStateChanged(auth, (user)=>{
-    if(!user) {
-        document.getElementById("login-view").style.display="flex";
-        document.getElementById("app-view").style.display="none";
-        return;
-    }
+    if(!user) { document.getElementById("login-view").style.display="flex"; document.getElementById("app-view").style.display="none"; return; }
     if(user.uid !== ADMIN_UID){ alert("Not an Admin."); signOut(auth); return; }
     document.getElementById("login-view").style.display="none";
     document.getElementById("app-view").style.display="flex";
@@ -432,18 +405,18 @@
       document.getElementById(tabId).classList.add('active');
       document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
       if(btn) btn.classList.add('active');
-      if(window.innerWidth <= 768 && document.getElementById('sidebar').classList.contains('open')) toggleSidebar();
+      if(window.innerWidth <= 768) toggleSidebar();
   };
 
   window.closeModal = (id) => { document.getElementById(id).classList.remove('active'); }
 
-  // --- USER'S API KEY UPLOAD SYSTEM (BASE64) ---
+  // --- IMAGE UPLOAD TO IMGBB (Base64 Method) ---
   window.uploadImageToImgBB = (fileInput, targetInputId) => {
       const file = fileInput.files[0];
       if(!file) return;
       
       const targetInput = document.getElementById(targetInputId);
-      targetInput.value = "Uploading to ImgBB... ⏳";
+      targetInput.value = "Uploading to Cloud... ⏳";
       
       // User provided API Key
       const API_KEY = "f0d759dd374df91104867c6701e199f2"; 
@@ -461,19 +434,14 @@
                   body: formData
               });
               const data = await response.json();
-              
               if(data.success) {
                   targetInput.value = data.data.url;
                   showToast("Image Uploaded! ✅");
-              } else {
-                  throw new Error(data.error.message || "Upload failed");
-              }
+              } else { throw new Error("Upload failed"); }
           } catch(e) {
               targetInput.value = "";
-              alert("Upload Error: " + e.message);
-          } finally {
-              fileInput.value = ""; 
-          }
+              alert("Error: " + e.message);
+          } finally { fileInput.value = ""; }
       };
   };
 
@@ -481,29 +449,33 @@
   function initRealtimeListeners() {
       onSnapshot(collection(db, "users"), (snap) => {
           globalUsers = []; snap.forEach(d => globalUsers.push({id: d.id, ...d.data()}));
-          updateDashboard(); renderUserList(document.querySelector('#tab-users .filter-pill.active')?.innerText.split(' ')[0] || 'All');
+          updateDashboard(); 
+          let activeTab = document.querySelector('#tab-users .filter-pill.active')?.innerText || 'All';
+          renderUserList(activeTab.split(' ')[0]);
       });
 
       onSnapshot(query(collection(db, "paidUsers"), where("active", "==", true)), (snap) => {
           globalProUsers = []; snap.forEach(d => globalProUsers.push(d.id));
-          updateDashboard(); renderUserList(document.querySelector('#tab-users .filter-pill.active')?.innerText.split(' ')[0] || 'All');
+          updateDashboard(); 
+          let activeTab = document.querySelector('#tab-users .filter-pill.active')?.innerText || 'All';
+          renderUserList(activeTab.split(' ')[0]);
       });
 
       onSnapshot(collection(db, "videos"), (snap) => {
           globalVideos = []; snap.forEach(d => globalVideos.push({id: d.id, ...d.data()}));
-          globalVideos.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0)); 
+          globalVideos.sort((a,b) => safeTime(b.timestamp) - safeTime(a.timestamp)); 
           updateDashboard(); renderVideoSection();
       });
 
       onSnapshot(collection(db, "posts"), (snap) => {
           globalPosts = []; snap.forEach(d => globalPosts.push({id: d.id, ...d.data()}));
-          globalPosts.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0)); 
+          globalPosts.sort((a,b) => safeTime(b.createdAt) - safeTime(a.createdAt)); 
           updateDashboard(); renderPostSection();
       });
 
       onSnapshot(collection(db, "comments"), (snap) => {
           let comments = []; snap.forEach(d => comments.push({id: d.id, ...d.data()}));
-          comments.sort((a,b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+          comments.sort((a,b) => safeTime(b.createdAt) - safeTime(a.createdAt));
           document.getElementById('stat-com').innerText = comments.length;
           renderCommentsUI(comments);
       });
@@ -523,16 +495,11 @@
       btn.classList.add('active');
       renderUserList(type);
   };
-
-  window.searchUserDB = () => {
-      const q = document.getElementById('u-search').value.toLowerCase();
-      renderUserList('Search', q);
-  };
+  window.searchUserDB = () => { renderUserList('Search', document.getElementById('u-search').value.toLowerCase()); };
 
   function renderUserList(filterType, searchQuery = "") {
       const box = document.getElementById('user-list-container');
       let filtered = globalUsers;
-
       if(filterType === 'Pro') filtered = globalUsers.filter(u => globalProUsers.includes(u.uid));
       if(filterType === 'Free') filtered = globalUsers.filter(u => !globalProUsers.includes(u.uid));
       if(filterType === 'Search') filtered = globalUsers.filter(u => (u.email||"").toLowerCase().includes(searchQuery));
@@ -556,37 +523,26 @@
       const u = globalUsers.find(x => x.uid === uid);
       if(!u) return;
       const isPro = globalProUsers.includes(uid);
-      
       document.getElementById('mu-email').innerText = u.email;
       document.getElementById('mu-uid').innerText = uid;
       document.getElementById('mu-status').innerText = isPro ? "PRO MEMBER" : "FREE ACCOUNT";
       document.getElementById('mu-status').style.color = isPro ? "var(--success)" : "var(--text-main)";
-      document.getElementById('mu-time').innerText = u.createdAt ? new Date(u.createdAt).toLocaleString() : "First Login Date";
-
+      
       const btnToggle = document.getElementById('btn-toggle-pro');
-      if(isPro) {
-          btnToggle.innerText = "Revoke PRO Access";
-          btnToggle.className = "btn btn-ghost";
-          btnToggle.onclick = () => togglePro(uid, false);
-      } else {
-          btnToggle.innerText = "Grant PRO Access";
-          btnToggle.className = "btn btn-primary";
-          btnToggle.onclick = () => togglePro(uid, true);
-      }
+      if(isPro) { btnToggle.innerText = "Revoke PRO Access"; btnToggle.className = "btn btn-ghost"; btnToggle.onclick = () => togglePro(uid, false); } 
+      else { btnToggle.innerText = "Grant PRO Access"; btnToggle.className = "btn btn-primary"; btnToggle.onclick = () => togglePro(uid, true); }
 
       document.getElementById('btn-del-user-db').onclick = () => deleteUserDB(uid);
       document.getElementById('modal-user').classList.add('active');
   };
 
   window.togglePro = async (uid, makePro) => {
-      try {
-          await setDoc(doc(db, "paidUsers", uid), { active: makePro, updatedAt: Date.now() }, { merge: true });
-          closeModal('modal-user');
-      } catch(e) {}
+      await setDoc(doc(db, "paidUsers", uid), { active: makePro, updatedAt: Date.now() }, { merge: true });
+      closeModal('modal-user');
   };
 
   window.deleteUserDB = async (uid) => {
-      if(confirm("Delete this user's data from Firestore?")) {
+      if(confirm("Delete user Firestore Data?")) {
           await deleteDoc(doc(db, "users", uid));
           await deleteDoc(doc(db, "paidUsers", uid));
           closeModal('modal-user');
@@ -595,39 +551,29 @@
 
   // --- HOME UI CONFIG ---
   async function loadHomeConfig() {
-      try {
-          const docSnap = await getDoc(doc(db, "appSettings", "homeConfig"));
-          if(docSnap.exists()) {
-              const data = docSnap.data();
-              if(data.marquee) document.getElementById('home-marquee').value = data.marquee;
-              
-              const bContainer = document.getElementById('banner-inputs');
-              bContainer.innerHTML = '';
-              if(data.banners && data.banners.length > 0) {
-                  data.banners.forEach((url, i) => bContainer.insertAdjacentHTML('beforeend', createImgInputRow(url, `banner-img-${i}`)));
-              } else {
-                  bContainer.insertAdjacentHTML('beforeend', createImgInputRow('', 'banner-img-0'));
-              }
-          }
-      } catch(e){}
+      const docSnap = await getDoc(doc(db, "appSettings", "homeConfig"));
+      if(docSnap.exists()) {
+          const data = docSnap.data();
+          if(data.marquee) document.getElementById('home-marquee').value = data.marquee;
+          const bContainer = document.getElementById('banner-inputs');
+          bContainer.innerHTML = '';
+          if(data.banners && data.banners.length > 0) {
+              data.banners.forEach((url, i) => bContainer.insertAdjacentHTML('beforeend', createImgInputRow(url, `banner-img-${i}`)));
+          } else { bContainer.insertAdjacentHTML('beforeend', createImgInputRow('', 'banner-img-0')); }
+      }
   }
 
-  window.addBannerField = () => {
-      document.getElementById('banner-inputs').insertAdjacentHTML('beforeend', createImgInputRow('', `banner-img-${Date.now()}`));
-  };
+  window.addBannerField = () => document.getElementById('banner-inputs').insertAdjacentHTML('beforeend', createImgInputRow('', `banner-img-${Date.now()}`));
 
   window.saveHomeUI = async () => {
       const marquee = document.getElementById('home-marquee').value.trim();
       let banners = [];
       document.querySelectorAll('#banner-inputs .p-img-url').forEach(i => { if(i.value.trim() !== '') banners.push(i.value.trim()); });
-      
-      try {
-          await setDoc(doc(db, "appSettings", "homeConfig"), { marquee: marquee, banners: banners });
-          showToast("Home Settings Saved! ✅");
-      } catch(e) { alert("Error saving config."); }
+      await setDoc(doc(db, "appSettings", "homeConfig"), { marquee: marquee, banners: banners });
+      showToast("Home Settings Saved! ✅");
   };
 
-  // --- DYNAMIC HELPER FOR LINKS/IMAGES ---
+  // --- DYNAMIC INPUTS ---
   function createImgInputRow(val = "", idStr) {
       return `
       <div class="dynamic-input-row">
@@ -637,12 +583,12 @@
           <button class="remove-btn" onclick="this.parentElement.remove()">✕</button>
       </div>`;
   }
-
+  
   function createDlInputRow(val1="", val2="") {
       return `
       <div class="dynamic-input-row">
-          <input type="text" value="${esc(val1)}" placeholder="Btn Text (e.g. Get GFX)" style="flex:1; margin:0;">
-          <input type="text" value="${esc(val2)}" placeholder="Download Link URL" style="flex:2; margin:0;">
+          <input type="text" value="${esc(val1)}" placeholder="Btn Text" style="flex:1; margin:0;">
+          <input type="text" value="${esc(val2)}" placeholder="Link URL" style="flex:2; margin:0;">
           <button class="remove-btn" onclick="this.parentElement.remove()">✕</button>
       </div>`;
   }
@@ -686,28 +632,20 @@
       document.getElementById('v-dl-container').innerHTML = '';
       
       if(id) {
-          document.getElementById('mv-header').innerText = "Edit Lesson";
+          document.getElementById('mv-header').innerText = "Edit Video";
           const v = globalVideos.find(x => x.id === id);
           document.getElementById('v-edit-id').value = id;
-          document.getElementById('v-cat').value = v.category || "General";
+          document.getElementById('v-cat').value = v.category || "";
           document.getElementById('v-title').value = v.title;
           document.getElementById('v-thumb').value = v.thumbnail || "";
           document.getElementById('v-link').value = v.link;
           document.getElementById('v-notes').value = v.notes || "";
-          
-          if(v.downloadLinks) {
-              v.downloadLinks.forEach(dl => {
-                  document.getElementById('v-dl-container').insertAdjacentHTML('beforeend', createDlInputRow(dl.title, dl.url));
-              });
-          }
+          if(v.downloadLinks) v.downloadLinks.forEach(dl => document.getElementById('v-dl-container').insertAdjacentHTML('beforeend', createDlInputRow(dl.title, dl.url)));
       } else {
-          document.getElementById('mv-header').innerText = "Add New Lesson";
-          document.getElementById('v-edit-id').value = "";
-          document.getElementById('v-cat').value = "";
-          document.getElementById('v-title').value = "";
-          document.getElementById('v-thumb').value = "";
-          document.getElementById('v-link').value = "";
-          document.getElementById('v-notes').value = "";
+          document.getElementById('mv-header').innerText = "Add Video";
+          document.getElementById('v-edit-id').value = ""; document.getElementById('v-cat').value = "";
+          document.getElementById('v-title').value = ""; document.getElementById('v-thumb').value = "";
+          document.getElementById('v-link').value = ""; document.getElementById('v-notes').value = "";
       }
       document.getElementById('modal-video').classList.add('active');
   };
@@ -722,15 +660,11 @@
           notes: document.getElementById('v-notes').value.trim(),
           downloadLinks: getDlData('v')
       };
-      
       if(!data.title || !data.link) return alert("Title and Link required.");
 
-      try {
-          if(id) await updateDoc(doc(db, "videos", id), data);
-          else { data.timestamp = Date.now(); await addDoc(collection(db, "videos"), data); }
-          closeModal('modal-video');
-          showToast("Saved!");
-      } catch(e) { alert("Error saving."); }
+      if(id) await updateDoc(doc(db, "videos", id), data);
+      else { data.timestamp = Date.now(); await addDoc(collection(db, "videos"), data); }
+      closeModal('modal-video'); showToast("Saved!");
   };
 
   // --- POSTS ---
@@ -753,19 +687,16 @@
           document.getElementById('mp-header').innerText = "Edit Post";
           const p = globalPosts.find(x => x.id === id);
           document.getElementById('p-edit-id').value = id;
-          document.getElementById('p-cat').value = p.category || "General News";
+          document.getElementById('p-cat').value = p.category || "";
           document.getElementById('p-title').value = p.title;
           document.getElementById('p-body').value = p.body || "";
           document.getElementById('p-notes').value = p.notes || "";
-          
           if(p.images) p.images.forEach((img, i) => document.getElementById('p-img-container').insertAdjacentHTML('beforeend', createImgInputRow(img, `p-img-${i}`)));
           if(p.downloadLinks) p.downloadLinks.forEach(dl => document.getElementById('p-dl-container').insertAdjacentHTML('beforeend', createDlInputRow(dl.title, dl.url)));
       } else {
           document.getElementById('mp-header').innerText = "Create Post";
-          document.getElementById('p-edit-id').value = "";
-          document.getElementById('p-cat').value = "";
-          document.getElementById('p-title').value = "";
-          document.getElementById('p-body').value = "";
+          document.getElementById('p-edit-id').value = ""; document.getElementById('p-cat').value = "";
+          document.getElementById('p-title').value = ""; document.getElementById('p-body').value = "";
           document.getElementById('p-notes').value = "";
           addImgField(); 
       }
@@ -776,35 +707,27 @@
       const id = document.getElementById('p-edit-id').value;
       let images = [];
       document.querySelectorAll('#p-img-container .p-img-url').forEach(i => { if(i.value.trim() !== '') images.push(i.value.trim()); });
-
       const data = {
           category: document.getElementById('p-cat').value.trim() || "All Updates",
           title: document.getElementById('p-title').value.trim(),
           body: document.getElementById('p-body').value.trim(),
           notes: document.getElementById('p-notes').value.trim(),
-          images: images,
-          downloadLinks: getDlData('p'),
-          isPublic: true
+          images: images, downloadLinks: getDlData('p'), isPublic: true
       };
-      
       if(!data.title) return alert("Title required.");
 
-      try {
-          if(id) await updateDoc(doc(db, "posts", id), data);
-          else { data.createdAt = Date.now(); await addDoc(collection(db, "posts"), data); }
-          closeModal('modal-post');
-          showToast("Saved!");
-      } catch(e) {}
+      if(id) await updateDoc(doc(db, "posts", id), data);
+      else { data.createdAt = Date.now(); await addDoc(collection(db, "posts"), data); }
+      closeModal('modal-post'); showToast("Saved!");
   };
 
-  // Generic List Renderer
+  // Generic List Filter
   window.filterDataList = (type, category, btn) => {
       if(btn) {
           const bar = btn.parentElement;
           bar.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
           btn.classList.add('active');
       }
-      
       const box = document.getElementById(type === 'videos' ? 'admin-vid-list' : 'admin-post-list');
       const sourceData = type === 'videos' ? globalVideos : globalPosts;
       let filtered = category === 'All' ? sourceData : sourceData.filter(x => (x.category || "General") === category);
@@ -818,8 +741,8 @@
                       <div class="item-meta"><span class="item-badge">${esc(item.category)}</span></div>
                   </div>
                   <div class="item-actions">
-                      <button class="btn btn-ghost" style="padding: 6px 10px; font-size:12px;" onclick="${type === 'videos' ? 'openVideoModal' : 'openPostModal'}('${item.id}')">Edit</button>
-                      <button class="btn btn-danger" style="padding: 6px 10px;" onclick="delDoc('${type}', '${item.id}')">Del</button>
+                      <button class="btn btn-ghost" style="padding: 8px 12px; font-size:12px;" onclick="${type === 'videos' ? 'openVideoModal' : 'openPostModal'}('${item.id}')">Edit</button>
+                      <button class="btn btn-danger" style="padding: 8px 12px;" onclick="delDoc('${type}', '${item.id}')">Del</button>
                   </div>
               </div>`;
       });
@@ -832,7 +755,8 @@
       let html = "";
       comments.forEach(c => {
           const initial = c.email ? c.email.charAt(0).toUpperCase() : "U";
-          const timeStr = c.createdAt ? new Date(c.createdAt.toMillis()).toLocaleString() : "Just now";
+          const timeVal = safeTime(c.createdAt);
+          const timeStr = timeVal ? new Date(timeVal).toLocaleString() : "Just now";
           
           const pContext = globalPosts.find(p => p.id === c.postId);
           const vContext = globalVideos.find(v => v.id === c.postId);
@@ -858,8 +782,8 @@
                       <div class="sc-text">${esc(c.text)}</div>
                       
                       <div style="display:flex; gap:10px; margin-bottom:15px;">
-                          <input type="text" id="admin-rep-${c.id}" placeholder="Reply..." style="margin:0; padding:8px 12px; font-size:12px;">
-                          <button class="btn btn-primary" style="padding:8px 15px; width:auto;" onclick="adminReply('${c.postId}', '${c.id}', '${esc(c.email)}')">Reply</button>
+                          <input type="text" id="admin-rep-${c.id}" placeholder="Reply..." style="margin:0; padding:10px 15px; font-size:12px;">
+                          <button class="btn btn-primary" style="padding:10px 20px; width:auto;" onclick="adminReply('${c.postId}', '${c.id}', '${esc(c.email)}')">Reply</button>
                       </div>
 
                       ${contextHtml}
