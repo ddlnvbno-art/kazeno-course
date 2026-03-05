@@ -3,130 +3,142 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>Kazeno Admin | Liquid Glass</title>
+<title>Kazeno Admin | Pro Console</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg-color: #0d0d14;
-    --glass-bg: rgba(255, 255, 255, 0.05); 
-    --glass-border: rgba(255, 255, 255, 0.15);
-    --glass-highlight: inset 0 1px 1px rgba(255, 255, 255, 0.2);
-    --text-main: #ffffff;
-    --text-muted: #9ca3af;
+    --bg-color: #000000;
+    --glass-bg: rgba(255, 255, 255, 0.04); 
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --text-main: #f5f5f7;
+    --text-muted: #86868b;
     --primary: #5e5ce6;
-    --accent: #3b82f6;
-    --danger: #ef4444;
-    --success: #10b981;
-    --radius: 20px;
+    --accent: #0a84ff;
+    --danger: #ff453a;
+    --success: #32d74b;
+    --radius: 24px;
   }
 
   * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
   
-  body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg-color); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
+  body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg-color); color: var(--text-main); min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
   
-  body::before { content: ''; position: fixed; top: -10%; left: -10%; width: 50vw; height: 50vh; background: radial-gradient(circle, rgba(94, 92, 230, 0.3) 0%, transparent 70%); filter: blur(90px); z-index: -1; }
-  body::after { content: ''; position: fixed; bottom: -10%; right: -10%; width: 60vw; height: 60vh; background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%); filter: blur(90px); z-index: -1; }
+  /* Subtle Background Glow */
+  body::before { content: ''; position: fixed; top: -20%; left: -10%; width: 60vw; height: 60vh; background: radial-gradient(circle, rgba(94, 92, 230, 0.15) 0%, transparent 60%); filter: blur(80px); z-index: -1; }
+  body::after { content: ''; position: fixed; bottom: -20%; right: -10%; width: 60vw; height: 60vh; background: radial-gradient(circle, rgba(10, 132, 255, 0.1) 0%, transparent 60%); filter: blur(80px); z-index: -1; }
 
-  .glass-panel { background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: var(--radius); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), var(--glass-highlight); }
+  /* Universal Glass Class */
+  .glass-panel {
+    background: var(--glass-bg); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+    border: 1px solid var(--glass-border); border-radius: var(--radius);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
 
   /* --- LOGIN --- */
-  #login-view { height: 100vh; display: flex; align-items: center; justify-content: center; }
-  .login-box { padding: 40px; width: 90%; max-width: 400px; text-align: center; }
-  .login-box h2 { font-weight: 800; margin-bottom: 25px; background: linear-gradient(135deg, #fff, #a5b4fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
-
-  /* --- INPUTS & BUTTONS --- */
-  input, textarea, select {
-    width: 100%; padding: 14px 18px; border-radius: 12px; margin-bottom: 15px;
-    background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #fff; font-family: 'Poppins'; font-size: 14px; transition: 0.3s;
-  }
-  input:focus, textarea:focus, select:focus { border-color: var(--accent); background: rgba(0, 0, 0, 0.4); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
-  
-  .btn { padding: 12px 20px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; font-family: 'Poppins'; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;}
-  .btn:active { transform: scale(0.96); }
-  .btn-primary { background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; box-shadow: 0 4px 15px rgba(94, 92, 230, 0.4); }
-  .btn-danger { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); }
-  .btn-ghost { background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid var(--glass-border); }
+  #login-view { height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .login-box { padding: 40px; width: 100%; max-width: 380px; text-align: center; }
+  .login-box h2 { font-weight: 800; margin-bottom: 30px; font-size: 24px; }
 
   /* --- APP LAYOUT --- */
-  #app-view { display: none; height: 100vh; display: flex; }
+  #app-view { display: none; height: 100vh; width: 100vw; overflow: hidden; }
   
+  /* Mobile Header */
   .mobile-header { display: none; padding: 15px 20px; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.5); backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border); z-index: 100; position: fixed; width: 100%; top: 0; }
   .mobile-header h1 { margin: 0; font-size: 18px; font-weight: 800; background: linear-gradient(90deg, var(--accent), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
   .menu-btn { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; padding: 0; }
 
   /* Sidebar */
-  .sidebar { width: 260px; padding: 20px; display: flex; flex-direction: column; gap: 10px; border-right: 1px solid var(--glass-border); background: rgba(13, 13, 20, 0.6); backdrop-filter: blur(20px); z-index: 100;}
-  .brand-logo { font-size: 20px; font-weight: 800; margin-bottom: 30px; padding: 0 10px; display: flex; align-items: center; gap:10px;}
+  .sidebar { width: 280px; height: 100vh; background: rgba(10, 10, 15, 0.8); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; padding: 30px 20px; z-index: 99; transition: transform 0.3s ease; }
+  .brand-logo { font-size: 22px; font-weight: 800; margin-bottom: 40px; padding: 0 10px; display: flex; align-items: center; gap:10px;}
   .brand-logo::before { content:''; width:12px; height:12px; background:var(--accent); border-radius:50%; box-shadow: 0 0 10px var(--accent);}
-  .nav-item { padding: 12px 15px; border-radius: 12px; cursor: pointer; color: var(--text-muted); font-weight: 500; transition: 0.3s; display: flex; align-items: center; gap: 10px;}
-  .nav-item:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
-  .nav-item.active { background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid var(--glass-border); box-shadow: var(--glass-highlight); }
-  .logout-btn { margin-top: auto; color: var(--danger); }
   
+  .nav-item { padding: 14px 18px; border-radius: 16px; cursor: pointer; color: var(--text-muted); font-weight: 500; transition: 0.3s; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 15px;}
+  .nav-item:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
+  .nav-item.active { background: rgba(10, 132, 255, 0.15); color: #fff; border: 1px solid rgba(10, 132, 255, 0.3); box-shadow: inset 0 0 10px rgba(10,132,255,0.1); }
+  .logout-btn { margin-top: auto; color: var(--danger); background: rgba(255,69,58,0.1); }
+
   /* Main Content */
-  .main-content { flex: 1; overflow-y: auto; padding: 30px; position: relative; }
-  .page-section { display: none; animation: fadeUp 0.4s ease; }
+  .main-content { flex: 1; height: 100vh; overflow-y: auto; padding: 40px; position: relative; scroll-behavior: smooth; }
+  .page-section { display: none; animation: fadeUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
   .page-section.active { display: block; }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-  h2.section-title { font-size: 24px; font-weight: 700; margin-bottom: 25px; }
-  h3 { margin: 0 0 15px 0; font-size: 16px; color: #fff; }
+  h2.section-title { font-size: 28px; font-weight: 800; margin-bottom: 30px; letter-spacing: -0.5px;}
+  h3 { margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: #fff; }
 
-  /* --- DASHBOARD --- */
-  .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
-  .stat-card { padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden;}
-  .stat-card::before { content:''; position:absolute; top:0; left:0; width:100%; height:3px; background: linear-gradient(90deg, var(--accent), var(--primary)); }
-  .stat-num { font-size: 38px; font-weight: 800; margin-bottom: 5px; }
-  .stat-label { font-size: 13px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+  /* --- INPUTS & BUTTONS --- */
+  input, textarea, select {
+    width: 100%; padding: 16px 20px; border-radius: 16px; margin-bottom: 16px;
+    background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff; font-family: 'Poppins'; font-size: 14px; transition: 0.3s;
+  }
+  input:focus, textarea:focus { border-color: var(--accent); background: rgba(0, 0, 0, 0.6); box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.2); }
+  textarea { min-height: 120px; resize: vertical; }
 
-  /* --- LISTS --- */
-  .filter-bar { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; scrollbar-width: none; padding-bottom: 5px;}
-  .filter-pill { padding: 8px 16px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); cursor: pointer; font-size: 13px; white-space: nowrap;}
-  .filter-pill.active { background: var(--text-main); color: #000; }
+  .btn { padding: 14px 24px; border-radius: 16px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; font-family: 'Poppins'; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;}
+  .btn:active { transform: scale(0.96); }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), var(--primary)); color: #fff; box-shadow: 0 8px 20px rgba(94, 92, 230, 0.3); width: 100%;}
+  .btn-danger { background: rgba(255, 69, 58, 0.15); color: var(--danger); border: 1px solid rgba(255, 69, 58, 0.3); }
+  .btn-ghost { background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid var(--glass-border); }
 
-  .content-list { display: flex; flex-direction: column; gap: 15px; }
-  .list-item { padding: 15px; display: flex; justify-content: space-between; align-items: center; gap: 15px; }
-  .item-main { flex: 1; min-width: 0; }
-  .item-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .item-meta { font-size: 12px; color: var(--text-muted); display:flex; gap:10px; align-items:center; }
-  .item-actions { display: flex; gap: 8px; flex-shrink: 0; }
-
-  /* Studio Comment Item */
-  .studio-comment { display: flex; gap: 15px; padding: 20px; align-items: flex-start; }
-  .sc-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #4facfe, #00f2fe); display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;}
-  .sc-body { flex: 1; }
-  .sc-header { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
-  .sc-name { font-weight: 700; font-size: 14px; }
-  .sc-time { font-size: 12px; color: var(--text-muted); }
-  .sc-text { font-size: 14px; color: #e5e7eb; margin-bottom: 12px; line-height: 1.5; }
-  .sc-context { display: flex; gap: 10px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; align-items: center; border: 1px solid rgba(255,255,255,0.05); width: fit-content; max-width: 100%;}
-  .sc-context-title { font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
-
-  /* Upload UI */
-  .dynamic-input-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
-  .dynamic-input-row input { margin-bottom: 0; }
-  .remove-btn { background: rgba(255,0,0,0.2); border:none; width: 48px; height: 48px; border-radius: 12px; color: #fca5a5; cursor:pointer; display:flex; justify-content:center; align-items:center;}
-
-  /* User Modal */
-  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px);}
-  .modal-bg.active { display: flex; animation: fadeIn 0.3s; }
-  .modal-content { width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; padding: 25px; animation: scaleUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
-  @keyframes scaleUp { from { transform: scale(0.95); opacity: 0;} to { transform: scale(1); opacity: 1;} }
-
-  /* Suggestion Chips */
-  .chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
+  /* Suggestion Chips for Category */
+  .chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: -8px; margin-bottom: 20px; }
   .chip { padding: 6px 14px; background: rgba(255,255,255,0.08); border-radius: 20px; font-size: 12px; cursor: pointer; border: 1px solid transparent; transition: 0.2s; color: var(--text-muted);}
   .chip:hover, .chip:active { background: rgba(10, 132, 255, 0.2); color: #fff; border-color: var(--accent); }
 
+  /* --- DASHBOARD --- */
+  .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
+  .stat-card { padding: 30px 20px; text-align: center; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center;}
+  .stat-num { font-size: 42px; font-weight: 800; margin-bottom: 5px; line-height: 1; }
+  .stat-label { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* --- LISTS --- */
+  .filter-bar { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; scrollbar-width: none; padding-bottom: 5px;}
+  .filter-pill { padding: 10px 20px; border-radius: 24px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); cursor: pointer; font-size: 13px; white-space: nowrap; font-weight: 500; transition: 0.3s;}
+  .filter-pill.active { background: #fff; color: #000; border-color: #fff; font-weight: 600;}
+
+  .content-list { display: flex; flex-direction: column; gap: 15px; }
+  .list-item { padding: 20px; display: flex; justify-content: space-between; align-items: center; gap: 15px; transition: transform 0.2s; }
+  .list-item:hover { background: rgba(255,255,255,0.08); }
+  .item-main { flex: 1; min-width: 0; }
+  .item-title { font-weight: 600; font-size: 15px; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff;}
+  .item-meta { font-size: 12px; color: var(--text-muted); display: flex; gap: 10px;}
+  .item-badge { background: rgba(10, 132, 255, 0.15); color: var(--accent); padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: bold; border: 1px solid rgba(10,132,255,0.3);}
+  .item-actions { display: flex; gap: 10px; flex-shrink: 0; }
+
+  /* Studio Comment Item */
+  .studio-comment { display: flex; gap: 15px; padding: 20px; align-items: flex-start; }
+  .sc-avatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; font-size: 16px;}
+  .sc-body { flex: 1; min-width: 0; }
+  .sc-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .sc-name { font-weight: 600; font-size: 14px; color: #fff;}
+  .sc-time { font-size: 11px; color: var(--text-muted); }
+  .sc-text { font-size: 14px; color: #e5e7eb; margin-bottom: 15px; line-height: 1.5; word-wrap: break-word;}
+  .sc-context { display: flex; gap: 12px; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 12px; align-items: center; border: 1px solid rgba(255,255,255,0.05); max-width: 100%;}
+  .sc-context-img { width: 70px; height: 45px; border-radius: 8px; object-fit: cover; }
+  .sc-context-title { font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .dynamic-input-row { display: flex; gap: 10px; margin-bottom: 12px; align-items: center; }
+  .dynamic-input-row input { margin-bottom: 0; }
+  .remove-btn { background: rgba(255,69,58,0.15); border:1px solid rgba(255,69,58,0.3); width: 50px; height: 50px; border-radius: 16px; color: var(--danger); cursor:pointer; flex-shrink: 0;}
+
+  /* Modals */
+  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px); padding: 20px;}
+  .modal-bg.active { display: flex; animation: fadeIn 0.3s; }
+  .modal-content { width: 100%; max-width: 600px; max-height: 85vh; overflow-y: auto; padding: 30px; animation: scaleUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  @keyframes scaleUp { from { transform: scale(0.95); opacity: 0;} to { transform: scale(1); opacity: 1;} }
+
   @media(max-width: 768px) {
-      #app-view { flex-direction: column; }
+      #app-view { display: block; overflow-y: auto;}
       .mobile-header { display: flex; }
-      .sidebar { position: fixed; left: -100%; top: 0; width: 280px; height: 100vh; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); border-right: 1px solid var(--glass-border); box-shadow: 20px 0 50px rgba(0,0,0,0.5); z-index: 1000; }
+      .sidebar { position: fixed; left: -100%; top: 0; width: 80vw; max-width: 320px; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); border-right: 1px solid var(--glass-border); box-shadow: 20px 0 50px rgba(0,0,0,0.5); }
       .sidebar.open { left: 0; }
       .main-content { padding: 90px 20px 40px; height: auto; overflow-y: visible;}
       .grid-2 { grid-template-columns: 1fr; }
+      .item-actions { flex-direction: column; }
       .dynamic-input-row { flex-direction: column; align-items: stretch; }
+      .dynamic-input-row input { width: 100%; }
+      .remove-btn { width: 100%; height: 40px; }
   }
 </style>
 </head>
@@ -139,7 +151,7 @@
         <h2>Kazeno Admin</h2>
         <input type="email" id="admin-email" placeholder="Admin Email">
         <input type="password" id="admin-pass" placeholder="Password">
-        <button class="btn btn-primary" style="width: 100%;" onclick="login()">Access Workspace</button>
+        <button class="btn btn-primary" onclick="login()">Access Console</button>
         <div id="err" style="color:var(--danger); margin-top:15px; font-size:13px;"></div>
     </div>
 </div>
@@ -161,48 +173,67 @@
         <div class="nav-item" onclick="switchTab('tab-comments', this)">💬 Comments</div>
         <div class="nav-item logout-btn" onclick="logout()">🚪 Log Out</div>
     </div>
-    
-    <div id="sidebar-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:999;" onclick="toggleSidebar()"></div>
+
+    <div id="sidebar-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:98;" onclick="toggleSidebar()"></div>
 
     <div class="main-content">
         
         <div id="tab-dash" class="page-section active">
             <h2 class="section-title">Overview</h2>
             <div class="dash-grid">
-                <div class="stat-card glass-panel" style="grid-column: 1 / -1; flex-direction: row; justify-content: space-around; padding: 30px 20px;">
-                    <div><div class="stat-num" id="s-total">0</div><div class="stat-label">Total Users</div></div>
-                    <div style="width: 1px; height: 40px; background: var(--glass-border);"></div>
-                    <div><div class="stat-num" id="s-pro" style="color: var(--success);">0</div><div class="stat-label">Pro Users</div></div>
-                    <div style="width: 1px; height: 40px; background: var(--glass-border);"></div>
-                    <div><div class="stat-num" id="s-free" style="color: var(--text-muted);">0</div><div class="stat-label">Free Users</div></div>
+                <div class="stat-card glass-panel" style="grid-column: 1 / -1; flex-direction: row; justify-content: space-around; padding: 40px 20px;">
+                    <div>
+                        <div class="stat-num" id="s-total">0</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div style="width: 1px; height: 50px; background: var(--glass-border);"></div>
+                    <div>
+                        <div class="stat-num" id="s-pro" style="color: var(--success);">0</div>
+                        <div class="stat-label">Pro Users</div>
+                    </div>
+                    <div style="width: 1px; height: 50px; background: var(--glass-border);"></div>
+                    <div>
+                        <div class="stat-num" id="s-free" style="color: var(--text-muted);">0</div>
+                        <div class="stat-label">Free Users</div>
+                    </div>
                 </div>
-                <div class="stat-card glass-panel"><div class="stat-num" id="s-vid">0</div><div class="stat-label">Videos</div></div>
-                <div class="stat-card glass-panel"><div class="stat-num" id="s-post">0</div><div class="stat-label">Posts</div></div>
+                
+                <div class="stat-card glass-panel">
+                    <div class="stat-num" id="s-vid">0</div>
+                    <div class="stat-label">Total Videos</div>
+                </div>
+                
+                <div class="stat-card glass-panel">
+                    <div class="stat-num" id="s-post">0</div>
+                    <div class="stat-label">Feed Posts</div>
+                </div>
             </div>
         </div>
 
         <div id="tab-home" class="page-section">
-            <h2 class="section-title">Home Page Control</h2>
-            <div class="glass-panel" style="padding: 25px;">
-                <label style="font-size:13px; color:var(--text-muted);">Marquee Text (စာတန်းပြေး)</label>
-                <textarea id="home-marquee"></textarea>
+            <h2 class="section-title">Home Page Customization</h2>
+            <div class="glass-panel" style="padding: 30px;">
+                <label style="font-size:13px; color:var(--text-muted); font-weight:600;">Marquee Text (စာတန်းပြေး)</label>
+                <textarea id="home-marquee" style="margin-top:8px;"></textarea>
                 
-                <label style="font-size:13px; color:var(--text-muted); display:block; margin: 15px 0 10px;">Banner Images (Upload from Phone)</label>
+                <label style="font-size:13px; color:var(--text-muted); font-weight:600; display:block; margin: 15px 0 10px;">Banner Images (Upload from Phone)</label>
                 <div id="banner-inputs"></div>
-                <button class="btn btn-ghost" style="margin-bottom: 20px;" onclick="addBannerField()">+ Add Banner</button>
+                <button class="btn btn-ghost" style="margin-bottom: 20px;" onclick="addBannerField()">+ Add Another Banner</button>
                 
                 <hr style="border-color: var(--glass-border); margin-bottom:20px;">
-                <button class="btn btn-primary" onclick="saveHomeUI()">Save Config</button>
+                <button class="btn btn-primary" onclick="saveHomeUI()">Save Home Config</button>
             </div>
         </div>
 
         <div id="tab-users" class="page-section">
             <h2 class="section-title">User Directory</h2>
+            
             <div class="filter-bar">
                 <div class="filter-pill active" onclick="filterUsers('All', this)">All Users</div>
                 <div class="filter-pill" onclick="filterUsers('Pro', this)">Pro Members</div>
                 <div class="filter-pill" onclick="filterUsers('Free', this)">Free Members</div>
             </div>
+            
             <div class="glass-panel" style="padding: 20px;">
                 <div style="display:flex; gap:10px; margin-bottom: 20px;">
                     <input type="text" id="u-search" placeholder="Search by Email..." style="margin:0;">
@@ -213,22 +244,26 @@
         </div>
 
         <div id="tab-videos" class="page-section">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
                 <h2 class="section-title" style="margin:0;">Video Courses</h2>
                 <button class="btn btn-primary" style="width:auto;" onclick="openVideoModal()">+ Add Video</button>
             </div>
+            
             <div class="filter-bar" id="vid-filter-bar"></div>
+            
             <div class="glass-panel" style="padding: 20px;">
                 <div class="content-list" id="admin-vid-list"></div>
             </div>
         </div>
 
         <div id="tab-posts" class="page-section">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
                 <h2 class="section-title" style="margin:0;">Community Posts</h2>
                 <button class="btn btn-primary" style="width:auto;" onclick="openPostModal()">+ Create Post</button>
             </div>
+            
             <div class="filter-bar" id="post-filter-bar"></div>
+            
             <div class="glass-panel" style="padding: 20px;">
                 <div class="content-list" id="admin-post-list"></div>
             </div>
@@ -246,44 +281,55 @@
 
 <div class="modal-bg" id="modal-user" onclick="closeModal('modal-user')">
     <div class="glass-panel modal-content" onclick="event.stopPropagation()">
-        <h3 id="mu-email" style="font-size:20px;">user@email.com</h3>
-        <p id="mu-uid" style="font-size:11px; color:var(--text-muted);"></p>
-        <div style="background:rgba(0,0,0,0.3); padding:15px; border-radius:12px; margin-bottom:20px;">
-            <div style="margin-bottom:8px; font-size:13px;">Status: <span id="mu-status" style="font-weight:bold;">FREE</span></div>
+        <h3 id="mu-email" style="font-size:22px; margin-bottom: 5px;">user@email.com</h3>
+        <p id="mu-uid" style="font-size:12px; color:var(--text-muted); font-family:monospace; margin-bottom: 25px;"></p>
+        
+        <div style="background:rgba(0,0,0,0.4); padding:20px; border-radius:16px; margin-bottom:25px; border: 1px solid rgba(255,255,255,0.05);">
+            <div style="margin-bottom:12px; font-size:14px; display:flex; justify-content:space-between;">
+                <span>Account Status:</span> 
+                <span id="mu-status" style="font-weight:bold; letter-spacing:1px;">FREE</span>
+            </div>
+            <div style="font-size:14px; display:flex; justify-content:space-between;">
+                <span>First Login:</span> 
+                <span id="mu-time" style="color:var(--text-muted);">Unknown</span>
+            </div>
         </div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        
+        <div style="display:flex; gap:15px; flex-direction: column;">
             <button class="btn btn-primary" id="btn-toggle-pro">Grant Pro Access</button>
-            <button class="btn btn-danger" id="btn-del-user-db">Delete Data</button>
+            <button class="btn btn-danger" id="btn-del-user-db">Delete Firestore Data</button>
         </div>
     </div>
 </div>
 
 <div class="modal-bg" id="modal-video" onclick="closeModal('modal-video')">
     <div class="glass-panel modal-content" onclick="event.stopPropagation()">
-        <h3 id="mv-header">Add Video</h3>
+        <h3 id="mv-header">Add New Lesson</h3>
         <input type="hidden" id="v-edit-id">
         
-        <label style="font-size:12px; color:var(--text-muted);">Category</label>
+        <label style="font-size:13px; color:var(--text-muted); margin-bottom:8px; display:block;">Category (Module)</label>
         <input type="text" id="v-cat" placeholder="Type new or pick below...">
         <div class="chip-row" id="v-cat-chips"></div>
         
         <input type="text" id="v-title" placeholder="Video Title">
         <input type="text" id="v-link" placeholder="Video Direct Link (MP4)">
         
-        <label style="font-size:12px; color:var(--text-muted);">Thumbnail Image (Upload)</label>
+        <label style="font-size:13px; color:var(--text-muted); margin-bottom:8px; display:block;">Thumbnail Image</label>
         <div style="display:flex; gap:10px; margin-bottom:15px;">
             <input type="text" id="v-thumb" placeholder="Image URL" style="margin:0; flex:1;">
             <button class="btn btn-ghost" onclick="document.getElementById('v-thumb-file').click()">📁 Browse</button>
             <input type="file" id="v-thumb-file" style="display:none;" accept="image/*" onchange="uploadImageToImgBB(this, 'v-thumb')">
         </div>
+
+        <textarea id="v-notes" placeholder="Notes or Quotes..."></textarea>
         
-        <textarea id="v-notes" placeholder="Notes..."></textarea>
+        <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 16px; margin-bottom: 20px; border: 1px dashed var(--glass-border);">
+            <label style="font-size:13px; color:var(--text-muted); display:block; margin-bottom:10px;">Download Links (Optional)</label>
+            <div id="v-dl-container"></div>
+            <button class="btn btn-ghost" style="font-size:12px; padding:8px 16px;" onclick="addDlField('v')">+ Add Download Link</button>
+        </div>
         
-        <label style="font-size:12px; color:var(--text-muted); display:block;">Download Links</label>
-        <div id="v-dl-container"></div>
-        <button class="btn btn-ghost" style="font-size:12px; padding:6px 12px; margin-bottom:20px;" onclick="addDlField('v')">+ Add Link</button>
-        
-        <button class="btn btn-primary" style="width:100%;" onclick="saveVideo()">Save Video</button>
+        <button class="btn btn-primary" onclick="saveVideo()">Save Video</button>
     </div>
 </div>
 
@@ -292,23 +338,27 @@
         <h3 id="mp-header">Create Post</h3>
         <input type="hidden" id="p-edit-id">
         
-        <label style="font-size:12px; color:var(--text-muted);">Category</label>
+        <label style="font-size:13px; color:var(--text-muted); margin-bottom:8px; display:block;">Category</label>
         <input type="text" id="p-cat" placeholder="Type new or pick below...">
         <div class="chip-row" id="p-cat-chips"></div>
         
         <input type="text" id="p-title" placeholder="Post Title">
         <textarea id="p-body" placeholder="Main Caption..."></textarea>
-        <textarea id="p-notes" placeholder="Quote Note (Optional)" style="min-height: 60px;"></textarea>
+        <textarea id="p-notes" placeholder="Quote / Special Note (Optional)" style="min-height: 80px;"></textarea>
         
-        <label style="font-size:12px; color:var(--text-muted); display:block; margin-top:10px;">Images (Upload from phone)</label>
-        <div id="p-img-container"></div>
-        <button class="btn btn-ghost" style="font-size:12px; padding:6px 12px; margin-bottom:15px;" onclick="addImgField()">+ Add Image</button>
+        <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 16px; margin-bottom: 15px; border: 1px dashed var(--glass-border);">
+            <label style="font-size:13px; color:var(--text-muted); display:block; margin-bottom:10px;">Images (Swipeable)</label>
+            <div id="p-img-container"></div>
+            <button class="btn btn-ghost" style="font-size:12px; padding:8px 16px;" onclick="addImgField()">+ Add Image</button>
+        </div>
         
-        <label style="font-size:12px; color:var(--text-muted); display:block;">Download Links</label>
-        <div id="p-dl-container"></div>
-        <button class="btn btn-ghost" style="font-size:12px; padding:6px 12px; margin-bottom:20px;" onclick="addDlField('p')">+ Add Link</button>
+        <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 16px; margin-bottom: 20px; border: 1px dashed var(--glass-border);">
+            <label style="font-size:13px; color:var(--text-muted); display:block; margin-bottom:10px;">Download Links</label>
+            <div id="p-dl-container"></div>
+            <button class="btn btn-ghost" style="font-size:12px; padding:8px 16px;" onclick="addDlField('p')">+ Add Link</button>
+        </div>
         
-        <button class="btn btn-primary" style="width:100%;" onclick="savePost()">Publish Post</button>
+        <button class="btn btn-primary" onclick="savePost()">Publish Post</button>
     </div>
 </div>
 
@@ -347,19 +397,29 @@
   window.toggleSidebar = () => {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('sidebar-overlay');
-      if(sidebar.classList.contains('open')) { sidebar.classList.remove('open'); overlay.style.display = 'none'; } 
-      else { sidebar.classList.add('open'); overlay.style.display = 'block'; }
+      if(sidebar.classList.contains('open')) {
+          sidebar.classList.remove('open');
+          overlay.style.display = 'none';
+      } else {
+          sidebar.classList.add('open');
+          overlay.style.display = 'block';
+      }
   };
 
+  // --- AUTH ---
   window.login = async ()=>{
-    document.getElementById("err").textContent = "Loading...";
+    document.getElementById("err").textContent = "Authenticating...";
     try{ await signInWithEmailAndPassword(auth, document.getElementById("admin-email").value.trim(), document.getElementById("admin-pass").value); }
-    catch(e){ document.getElementById("err").textContent = "Access Denied."; }
+    catch(e){ document.getElementById("err").textContent = "Invalid Credentials"; }
   };
   window.logout = async ()=>{ await signOut(auth); };
 
   onAuthStateChanged(auth, (user)=>{
-    if(!user) { document.getElementById("login-view").style.display="flex"; document.getElementById("app-view").style.display="none"; return; }
+    if(!user) {
+        document.getElementById("login-view").style.display="flex";
+        document.getElementById("app-view").style.display="none";
+        return;
+    }
     if(user.uid !== ADMIN_UID){ alert("Not an Admin."); signOut(auth); return; }
     document.getElementById("login-view").style.display="none";
     document.getElementById("app-view").style.display="flex";
@@ -372,45 +432,52 @@
       document.getElementById(tabId).classList.add('active');
       document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
       if(btn) btn.classList.add('active');
-      if(window.innerWidth <= 768) toggleSidebar();
+      if(window.innerWidth <= 768 && document.getElementById('sidebar').classList.contains('open')) toggleSidebar();
   };
 
   window.closeModal = (id) => { document.getElementById(id).classList.remove('active'); }
 
-  // --- FREE IMAGE UPLOAD TO IMGBB API ---
-  window.uploadImageToImgBB = async (fileInput, targetInputId) => {
+  // --- USER'S API KEY UPLOAD SYSTEM (BASE64) ---
+  window.uploadImageToImgBB = (fileInput, targetInputId) => {
       const file = fileInput.files[0];
       if(!file) return;
       
       const targetInput = document.getElementById(targetInputId);
-      targetInput.value = "Uploading to Cloud... ⏳";
+      targetInput.value = "Uploading to ImgBB... ⏳";
       
-      // ImgBB Free API Key (No account limit, auto delete after months if unused, perfect for images)
-      const API_KEY = "f71427bc521d8b9e6912ff484c98f98a"; 
+      // User provided API Key
+      const API_KEY = "f0d759dd374df91104867c6701e199f2"; 
       
-      const formData = new FormData();
-      formData.append("image", file);
-      
-      try {
-          const response = await fetch(`https://api.imgbb.com/1/upload?key=${API_KEY}`, {
-              method: 'POST',
-              body: formData
-          });
-          const data = await response.json();
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = async () => {
+          const base64data = reader.result.split(',')[1];
+          const formData = new FormData();
+          formData.append("image", base64data);
           
-          if(data.success) {
-              targetInput.value = data.data.url;
-              showToast("Image Uploaded! ✅");
-          } else {
-              throw new Error("Upload failed");
+          try {
+              const response = await fetch(`https://api.imgbb.com/1/upload?key=${API_KEY}`, {
+                  method: 'POST',
+                  body: formData
+              });
+              const data = await response.json();
+              
+              if(data.success) {
+                  targetInput.value = data.data.url;
+                  showToast("Image Uploaded! ✅");
+              } else {
+                  throw new Error(data.error.message || "Upload failed");
+              }
+          } catch(e) {
+              targetInput.value = "";
+              alert("Upload Error: " + e.message);
+          } finally {
+              fileInput.value = ""; 
           }
-      } catch(e) {
-          targetInput.value = "";
-          alert("Image Upload failed. Please try again.");
-      }
+      };
   };
 
-  // --- REAL-TIME FETCHING (Fixes the Blank Loading Issue) ---
+  // --- REAL-TIME DATA FETCHING ---
   function initRealtimeListeners() {
       onSnapshot(collection(db, "users"), (snap) => {
           globalUsers = []; snap.forEach(d => globalUsers.push({id: d.id, ...d.data()}));
@@ -456,11 +523,16 @@
       btn.classList.add('active');
       renderUserList(type);
   };
-  window.searchUserDB = () => { renderUserList('Search', document.getElementById('u-search').value.toLowerCase()); };
+
+  window.searchUserDB = () => {
+      const q = document.getElementById('u-search').value.toLowerCase();
+      renderUserList('Search', q);
+  };
 
   function renderUserList(filterType, searchQuery = "") {
       const box = document.getElementById('user-list-container');
       let filtered = globalUsers;
+
       if(filterType === 'Pro') filtered = globalUsers.filter(u => globalProUsers.includes(u.uid));
       if(filterType === 'Free') filtered = globalUsers.filter(u => !globalProUsers.includes(u.uid));
       if(filterType === 'Search') filtered = globalUsers.filter(u => (u.email||"").toLowerCase().includes(searchQuery));
@@ -484,26 +556,37 @@
       const u = globalUsers.find(x => x.uid === uid);
       if(!u) return;
       const isPro = globalProUsers.includes(uid);
+      
       document.getElementById('mu-email').innerText = u.email;
       document.getElementById('mu-uid').innerText = uid;
       document.getElementById('mu-status').innerText = isPro ? "PRO MEMBER" : "FREE ACCOUNT";
       document.getElementById('mu-status').style.color = isPro ? "var(--success)" : "var(--text-main)";
-      
+      document.getElementById('mu-time').innerText = u.createdAt ? new Date(u.createdAt).toLocaleString() : "First Login Date";
+
       const btnToggle = document.getElementById('btn-toggle-pro');
-      if(isPro) { btnToggle.innerText = "Revoke PRO Access"; btnToggle.className = "btn btn-ghost"; btnToggle.onclick = () => togglePro(uid, false); } 
-      else { btnToggle.innerText = "Grant PRO Access"; btnToggle.className = "btn btn-primary"; btnToggle.onclick = () => togglePro(uid, true); }
+      if(isPro) {
+          btnToggle.innerText = "Revoke PRO Access";
+          btnToggle.className = "btn btn-ghost";
+          btnToggle.onclick = () => togglePro(uid, false);
+      } else {
+          btnToggle.innerText = "Grant PRO Access";
+          btnToggle.className = "btn btn-primary";
+          btnToggle.onclick = () => togglePro(uid, true);
+      }
 
       document.getElementById('btn-del-user-db').onclick = () => deleteUserDB(uid);
       document.getElementById('modal-user').classList.add('active');
   };
 
   window.togglePro = async (uid, makePro) => {
-      await setDoc(doc(db, "paidUsers", uid), { active: makePro, updatedAt: Date.now() }, { merge: true });
-      closeModal('modal-user');
+      try {
+          await setDoc(doc(db, "paidUsers", uid), { active: makePro, updatedAt: Date.now() }, { merge: true });
+          closeModal('modal-user');
+      } catch(e) {}
   };
 
   window.deleteUserDB = async (uid) => {
-      if(confirm("Delete user Firestore Data?")) {
+      if(confirm("Delete this user's data from Firestore?")) {
           await deleteDoc(doc(db, "users", uid));
           await deleteDoc(doc(db, "paidUsers", uid));
           closeModal('modal-user');
@@ -512,29 +595,39 @@
 
   // --- HOME UI CONFIG ---
   async function loadHomeConfig() {
-      const docSnap = await getDoc(doc(db, "appSettings", "homeConfig"));
-      if(docSnap.exists()) {
-          const data = docSnap.data();
-          if(data.marquee) document.getElementById('home-marquee').value = data.marquee;
-          const bContainer = document.getElementById('banner-inputs');
-          bContainer.innerHTML = '';
-          if(data.banners && data.banners.length > 0) {
-              data.banners.forEach((url, i) => bContainer.insertAdjacentHTML('beforeend', createImgInputRow(url, `banner-img-${i}`)));
-          } else { bContainer.insertAdjacentHTML('beforeend', createImgInputRow('', 'banner-img-0')); }
-      }
+      try {
+          const docSnap = await getDoc(doc(db, "appSettings", "homeConfig"));
+          if(docSnap.exists()) {
+              const data = docSnap.data();
+              if(data.marquee) document.getElementById('home-marquee').value = data.marquee;
+              
+              const bContainer = document.getElementById('banner-inputs');
+              bContainer.innerHTML = '';
+              if(data.banners && data.banners.length > 0) {
+                  data.banners.forEach((url, i) => bContainer.insertAdjacentHTML('beforeend', createImgInputRow(url, `banner-img-${i}`)));
+              } else {
+                  bContainer.insertAdjacentHTML('beforeend', createImgInputRow('', 'banner-img-0'));
+              }
+          }
+      } catch(e){}
   }
 
-  window.addBannerField = () => document.getElementById('banner-inputs').insertAdjacentHTML('beforeend', createImgInputRow('', `banner-img-${Date.now()}`));
+  window.addBannerField = () => {
+      document.getElementById('banner-inputs').insertAdjacentHTML('beforeend', createImgInputRow('', `banner-img-${Date.now()}`));
+  };
 
   window.saveHomeUI = async () => {
       const marquee = document.getElementById('home-marquee').value.trim();
       let banners = [];
       document.querySelectorAll('#banner-inputs .p-img-url').forEach(i => { if(i.value.trim() !== '') banners.push(i.value.trim()); });
-      await setDoc(doc(db, "appSettings", "homeConfig"), { marquee: marquee, banners: banners });
-      showToast("Home UI Saved! ✅");
+      
+      try {
+          await setDoc(doc(db, "appSettings", "homeConfig"), { marquee: marquee, banners: banners });
+          showToast("Home Settings Saved! ✅");
+      } catch(e) { alert("Error saving config."); }
   };
 
-  // --- DYNAMIC INPUTS (WITH IMGBB UPLOAD) ---
+  // --- DYNAMIC HELPER FOR LINKS/IMAGES ---
   function createImgInputRow(val = "", idStr) {
       return `
       <div class="dynamic-input-row">
@@ -544,12 +637,12 @@
           <button class="remove-btn" onclick="this.parentElement.remove()">✕</button>
       </div>`;
   }
-  
+
   function createDlInputRow(val1="", val2="") {
       return `
       <div class="dynamic-input-row">
-          <input type="text" value="${esc(val1)}" placeholder="Btn Text" style="flex:1; margin:0;">
-          <input type="text" value="${esc(val2)}" placeholder="Link URL" style="flex:2; margin:0;">
+          <input type="text" value="${esc(val1)}" placeholder="Btn Text (e.g. Get GFX)" style="flex:1; margin:0;">
+          <input type="text" value="${esc(val2)}" placeholder="Download Link URL" style="flex:2; margin:0;">
           <button class="remove-btn" onclick="this.parentElement.remove()">✕</button>
       </div>`;
   }
@@ -583,7 +676,9 @@
       let filterHtml = `<div class="filter-pill active" onclick="filterDataList('videos', 'All', this)">All</div>`;
       cats.forEach(c => filterHtml += `<div class="filter-pill" onclick="filterDataList('videos', '${esc(c)}', this)">${esc(c)}</div>`);
       document.getElementById('vid-filter-bar').innerHTML = filterHtml;
-      filterDataList('videos', document.querySelector('#vid-filter-bar .filter-pill.active')?.innerText || 'All', null);
+      
+      const activeCat = document.querySelector('#vid-filter-bar .filter-pill.active')?.innerText || 'All';
+      filterDataList('videos', activeCat, null);
   }
 
   window.openVideoModal = (id = null) => {
@@ -591,20 +686,28 @@
       document.getElementById('v-dl-container').innerHTML = '';
       
       if(id) {
-          document.getElementById('mv-header').innerText = "Edit Video";
+          document.getElementById('mv-header').innerText = "Edit Lesson";
           const v = globalVideos.find(x => x.id === id);
           document.getElementById('v-edit-id').value = id;
-          document.getElementById('v-cat').value = v.category || "";
+          document.getElementById('v-cat').value = v.category || "General";
           document.getElementById('v-title').value = v.title;
           document.getElementById('v-thumb').value = v.thumbnail || "";
           document.getElementById('v-link').value = v.link;
           document.getElementById('v-notes').value = v.notes || "";
-          if(v.downloadLinks) v.downloadLinks.forEach(dl => document.getElementById('v-dl-container').insertAdjacentHTML('beforeend', createDlInputRow(dl.title, dl.url)));
+          
+          if(v.downloadLinks) {
+              v.downloadLinks.forEach(dl => {
+                  document.getElementById('v-dl-container').insertAdjacentHTML('beforeend', createDlInputRow(dl.title, dl.url));
+              });
+          }
       } else {
-          document.getElementById('mv-header').innerText = "Add Video";
-          document.getElementById('v-edit-id').value = ""; document.getElementById('v-cat').value = "";
-          document.getElementById('v-title').value = ""; document.getElementById('v-thumb').value = "";
-          document.getElementById('v-link').value = ""; document.getElementById('v-notes').value = "";
+          document.getElementById('mv-header').innerText = "Add New Lesson";
+          document.getElementById('v-edit-id').value = "";
+          document.getElementById('v-cat').value = "";
+          document.getElementById('v-title').value = "";
+          document.getElementById('v-thumb').value = "";
+          document.getElementById('v-link').value = "";
+          document.getElementById('v-notes').value = "";
       }
       document.getElementById('modal-video').classList.add('active');
   };
@@ -619,11 +722,15 @@
           notes: document.getElementById('v-notes').value.trim(),
           downloadLinks: getDlData('v')
       };
+      
       if(!data.title || !data.link) return alert("Title and Link required.");
 
-      if(id) await updateDoc(doc(db, "videos", id), data);
-      else { data.timestamp = Date.now(); await addDoc(collection(db, "videos"), data); }
-      closeModal('modal-video'); showToast("Saved!");
+      try {
+          if(id) await updateDoc(doc(db, "videos", id), data);
+          else { data.timestamp = Date.now(); await addDoc(collection(db, "videos"), data); }
+          closeModal('modal-video');
+          showToast("Saved!");
+      } catch(e) { alert("Error saving."); }
   };
 
   // --- POSTS ---
@@ -632,7 +739,9 @@
       let filterHtml = `<div class="filter-pill active" onclick="filterDataList('posts', 'All', this)">All</div>`;
       cats.forEach(c => filterHtml += `<div class="filter-pill" onclick="filterDataList('posts', '${esc(c)}', this)">${esc(c)}</div>`);
       document.getElementById('post-filter-bar').innerHTML = filterHtml;
-      filterDataList('posts', document.querySelector('#post-filter-bar .filter-pill.active')?.innerText || 'All', null);
+      
+      const activeCat = document.querySelector('#post-filter-bar .filter-pill.active')?.innerText || 'All';
+      filterDataList('posts', activeCat, null);
   }
 
   window.openPostModal = (id = null) => {
@@ -644,16 +753,19 @@
           document.getElementById('mp-header').innerText = "Edit Post";
           const p = globalPosts.find(x => x.id === id);
           document.getElementById('p-edit-id').value = id;
-          document.getElementById('p-cat').value = p.category || "";
+          document.getElementById('p-cat').value = p.category || "General News";
           document.getElementById('p-title').value = p.title;
           document.getElementById('p-body').value = p.body || "";
           document.getElementById('p-notes').value = p.notes || "";
+          
           if(p.images) p.images.forEach((img, i) => document.getElementById('p-img-container').insertAdjacentHTML('beforeend', createImgInputRow(img, `p-img-${i}`)));
           if(p.downloadLinks) p.downloadLinks.forEach(dl => document.getElementById('p-dl-container').insertAdjacentHTML('beforeend', createDlInputRow(dl.title, dl.url)));
       } else {
           document.getElementById('mp-header').innerText = "Create Post";
-          document.getElementById('p-edit-id').value = ""; document.getElementById('p-cat').value = "";
-          document.getElementById('p-title').value = ""; document.getElementById('p-body').value = "";
+          document.getElementById('p-edit-id').value = "";
+          document.getElementById('p-cat').value = "";
+          document.getElementById('p-title').value = "";
+          document.getElementById('p-body').value = "";
           document.getElementById('p-notes').value = "";
           addImgField(); 
       }
@@ -664,27 +776,35 @@
       const id = document.getElementById('p-edit-id').value;
       let images = [];
       document.querySelectorAll('#p-img-container .p-img-url').forEach(i => { if(i.value.trim() !== '') images.push(i.value.trim()); });
+
       const data = {
           category: document.getElementById('p-cat').value.trim() || "All Updates",
           title: document.getElementById('p-title').value.trim(),
           body: document.getElementById('p-body').value.trim(),
           notes: document.getElementById('p-notes').value.trim(),
-          images: images, downloadLinks: getDlData('p'), isPublic: true
+          images: images,
+          downloadLinks: getDlData('p'),
+          isPublic: true
       };
+      
       if(!data.title) return alert("Title required.");
 
-      if(id) await updateDoc(doc(db, "posts", id), data);
-      else { data.createdAt = Date.now(); await addDoc(collection(db, "posts"), data); }
-      closeModal('modal-post'); showToast("Saved!");
+      try {
+          if(id) await updateDoc(doc(db, "posts", id), data);
+          else { data.createdAt = Date.now(); await addDoc(collection(db, "posts"), data); }
+          closeModal('modal-post');
+          showToast("Saved!");
+      } catch(e) {}
   };
 
-  // Generic List Filter
+  // Generic List Renderer
   window.filterDataList = (type, category, btn) => {
       if(btn) {
           const bar = btn.parentElement;
           bar.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
           btn.classList.add('active');
       }
+      
       const box = document.getElementById(type === 'videos' ? 'admin-vid-list' : 'admin-post-list');
       const sourceData = type === 'videos' ? globalVideos : globalPosts;
       let filtered = category === 'All' ? sourceData : sourceData.filter(x => (x.category || "General") === category);
@@ -698,8 +818,8 @@
                       <div class="item-meta"><span class="item-badge">${esc(item.category)}</span></div>
                   </div>
                   <div class="item-actions">
-                      <button class="btn btn-ghost" style="padding: 8px 12px; font-size:12px;" onclick="${type === 'videos' ? 'openVideoModal' : 'openPostModal'}('${item.id}')">Edit</button>
-                      <button class="btn btn-danger" style="padding: 8px 12px;" onclick="delDoc('${type}', '${item.id}')">Del</button>
+                      <button class="btn btn-ghost" style="padding: 6px 10px; font-size:12px;" onclick="${type === 'videos' ? 'openVideoModal' : 'openPostModal'}('${item.id}')">Edit</button>
+                      <button class="btn btn-danger" style="padding: 6px 10px;" onclick="delDoc('${type}', '${item.id}')">Del</button>
                   </div>
               </div>`;
       });
@@ -713,6 +833,7 @@
       comments.forEach(c => {
           const initial = c.email ? c.email.charAt(0).toUpperCase() : "U";
           const timeStr = c.createdAt ? new Date(c.createdAt.toMillis()).toLocaleString() : "Just now";
+          
           const pContext = globalPosts.find(p => p.id === c.postId);
           const vContext = globalVideos.find(v => v.id === c.postId);
           let contextHtml = "";
@@ -732,16 +853,19 @@
                       <div class="sc-header">
                           <span class="sc-name">${esc(c.email.split('@')[0])}</span>
                           <span class="sc-time">${timeStr}</span>
+                          ${c.parentId ? '<span class="item-badge">Reply</span>' : ''}
                       </div>
                       <div class="sc-text">${esc(c.text)}</div>
+                      
                       <div style="display:flex; gap:10px; margin-bottom:15px;">
-                          <input type="text" id="admin-rep-${c.id}" placeholder="Reply..." style="margin:0; padding:10px 15px; font-size:12px;">
-                          <button class="btn btn-primary" style="padding:10px 20px; width:auto;" onclick="adminReply('${c.postId}', '${c.id}', '${esc(c.email)}')">Reply</button>
+                          <input type="text" id="admin-rep-${c.id}" placeholder="Reply..." style="margin:0; padding:8px 12px; font-size:12px;">
+                          <button class="btn btn-primary" style="padding:8px 15px; width:auto;" onclick="adminReply('${c.postId}', '${c.id}', '${esc(c.email)}')">Reply</button>
                       </div>
+
                       ${contextHtml}
                   </div>
-                  <div class="item-actions">
-                      <button class="btn btn-danger" style="background:transparent; border:none; font-size:18px; width:40px; height:40px; padding:0;" onclick="delDoc('comments','${c.id}')">🗑️</button>
+                  <div class="item-actions" style="flex-direction:column;">
+                      <button class="btn btn-danger" style="background:transparent; border:none; font-size: 18px; padding: 0; width: 40px; height: 40px; display:flex; justify-content:center; align-items:center;" onclick="delDoc('comments','${c.id}')">🗑️</button>
                   </div>
               </div>
           `;
@@ -753,16 +877,24 @@
       const input = document.getElementById(`admin-rep-${parentId}`);
       const text = input.value.trim();
       if(!text) return;
+      
       try {
           await addDoc(collection(db, "comments"), {
-              postId: postId, text: `@${userEmail.split('@')[0]} ${text}`, uid: me.uid, email: "Admin 👑", parentId: parentId, createdAt: serverTimestamp()
+              postId: postId, text: `@${userEmail.split('@')[0]} ${text}`, 
+              uid: me.uid, email: "Admin 👑", parentId: parentId, 
+              createdAt: serverTimestamp()
           });
-          input.value = ""; showToast("Replied!");
-      } catch(e) {}
+          input.value = "";
+          showToast("Replied!");
+      } catch(e) { alert("Failed to reply."); }
   };
 
+  // Global Delete
   window.delDoc = async (col, id) => {
-      if(confirm("Permanently delete?")) { await deleteDoc(doc(db, col, id)); showToast("Deleted!"); }
+      if(confirm("Permanently delete this?")) {
+          await deleteDoc(doc(db, col, id));
+          showToast("Deleted!");
+      }
   };
 </script>
 </body>
