@@ -3,108 +3,237 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Kazeno Admin Console</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<title>Kazeno+ Admin Workspace</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#090e17; --card:#111b33; --border:rgba(255,255,255,.1);
-    --text:#fff; --muted:#8b9bb4;
-    --primary:#8a2be2; --accent:#4facfe; --danger:#ff4d4d; --ok:#00e676;
-    --r:16px;
+    --bg: #050510; 
+    --glass-bg: rgba(20, 25, 45, 0.6); 
+    --border: rgba(255, 255, 255, 0.1);
+    --text: #ffffff; 
+    --muted: #a0b0c0;
+    --primary: #8a2be2; 
+    --accent: #4facfe; 
+    --danger: #ff4d4d; 
+    --ok: #00e676;
+    --sidebar-width: 260px;
   }
-  * { outline: none; -webkit-tap-highlight-color: transparent; }
-  body{margin:0; font-family:'Poppins', Arial; background:var(--bg); color:var(--text); padding:20px;}
-  .wrap{max-width:900px; margin:0 auto;}
-  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-  .card{background:var(--card); border:1px solid var(--border); border-radius:var(--r); padding:24px; margin-bottom:20px;}
-  .title{margin:0 0 16px; font-weight:800; font-size: 18px; color: var(--accent);}
-  .muted{color:var(--muted); font-size:13px; line-height:1.6;}
+  
+  * { outline: none; box-sizing: border-box; }
+  body { margin:0; font-family:'Poppins', sans-serif; background:var(--bg); color:var(--text); overflow: hidden; }
+  body::before { content:''; position:fixed; top:-20%; left:-10%; width:60%; height:60%; background: radial-gradient(circle, rgba(138,43,226,0.15) 0%, transparent 60%); filter:blur(80px); z-index:-1;}
+  
+  .glass { background: var(--glass-bg); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid var(--border); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); }
+  
+  /* --- LOGIN SCREEN --- */
+  #loginBox { max-width: 400px; margin: 15vh auto; padding: 30px; border-radius: 20px; text-align: center; }
+
+  /* --- APP LAYOUT --- */
+  #admin-app { display: none; height: 100vh; width: 100vw; display: flex; }
+  
+  /* Sidebar */
+  .sidebar { width: var(--sidebar-width); background: rgba(10, 15, 30, 0.8); backdrop-filter: blur(20px); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px 15px; z-index: 100;}
+  .brand { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 30px; display: flex; align-items: center; gap: 10px; padding-left: 10px;}
+  .brand::before { content: ''; width: 14px; height: 14px; background: linear-gradient(45deg, var(--accent), var(--primary)); border-radius: 50%; box-shadow: 0 0 10px var(--primary); }
+  
+  .nav-btn { background: transparent; border: none; color: var(--muted); font-family: 'Poppins'; font-size: 14px; font-weight: 600; text-align: left; padding: 12px 15px; border-radius: 12px; cursor: pointer; transition: 0.3s; margin-bottom: 8px; display: flex; align-items: center; gap: 10px;}
+  .nav-btn:hover { background: rgba(255,255,255,0.05); color: #fff; }
+  .nav-btn.active { background: linear-gradient(90deg, rgba(138,43,226,0.3), transparent); color: #fff; border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0;}
+  
+  .logout-btn { margin-top: auto; background: rgba(255,77,77,0.1); color: var(--danger); }
+  
+  /* Main Content Area */
+  .main-content { flex: 1; height: 100vh; overflow-y: auto; padding: 30px; position: relative;}
+  .section { display: none; animation: fadeIn 0.3s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* UI Elements */
+  .card { padding: 20px; border-radius: 16px; margin-bottom: 20px; }
+  h2 { margin: 0 0 20px 0; font-size: 22px; font-weight: 800; background: linear-gradient(45deg, var(--accent), #d8b4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
+  h3 { margin: 0 0 15px 0; font-size: 16px; color: #fff; }
   
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  @media(max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;}
   
-  input,textarea,select{
-    width:100%; padding:14px; border-radius:12px; border:1px solid var(--border);
-    background:rgba(0,0,0,.2); color:var(--text); font-family:'Poppins'; box-sizing:border-box; margin-bottom: 12px;
+  .stat-card { padding: 20px; border-radius: 16px; text-align: center; border-top: 2px solid var(--primary); }
+  .stat-val { font-size: 32px; font-weight: 800; color: #fff; }
+  .stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; font-weight: 600; letter-spacing: 1px;}
+
+  input, textarea, select { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0,0,0,0.3); color: #fff; font-family: 'Poppins'; margin-bottom: 15px; font-size: 13px; transition: 0.3s;}
+  input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(79,172,254,0.2); }
+  textarea { min-height: 100px; resize: vertical; }
+
+  .btn { padding: 12px 24px; border-radius: 12px; border: none; cursor: pointer; font-weight: 800; font-family: 'Poppins'; transition: 0.2s; font-size: 14px; }
+  .btn:active { transform: scale(0.95); }
+  .btnP { background: linear-gradient(135deg, var(--accent), var(--primary)); color: #fff; box-shadow: 0 4px 15px rgba(138,43,226,0.3); width: 100%;}
+  .btnS { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--border); }
+  .btnD { background: rgba(255,77,77,0.15); color: var(--danger); border: 1px solid rgba(255,77,77,0.3); padding: 8px 15px; font-size: 12px;}
+  .btnOK { background: rgba(0,230,118,0.15); color: var(--ok); border: 1px solid rgba(0,230,118,0.3); padding: 8px 15px; font-size: 12px;}
+
+  /* List Items */
+  .list-item { background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap:15px;}
+  .item-info { flex: 1; min-width: 0; }
+  .item-title { font-weight: 600; font-size: 14px; color: #fff; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+  .item-meta { font-size: 11px; color: var(--muted); }
+  .item-actions { display: flex; gap: 8px; flex-shrink: 0;}
+
+  /* Image Upload UI */
+  .img-inputs-container { background: rgba(255,255,255,0.02); border: 1px dashed var(--border); border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+
+  @media(max-width: 768px) {
+      #admin-app { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; padding: 10px; flex-direction: row; overflow-x: auto; border-right: none; border-bottom: 1px solid var(--border); z-index: 100; position: sticky; top:0; border-radius:0;}
+      .brand { display: none; }
+      .nav-btn { white-space: nowrap; margin-bottom: 0; padding: 8px 12px; }
+      .logout-btn { margin-top: 0; margin-left: auto; }
+      .grid-2 { grid-template-columns: 1fr; }
   }
-  input:focus, textarea:focus { border-color: var(--accent); }
-  textarea{min-height:100px; resize: vertical;}
-  
-  .btn{padding:12px 20px; border-radius:12px; border:none; cursor:pointer; font-weight:800; font-family:'Poppins'; transition:0.2s;}
-  .btn:active {transform:scale(0.95);}
-  .btnP{background:linear-gradient(135deg, var(--accent), var(--primary)); color:#fff;}
-  .btnS{background:rgba(255,255,255,.1); color:var(--text); border:1px solid var(--border);}
-  .btnD{background:rgba(255,77,77,0.2); color:var(--danger); border:1px solid var(--danger);}
-  .btnOK{background:rgba(0,230,118,0.2); color:var(--ok); border:1px solid var(--ok);}
-  
-  .row{display:flex; gap:10px;}
-  .item{padding:16px; border-radius:14px; border:1px solid var(--border); background:rgba(0,0,0,.3); margin-top:12px;}
-  .item-header { display: flex; justify-content: space-between; margin-bottom: 8px;}
-  .badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; background: rgba(255,255,255,0.1); }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <div class="card" id="loginBox" style="max-width: 400px; margin: 100px auto;">
-    <h2 class="title" style="text-align:center;">Kazeno Admin</h2>
-    <input id="email" placeholder="Admin Email" type="email">
-    <input id="pass" type="password" placeholder="Password">
-    <button class="btn btnP" style="width:100%;" onclick="login()">Enter Console</button>
-    <div id="err" style="color:var(--danger); margin-top:10px; font-size:13px; text-align:center;"></div>
+<div id="loginBox" class="glass">
+  <h2>Kazeno Admin Console</h2>
+  <input id="email" type="email" placeholder="Admin Email">
+  <input id="pass" type="password" placeholder="Password">
+  <button class="btn btnP" onclick="login()">Enter Secure Area</button>
+  <div id="err" style="color:var(--danger); margin-top:15px; font-size:13px;"></div>
+</div>
+
+<div id="admin-app">
+  <div class="sidebar">
+      <div class="brand">Kazeno+ Admin</div>
+      <button class="nav-btn active" onclick="switchTab('dashboard', this)">📊 Dashboard</button>
+      <button class="nav-btn" onclick="switchTab('home-settings', this)">🌟 Home UI Settings</button>
+      <button class="nav-btn" onclick="switchTab('users', this)">👥 Pro Users</button>
+      <button class="nav-btn" onclick="switchTab('videos', this)">🎬 Videos Course</button>
+      <button class="nav-btn" onclick="switchTab('posts', this)">📝 Feed Posts</button>
+      <button class="nav-btn" onclick="switchTab('comments', this)">💬 Comments</button>
+      <button class="nav-btn logout-btn" onclick="logout()">Log Out</button>
   </div>
 
-  <div id="panel" style="display:none;">
-    <div class="header">
-        <h2>Dashboard</h2>
-        <button class="btn btnS" onclick="logout()">Log Out</button>
-    </div>
-
-    <div class="card" style="border-color: var(--primary); box-shadow: 0 0 15px rgba(138,43,226,0.2);">
-      <h2 class="title">🔍 Manage PRO Users</h2>
-      <div class="muted" style="margin-bottom: 15px;">ကျောင်းသား၏ Email ကိုရိုက်ထည့်ပြီး PRO အကောင့် ဖွင့်ပေးပါ / ပိတ်ပါ။</div>
-      <div class="row">
-          <input id="searchEmail" type="email" placeholder="Enter user email (e.g. user@gmail.com)" style="margin-bottom:0;">
-          <button class="btn btnP" style="width: auto; padding: 0 24px;" onclick="searchUser()">Search</button>
+  <div class="main-content">
+      
+      <div id="dashboard" class="section active">
+          <h2>Dashboard Overview</h2>
+          <div class="grid-4">
+              <div class="stat-card glass">
+                  <div class="stat-val" id="stat-pro">0</div>
+                  <div class="stat-label">Pro Users</div>
+              </div>
+              <div class="stat-card glass">
+                  <div class="stat-val" id="stat-vid">0</div>
+                  <div class="stat-label">Total Videos</div>
+              </div>
+              <div class="stat-card glass">
+                  <div class="stat-val" id="stat-post">0</div>
+                  <div class="stat-label">Feed Posts</div>
+              </div>
+              <div class="stat-card glass">
+                  <div class="stat-val" id="stat-com">0</div>
+                  <div class="stat-label">Comments</div>
+              </div>
+          </div>
       </div>
-      <div id="searchResult" style="margin-top:15px;"></div>
-    </div>
 
-    <div class="grid-2">
-        <div class="card">
-          <h2 class="title">🎬 Upload Premium Video</h2>
-          <input id="vCategory" placeholder="Category (e.g. Module 1)">
-          <input id="vTitle" placeholder="Video Title">
-          <input id="vThumbnail" placeholder="Thumbnail Image URL (Optional)">
-          <input id="vLink" placeholder="Cloudinary Embed URL">
-          <textarea id="vNotes" placeholder="Additional Notes or Download Links"></textarea>
-          <button class="btn btnP" onclick="addVideo()">Publish Video</button>
-          
-          <div style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 15px;">
-              <h3 style="font-size: 15px; margin-bottom: 10px;">Manage Videos</h3>
-              <div id="videoList" class="muted">Loading...</div>
+      <div id="home-settings" class="section">
+          <h2>🌟 Home Page Control</h2>
+          <div class="card glass">
+              <div class="muted" style="margin-bottom:15px;">User App ၏ ပထမဆုံး စာမျက်နှာတွင် ပေါ်မည့် စာတန်းပြေးနှင့် Banner ပုံများကို ဤနေရာမှ အလွယ်တကူ ပြောင်းလဲနိုင်ပါသည်။</div>
+              
+              <h3>💬 Marquee Text (စာတန်းပြေး)</h3>
+              <textarea id="h-marquee" placeholder="ကြိုဆိုပါတယ်။ Kazeno+ မှ..."></textarea>
+              
+              <h3>🖼️ Banner Slider Images (ပုံ ၃ ပုံ)</h3>
+              <input type="text" id="h-banner1" placeholder="Image URL 1">
+              <input type="text" id="h-banner2" placeholder="Image URL 2">
+              <input type="text" id="h-banner3" placeholder="Image URL 3">
+              
+              <button class="btn btnP" onclick="saveHomeConfig()">Save Home UI ✅</button>
           </div>
-        </div>
+      </div>
 
-        <div class="card">
-          <h2 class="title">📝 Publish Public Post</h2>
-          <input id="pTitle" placeholder="Post Title">
-          <textarea id="pBody" placeholder="Post content..."></textarea>
-          <input id="pImages" placeholder="Image URLs (comma separated)">
-          <button class="btn btnP" onclick="addPost()">Publish Post</button>
-
-          <div style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 15px;">
-              <h3 style="font-size: 15px; margin-bottom: 10px;">Manage Posts</h3>
-              <div id="postList" class="muted">Loading...</div>
+      <div id="users" class="section">
+          <h2>👥 User Management</h2>
+          <div class="grid-2">
+              <div class="card glass">
+                  <h3>🔍 Grant PRO Access</h3>
+                  <div class="muted" style="margin-bottom: 10px;">ကျောင်းသား၏ Email ကိုရိုက်ထည့်ပြီး ရှာပါ။</div>
+                  <div style="display:flex; gap:10px;">
+                      <input type="email" id="searchEmail" placeholder="user@gmail.com" style="margin-bottom:0;">
+                      <button class="btn btnP" style="width:100px;" onclick="searchUser()">Search</button>
+                  </div>
+                  <div id="searchResult" style="margin-top:15px;"></div>
+              </div>
+              <div class="card glass" style="max-height: 70vh; overflow-y: auto;">
+                  <h3>Active PRO Members</h3>
+                  <div id="proUserList">Loading...</div>
+              </div>
           </div>
-        </div>
-    </div>
+      </div>
+
+      <div id="videos" class="section">
+          <h2>🎬 Video Course Management</h2>
+          <div class="grid-2">
+              <div class="card glass">
+                  <h3>Upload New Lesson</h3>
+                  <input type="text" id="vCat" placeholder="Category (e.g., Module 1)">
+                  <input type="text" id="vTitle" placeholder="Video Title">
+                  <input type="text" id="vThumb" placeholder="Thumbnail Image URL">
+                  <input type="text" id="vLink" placeholder="Video Direct Link (MP4)">
+                  <input type="text" id="vDl" placeholder="Download Link (Optional, for tools)">
+                  <textarea id="vNotes" placeholder="Lesson Notes / Quotes"></textarea>
+                  <button class="btn btnP" onclick="addVideo()">Publish Video</button>
+              </div>
+              <div class="card glass" style="max-height: 75vh; overflow-y: auto;">
+                  <h3>Manage Library</h3>
+                  <div id="videoList">Loading...</div>
+              </div>
+          </div>
+      </div>
+
+      <div id="posts" class="section">
+          <h2>📝 Community Feed Posts</h2>
+          <div class="grid-2">
+              <div class="card glass">
+                  <h3>Create New Post</h3>
+                  <input type="text" id="pCat" placeholder="Category (e.g., Kazeno News, MLBB News)">
+                  <input type="text" id="pTitle" placeholder="Post Title">
+                  <textarea id="pBody" placeholder="Write main caption here..."></textarea>
+                  <textarea id="pNotes" placeholder="Special Note / Quote (Optional)" style="min-height: 60px;"></textarea>
+                  
+                  <div class="img-inputs-container">
+                      <h3 style="font-size:13px; margin-bottom:10px;">Attach Images (TikTok Style Swipe)</h3>
+                      <div id="p-img-wrapper">
+                          <input type="text" class="p-img-url" placeholder="Image URL 1">
+                      </div>
+                      <button class="btn btnS" style="width:auto; padding:6px 12px; font-size:11px;" onclick="addImgInput()">+ Add Another Image</button>
+                  </div>
+                  
+                  <button class="btn btnP" onclick="addPost()">Publish to Feed</button>
+              </div>
+              <div class="card glass" style="max-height: 75vh; overflow-y: auto;">
+                  <h3>Manage Posts</h3>
+                  <div id="postList">Loading...</div>
+              </div>
+          </div>
+      </div>
+
+      <div id="comments" class="section">
+          <h2>💬 Comment Moderation</h2>
+          <div class="card glass">
+              <div class="muted" style="margin-bottom:15px;">User များရေးသားထားသော မေးခွန်းများနှင့် Comment အားလုံးကို ဤနေရာမှ ထိန်းချုပ်/ဖျက်ပစ်နိုင်ပါသည်။</div>
+              <div id="admin-comment-list">Loading...</div>
+          </div>
+      </div>
+
   </div>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, setDoc, query, orderBy, getDocs, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, setDoc, getDoc, query, orderBy, getDocs, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
   import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
   const firebaseConfig = {
@@ -121,10 +250,12 @@
   const db = getFirestore(app);
   const auth = getAuth(app);
 
+  function esc(s){ return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
+
   window.login = async ()=>{
-    document.getElementById("err").textContent = "";
+    document.getElementById("err").textContent = "Authenticating...";
     try{ await signInWithEmailAndPassword(auth, document.getElementById("email").value.trim(), document.getElementById("pass").value); }
-    catch(e){ document.getElementById("err").textContent = "Login Failed"; }
+    catch(e){ document.getElementById("err").textContent = "Invalid Credentials"; }
   };
 
   window.logout = async ()=>{ await signOut(auth); };
@@ -133,116 +264,243 @@
     if(!user) return;
     if(user.uid !== ADMIN_UID){ alert("Access Denied"); await signOut(auth); return; }
     document.getElementById("loginBox").style.display="none";
-    document.getElementById("panel").style.display="block";
-    loadAll();
+    document.getElementById("admin-app").style.display="flex";
+    loadAllData();
   });
 
-  function esc(s){ return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
+  // Navigation
+  window.switchTab = (tabId, btn) => {
+      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+  };
 
-  // --- SEARCH USER & GRANT PRO ---
-  window.searchUser = async () => {
-      const emailInput = document.getElementById("searchEmail").value.trim();
-      const resDiv = document.getElementById("searchResult");
-      if(!emailInput) return;
-      resDiv.innerHTML = "Searching...";
+  function loadAllData() {
+      loadStats();
+      loadHomeConfig();
+      loadProUsers();
+      loadVideos();
+      loadPosts();
+      loadComments();
+  }
 
+  // 1. STATS
+  async function loadStats() {
+      const proSnap = await getDocs(query(collection(db, "paidUsers"), where("active", "==", true)));
+      document.getElementById('stat-pro').innerText = proSnap.size;
+      getDocs(collection(db, "videos")).then(s => document.getElementById('stat-vid').innerText = s.size);
+      getDocs(collection(db, "posts")).then(s => document.getElementById('stat-post').innerText = s.size);
+      getDocs(collection(db, "comments")).then(s => document.getElementById('stat-com').innerText = s.size);
+  }
+
+  // 2. HOME CONFIG
+  async function loadHomeConfig() {
       try {
-          const q = query(collection(db, "users"), where("email", "==", emailInput));
-          const snap = await getDocs(q);
-
-          if(snap.empty) {
-              resDiv.innerHTML = `<span style="color:var(--danger)">User မတွေ့ပါ။ ကျောင်းသားသည် App ထဲတွင် Email ဖြင့် အကောင့်ဝင်ထားခြင်း ရှိမရှိ သေချာစစ်ဆေးပါ။</span>`;
-              return;
+          const docSnap = await getDoc(doc(db, "appSettings", "homeConfig"));
+          if(docSnap.exists()) {
+              const data = docSnap.data();
+              if(data.marquee) document.getElementById('h-marquee').value = data.marquee;
+              if(data.banners) {
+                  document.getElementById('h-banner1').value = data.banners[0] || '';
+                  document.getElementById('h-banner2').value = data.banners[1] || '';
+                  document.getElementById('h-banner3').value = data.banners[2] || '';
+              }
           }
+      } catch(e){}
+  }
+  
+  window.saveHomeConfig = async () => {
+      const marquee = document.getElementById('h-marquee').value.trim();
+      const b1 = document.getElementById('h-banner1').value.trim();
+      const b2 = document.getElementById('h-banner2').value.trim();
+      const b3 = document.getElementById('h-banner3').value.trim();
+      
+      try {
+          await setDoc(doc(db, "appSettings", "homeConfig"), {
+              marquee: marquee,
+              banners: [b1, b2, b3].filter(Boolean)
+          });
+          alert("Home Page UI Updated Successfully! ✅");
+      } catch(e) { alert("Error saving config."); }
+  };
 
-          const userData = snap.docs[0].data();
-          const uid = userData.uid;
-
-          resDiv.innerHTML = `
-              <div class="item" style="border-color: var(--accent);">
-                  <div style="font-size: 16px;"><b>Email:</b> ${esc(userData.email)}</div>
-                  <div class="muted" style="margin-top: 5px;">UID: ${esc(uid)}</div>
-                  <div class="row" style="margin-top:15px;">
-                      <button class="btn btnOK" onclick="grantPro('${uid}')">Grant PRO Access</button>
-                      <button class="btn btnD" onclick="revokePro('${uid}')">Revoke Access</button>
-                  </div>
+  // 3. USERS
+  window.searchUser = async () => {
+      const email = document.getElementById("searchEmail").value.trim();
+      const res = document.getElementById("searchResult");
+      if(!email) return;
+      res.innerHTML = "Searching...";
+      try {
+          const q = query(collection(db, "users"), where("email", "==", email));
+          const snap = await getDocs(q);
+          if(snap.empty) { res.innerHTML = `<span style="color:var(--danger)">User not found. They must login to the app first.</span>`; return; }
+          const u = snap.docs[0].data();
+          res.innerHTML = `
+              <div class="list-item">
+                  <div class="item-info"><div class="item-title">${esc(u.email)}</div><div class="item-meta">UID: ${esc(u.uid)}</div></div>
+                  <button class="btn btnOK" onclick="grantPro('${u.uid}', '${u.email}')">Grant PRO</button>
               </div>
           `;
-      } catch(e) {
-          resDiv.innerHTML = `<span style="color:var(--danger)">Error: Firestore Rules ကို အသစ်ပြင်ပေးထားခြင်း ရှိမရှိ စစ်ဆေးပါ။</span>`;
+      } catch(e) {}
+  };
+
+  window.grantPro = async (uid, email) => {
+      await setDoc(doc(db, "paidUsers", uid), { active: true, email: email, updatedAt: Date.now() }, { merge: true });
+      alert("PRO Access Granted! ✅");
+      loadProUsers(); loadStats();
+  };
+
+  window.revokePro = async (uid) => {
+      if(confirm("Are you sure you want to revoke PRO access?")) {
+          await setDoc(doc(db, "paidUsers", uid), { active: false, updatedAt: Date.now() }, { merge: true });
+          loadProUsers(); loadStats();
       }
   };
 
-  window.grantPro = async (uid) => {
-      await setDoc(doc(db, "paidUsers", uid), { active: true, plan: "lifetime", updatedAt: Date.now() }, { merge: true });
-      alert("PRO Access ဖွင့်ပေးလိုက်ပါပြီ! ✅");
-  };
-  
-  window.revokePro = async (uid) => {
-      await setDoc(doc(db, "paidUsers", uid), { active: false, updatedAt: Date.now() }, { merge: true });
-      alert("PRO Access ပိတ်လိုက်ပါပြီ! ❌");
-  };
-
-  window.addVideo = async ()=>{
-    const title = document.getElementById("vTitle").value.trim();
-    const link = document.getElementById("vLink").value.trim();
-    if(!title || !link) return alert("Title & Link required");
-
-    await addDoc(collection(db,"videos"), {
-      category: document.getElementById("vCategory").value.trim() || "General",
-      title, link,
-      thumbnail: document.getElementById("vThumbnail").value.trim(),
-      notes: document.getElementById("vNotes").value.trim(),
-      isFree: false, timestamp: Date.now()
-    });
-    alert("Video Published ✅"); location.reload();
-  };
-
-  async function loadVideos(){
-    const box = document.getElementById("videoList");
-    const snap = await getDocs(query(collection(db,"videos"), orderBy("timestamp","desc")));
-    let html = "";
-    snap.forEach(d=>{
-      const v = d.data();
-      html += `
-        <div class="item" style="padding: 12px;">
-          <div class="item-header"><b>${esc(v.title)}</b> <span class="badge">${esc(v.category)}</span></div>
-          <button class="btn btnD" style="padding: 6px 12px; font-size:12px;" onclick="delDoc('videos','${d.id}')">Delete</button>
-        </div>`;
-    });
-    box.innerHTML = html || "No videos found.";
+  async function loadProUsers() {
+      const box = document.getElementById("proUserList");
+      const snap = await getDocs(query(collection(db, "paidUsers"), where("active", "==", true)));
+      let html = "";
+      snap.forEach(d => {
+          const u = d.data();
+          html += `
+              <div class="list-item">
+                  <div class="item-info">
+                      <div class="item-title">${esc(u.email || "Unknown Email")}</div>
+                      <div class="item-meta">Granted: ${new Date(u.updatedAt).toLocaleDateString()}</div>
+                  </div>
+                  <button class="btn btnD" onclick="revokePro('${d.id}')">Revoke</button>
+              </div>
+          `;
+      });
+      box.innerHTML = html || "<div class='muted'>No active PRO users.</div>";
   }
 
-  window.addPost = async ()=>{
-    const title = document.getElementById("pTitle").value.trim();
-    if(!title) return alert("Title required");
-    const imagesRaw = document.getElementById("pImages").value.trim();
-    
-    await addDoc(collection(db,"posts"), {
-      title, body: document.getElementById("pBody").value.trim(),
-      images: imagesRaw ? imagesRaw.split(",").map(x=>x.trim()).filter(Boolean) : [],
-      isPublic: true, createdAt: Date.now() 
-    });
-    alert("Post Published ✅"); location.reload();
+  // 4. VIDEOS
+  window.addVideo = async () => {
+      const title = document.getElementById("vTitle").value.trim();
+      const link = document.getElementById("vLink").value.trim();
+      if(!title || !link) return alert("Title and MP4 Link are required.");
+      try {
+          await addDoc(collection(db, "videos"), {
+              category: document.getElementById("vCat").value.trim() || "General",
+              title: title, link: link,
+              thumbnail: document.getElementById("vThumb").value.trim(),
+              notes: document.getElementById("vNotes").value.trim(),
+              downloadLink: document.getElementById("vDl").value.trim(),
+              timestamp: Date.now(),
+              reactions: {}
+          });
+          alert("Video Published! 🎬");
+          document.querySelectorAll('#videos input, #videos textarea').forEach(i => i.value='');
+          loadVideos(); loadStats();
+      } catch(e) { alert("Error: " + e.message); }
   };
 
-  async function loadPosts(){
-    const box = document.getElementById("postList");
-    const snap = await getDocs(query(collection(db,"posts"), orderBy("createdAt","desc")));
-    let html = "";
-    snap.forEach(d=>{
-      html += `
-        <div class="item" style="padding: 12px;">
-          <div style="font-weight:bold; margin-bottom:8px;">${esc(d.data().title)}</div>
-          <button class="btn btnD" style="padding: 6px 12px; font-size:12px;" onclick="delDoc('posts','${d.id}')">Delete</button>
-        </div>`;
-    });
-    box.innerHTML = html || "No posts found.";
+  async function loadVideos() {
+      const box = document.getElementById("videoList");
+      const snap = await getDocs(query(collection(db, "videos"), orderBy("timestamp", "desc")));
+      let html = "";
+      snap.forEach(d => {
+          const v = d.data();
+          html += `
+              <div class="list-item">
+                  <div class="item-info">
+                      <div class="item-title">${esc(v.title)}</div>
+                      <div class="item-meta">${esc(v.category)}</div>
+                  </div>
+                  <button class="btn btnD" onclick="delDoc('videos','${d.id}')">Delete</button>
+              </div>`;
+      });
+      box.innerHTML = html || "<div class='muted'>No videos.</div>";
   }
 
-  window.delDoc = async (col, id)=>{ if(confirm("Delete this item?")){ await deleteDoc(doc(db,col,id)); location.reload(); } };
+  // 5. POSTS
+  window.addImgInput = () => {
+      const wrapper = document.getElementById('p-img-wrapper');
+      const input = document.createElement('input');
+      input.type = 'text'; input.className = 'p-img-url'; input.placeholder = 'Image URL ' + (wrapper.children.length + 1);
+      wrapper.appendChild(input);
+  };
 
-  function loadAll(){ loadVideos(); loadPosts(); }
+  window.addPost = async () => {
+      const title = document.getElementById("pTitle").value.trim();
+      if(!title) return alert("Title required.");
+      
+      const imgInputs = document.querySelectorAll('.p-img-url');
+      let images = [];
+      imgInputs.forEach(i => { if(i.value.trim() !== '') images.push(i.value.trim()); });
+      
+      try {
+          await addDoc(collection(db, "posts"), {
+              category: document.getElementById("pCat").value.trim() || "All Updates",
+              title: title,
+              body: document.getElementById("pBody").value.trim(),
+              notes: document.getElementById("pNotes").value.trim(),
+              images: images,
+              isPublic: true,
+              createdAt: Date.now(),
+              reactions: {}
+          });
+          alert("Post Published! 📝");
+          document.querySelectorAll('#posts input, #posts textarea').forEach(i => i.value='');
+          loadPosts(); loadStats();
+      } catch(e) {}
+  };
+
+  async function loadPosts() {
+      const box = document.getElementById("postList");
+      const snap = await getDocs(query(collection(db, "posts"), orderBy("createdAt", "desc")));
+      let html = "";
+      snap.forEach(d => {
+          const p = d.data();
+          html += `
+              <div class="list-item">
+                  <div class="item-info">
+                      <div class="item-title">${esc(p.title)}</div>
+                      <div class="item-meta">${esc(p.category)} | ${p.images ? p.images.length : 0} Images</div>
+                  </div>
+                  <button class="btn btnD" onclick="delDoc('posts','${d.id}')">Delete</button>
+              </div>`;
+      });
+      box.innerHTML = html || "<div class='muted'>No posts.</div>";
+  }
+
+  // 6. COMMENTS
+  async function loadComments() {
+      const box = document.getElementById("admin-comment-list");
+      box.innerHTML = "Loading...";
+      const snap = await getDocs(collection(db, "comments"));
+      let comments = [];
+      snap.forEach(d => comments.push({id: d.id, ...d.data()}));
+      comments.sort((a,b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+      
+      let html = "";
+      comments.forEach(c => {
+          html += `
+              <div class="list-item" style="align-items:flex-start;">
+                  <div class="item-info">
+                      <div class="item-title" style="color:var(--accent);">${esc(c.email)}</div>
+                      <div style="font-size:13px; margin: 4px 0;">${esc(c.text)}</div>
+                      <div class="item-meta">Date: ${new Date(c.createdAt?.toMillis() || Date.now()).toLocaleString()}</div>
+                  </div>
+                  <button class="btn btnD" onclick="delDoc('comments','${c.id}')">Trash</button>
+              </div>
+          `;
+      });
+      box.innerHTML = html || "<div class='muted'>No comments found.</div>";
+  }
+
+  window.delDoc = async (col, id) => {
+      if(confirm("Are you sure you want to delete this permanently?")) {
+          await deleteDoc(doc(db, col, id));
+          if(col === 'videos') loadVideos();
+          if(col === 'posts') loadPosts();
+          if(col === 'comments') loadComments();
+          loadStats();
+      }
+  };
 </script>
 </body>
 </html>
