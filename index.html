@@ -9,7 +9,7 @@
   :root{
     --bg: #050510; 
     --glass-bg: rgba(20, 25, 45, 0.4); 
-    --border: rgba(255, 255, 255, 0.12);
+    --border: rgba(255, 255, 255, 0.06); /* Lighter border for cleaner look */
     --text: #ffffff; 
     --muted: #a0b0c0;
     --primary: #8a2be2; 
@@ -32,13 +32,13 @@
   .svg-icon { stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
 
   /* SKELETON LOADING */
-  .skeleton { background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 12px; }
+  .skeleton { background: linear-gradient(90deg, rgba(255,255,255,0.02) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.02) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 12px; }
   @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 
   /* TOP HEADER */
   .top-wrapper { position:sticky; top:10px; z-index:20; transition: transform 0.3s ease; }
   .top { display:flex; align-items:center; justify-content:space-between; padding:16px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); background: rgba(5,5,16,0.6); backdrop-filter: blur(20px); border-radius: 20px; border: 1px solid var(--border);}
-  .top.compact { padding: 8px 16px; border-radius: 20px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+  .top.compact { padding: 8px 16px; border-radius: 20px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
   
   .brand-area { display:flex; align-items:center; gap:8px; transition: 0.3s; flex: 1;}
   .brand { font-weight:800; font-size: 18px; letter-spacing: 0.5px; display:flex; align-items:center; gap:8px; color:#fff;}
@@ -68,7 +68,6 @@
   .btn:active {transform: scale(0.97);}
   .btnP{background:linear-gradient(135deg, var(--accent), var(--primary)); color:#fff; box-shadow: 0 4px 15px rgba(138,43,226,0.4);}
   .btnS{background:rgba(255,255,255,.05); color:var(--text); border:1px solid var(--border);}
-  .row{display:flex; gap:10px;}
   
   /* --- NEW HOME DASHBOARD --- */
   .carousel-container { width: 100%; overflow: hidden; border-radius: 16px; margin-top: 16px; position: relative; border: 1px solid var(--border); background: #000; aspect-ratio: 16/9; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
@@ -88,10 +87,15 @@
   .h-video-card:active { transform: scale(0.95); }
   .h-video-thumb { width: 100%; aspect-ratio: 16/9; border-radius: 12px; background: #000; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
   .h-video-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; }
+  
+  /* NEW TINY PLAY BUTTON */
+  .tiny-play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 28px; height: 28px; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; }
+  .tiny-play-btn svg { width: 12px; height: 12px; fill: currentColor; stroke: none;}
+  
   .h-video-dur { position: absolute; bottom: 6px; right: 6px; background: rgba(0,0,0,0.8); color: #fff; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 6px; }
   .h-video-title { font-size: 12px; font-weight: 600; color: #e5e7eb; margin-top: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   
-  .h-post-card { width: 240px; flex-shrink: 0; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; cursor: pointer; transition: 0.2s;}
+  .h-post-card { width: 240px; flex-shrink: 0; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; cursor: pointer; transition: 0.2s;}
   .h-post-card:active { transform: scale(0.98); background: rgba(255,255,255,0.06); }
   .h-post-head { display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center;}
   .h-post-cat { font-size: 10px; font-weight: 800; color: var(--accent); background: rgba(79,172,254,0.1); padding: 2px 8px; border-radius: 6px; }
@@ -107,15 +111,16 @@
   .cat-pill { padding: 8px 18px; background: rgba(0,0,0,0.4); border-radius: 20px; font-size: 13px; white-space: nowrap; border: 1px solid var(--border); cursor: pointer; font-weight: 500; color: var(--muted); transition: 0.3s;}
   .cat-pill.active { background: linear-gradient(45deg, var(--accent), var(--primary)); color: #fff; border-color: transparent; }
   
-  /* POSTS */
-  .post{padding:16px; margin-top:16px; transition: 0.3s;}
-  .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-  .post-header h4{margin:0; font-size:15px; font-weight: 800; color:#fff;}
+  /* --- POSTS (EDGE TO EDGE REFINEMENT) --- */
+  .post { padding: 0; margin-top: 16px; transition: 0.3s; overflow: hidden; }
+  .post-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 16px 12px 16px; }
+  .post-header h4 { margin:0; font-size:15px; font-weight: 800; color:#fff;}
   .post-date { font-size: 11px; color: var(--muted); display: block; margin-top:2px; }
-  .post-img-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; border-radius: 14px; margin-bottom: 12px; border: 1px solid var(--border); background: #000; position: relative;}
+  .post-img-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-bottom: 12px; background: #000; position: relative;}
   .post-img-carousel::-webkit-scrollbar { display: none; }
-  .post-img-carousel img { flex: 0 0 100%; width: 100%; height: 220px; object-fit: cover; scroll-snap-align: center; cursor: pointer; }
-  .post-actions { display: flex; justify-content: space-around; position: relative; gap: 5px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05);}
+  .post-img-carousel img { flex: 0 0 100%; width: 100%; height: auto; max-height: 300px; object-fit: cover; scroll-snap-align: center; cursor: pointer; border-radius: 0; }
+  .post-body-text { font-size: 13.5px; color: rgba(255,255,255,0.9); line-height: 1.6; white-space: pre-wrap; display: block; padding: 0 16px 10px 16px; }
+  .post-actions { display: flex; justify-content: space-around; position: relative; gap: 5px; padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.05);}
   .action-btn { background: transparent; border: none; color: var(--muted); font-size: 13px; font-weight: 600; padding: 5px; cursor: pointer; display:flex; align-items:center; gap:6px; transition: 0.2s;}
   .action-btn:active { transform: scale(0.9); }
   .action-btn.liked { color: var(--danger); }
@@ -126,7 +131,6 @@
   .v-thumb-wrap { width: 140px; flex-shrink: 0; position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 16/9; background: #000; border: 1px solid rgba(255,255,255,0.05);}
   .v-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
   .v-duration { position: absolute; bottom: 6px; right: 6px; background: rgba(0,0,0,0.8); color: #fff; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 6px; font-variant-numeric: tabular-nums; }
-  .play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 30px; background: rgba(255,255,255,0.2); backdrop-filter: blur(4px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; border: 1px solid rgba(255,255,255,0.5); }
   .v-info { flex: 1; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
   .v-title { font-weight: 700; font-size: 13.5px; color: #fff; margin-bottom: 4px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
@@ -140,7 +144,7 @@
   .vd-content-layer { position: relative; z-index: 5; }
   
   .vd-header { position: absolute; top: 15px; left: 15px; right: 15px; display: flex; align-items: center; gap: 15px; z-index: 20; pointer-events: none;}
-  .vd-back { background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); width: 40px; height: 40px; border-radius: 50%; color: #fff; font-size: 20px; display:flex; justify-content:center; align-items:center; cursor: pointer; pointer-events: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.3);}
+  .vd-back { background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%; color: #fff; font-size: 20px; display:flex; justify-content:center; align-items:center; cursor: pointer; pointer-events: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.3);}
   
   /* Player */
   .custom-player-wrap { width: 100%; aspect-ratio: 16/9; background: #000; position: sticky; top: 0; z-index: 10; overflow: hidden; user-select: none; box-shadow: 0 10px 30px rgba(0,0,0,0.6);}
@@ -182,29 +186,25 @@
   @keyframes moveWatermark { 0% { top: 15%; left: 5%; transform: rotate(-5deg); } 100% { top: 75%; left: 65%; transform: rotate(5deg); } }
 
   /* Info Card */
-  .vd-info-card { margin: 15px; padding: 20px; border-radius: 20px; background: rgba(10, 10, 15, 0.65); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 40px rgba(0,0,0,0.5); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); position: relative; z-index: 15;}
+  .vd-info-card { margin: 15px; padding: 20px; border-radius: 20px; background: rgba(10, 10, 15, 0.65); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 10px 40px rgba(0,0,0,0.5); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px); position: relative; z-index: 15;}
   .vd-title { font-size: 18px; font-weight: 800; line-height: 1.4; margin-bottom: 8px; color: #fff;}
   .vd-meta-row { display: flex; align-items: center; gap: 10px; font-size: 11px; color: var(--muted); margin-bottom: 20px; }
-  .vd-meta-cat { background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 6px; color: #fff; font-weight: 600; border: 1px solid rgba(255,255,255,0.1); }
+  .vd-meta-cat { background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 6px; color: #fff; font-weight: 600; border: 1px solid rgba(255,255,255,0.08); }
   
-  /* Clean Actions with Line Icons */
-  .vd-actions-row { display: flex; justify-content: space-around; align-items: center; padding-bottom: 15px; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.08);}
-  .vd-action-btn { background: transparent; border: none; color: #e5e7eb; font-size: 12px; font-weight: 500; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s;}
-  .vd-action-btn .icon-bg { background: rgba(255,255,255,0.05); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;}
-  .vd-action-btn:active .icon-bg { transform: scale(0.9); background: rgba(255,255,255,0.1);}
-  .vd-action-btn svg { width: 20px; height: 20px; }
+  /* 🔥 NEW CLEAN ACTION BUTTONS (NO CIRCLE BG) 🔥 */
+  .vd-actions-row { display: flex; justify-content: space-around; align-items: center; padding-bottom: 15px; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05);}
+  .vd-action-btn { background: transparent; border: none; color: #e5e7eb; font-size: 12px; font-weight: 500; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s;}
+  .vd-action-btn svg { width: 26px; height: 26px; transition: 0.2s; }
+  .vd-action-btn:active svg { transform: scale(0.85); }
   
   .vd-action-btn.liked { color: var(--danger); }
-  .vd-action-btn.liked .icon-bg { background: rgba(255, 77, 77, 0.1); border-color: rgba(255, 77, 77, 0.2); }
-  .vd-action-btn.liked .svg-icon { fill: var(--danger); stroke: var(--danger); }
+  .vd-action-btn.liked svg { fill: var(--danger); stroke: var(--danger); }
   
   .vd-action-btn.saved { color: var(--ok); }
-  .vd-action-btn.saved .icon-bg { background: rgba(0, 230, 118, 0.1); border-color: rgba(0, 230, 118, 0.2); }
-  .vd-action-btn.saved .svg-icon { fill: var(--ok); stroke: var(--ok); }
+  .vd-action-btn.saved svg { fill: var(--ok); stroke: var(--ok); }
   
   .vd-action-btn.dl-btn-unified { color: var(--accent); }
-  .vd-action-btn.dl-btn-unified .icon-bg { background: rgba(79, 172, 254, 0.1); border-color: rgba(79, 172, 254, 0.2); }
-  .vd-action-btn.dl-btn-unified .svg-icon { stroke: var(--accent); }
+  .vd-action-btn.dl-btn-unified svg { stroke: var(--accent); }
   
   .vd-desc-text { font-size: 13.5px; color: rgba(255,255,255,0.8); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-wrap; transition: all 0.3s ease;}
   .vd-desc-text.expanded { -webkit-line-clamp: unset; }
@@ -244,7 +244,7 @@
   .toast.show{opacity:1; transform:translateX(-50%) translateY(-10px);}
   
   /* --- iOS NATIVE BOTTOM NAV --- */
-  .nav { position:fixed; left:0; bottom:0; width:100%; display:flex; justify-content:space-around; background:rgba(10, 12, 20, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border-top:1px solid rgba(255,255,255,0.08); padding: 12px 10px max(12px, env(safe-area-inset-bottom)); z-index: 100; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+  .nav { position:fixed; left:0; bottom:0; width:100%; display:flex; justify-content:space-around; background:rgba(10, 12, 20, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border-top:1px solid rgba(255,255,255,0.05); padding: 12px 10px max(12px, env(safe-area-inset-bottom)); z-index: 100; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
   .nav.hidden { transform: translateY(100%); }
   .nav button { flex:1; background:transparent; border:none; color:var(--muted); cursor:pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; transition:0.3s; padding: 0;}
   .nav button svg { width: 24px; height: 24px; transition: 0.2s; }
@@ -451,15 +451,15 @@
             
             <div class="vd-actions-row" id="vd-unified-actions">
                 <button class="vd-action-btn" id="vd-btn-like" onclick="reactToVideo(); vibe();">
-                    <div class="icon-bg"><svg viewBox="0 0 24 24" class="svg-icon"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></div>
+                    <svg viewBox="0 0 24 24" class="svg-icon"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                     <span id="v-like-text">React</span>
                 </button>
                 <button class="vd-action-btn" id="vd-btn-comment" onclick="openComment(currentPlayingVideoId); vibe();">
-                    <div class="icon-bg"><svg viewBox="0 0 24 24" class="svg-icon"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg></div>
+                    <svg viewBox="0 0 24 24" class="svg-icon"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
                     <span id="v-com-text">Comment</span>
                 </button>
                 <button class="vd-action-btn" id="vd-btn-save" onclick="toggleSave('vid', currentPlayingVideoId); vibe();">
-                    <div class="icon-bg"><svg viewBox="0 0 24 24" class="svg-icon"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg></div>
+                    <svg viewBox="0 0 24 24" class="svg-icon"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                     <span id="v-save-text">Save</span>
                 </button>
                 <span id="vd-dl-anchor"></span>
@@ -588,8 +588,8 @@
   }
 
   function loadDurations() {
-      document.querySelectorAll('.v-list-item').forEach(item => {
-          const vidUrl = item.dataset.link; const durEl = item.querySelector('.v-duration');
+      document.querySelectorAll('.v-list-item, .h-video-card').forEach(item => {
+          const vidUrl = item.dataset.link; const durEl = item.querySelector('.v-duration, .h-video-dur');
           if(vidUrl && durEl && durEl.innerText === '') {
               const tempV = document.createElement('video'); tempV.src = vidUrl; tempV.preload = 'metadata';
               tempV.onloadedmetadata = () => { durEl.innerText = formatPTime(tempV.duration); tempV.remove(); };
@@ -599,7 +599,6 @@
   
   // 🔥 RENDER HOME DASHBOARD 🔥
   function renderHomeDashboard() {
-      // Latest Videos
       const homeVids = document.getElementById('home-latest-videos');
       if(homeVids) {
           if(!me || !isPro) {
@@ -608,16 +607,20 @@
               let vHtml = "";
               allVideosData.slice(0, 8).forEach(v => {
                   vHtml += `
-                  <div class="h-video-card" onclick="openVideoDetail('${v.id}'); vibe();">
-                      <div class="h-video-thumb"><img src="${esc(v.thumbnail)}"><div class="h-video-dur">Pro</div></div>
+                  <div class="h-video-card" onclick="openVideoDetail('${v.id}'); vibe();" data-link="${esc(v.link)}">
+                      <div class="h-video-thumb">
+                          <img src="${esc(v.thumbnail)}">
+                          <div class="tiny-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+                          <div class="h-video-dur"></div>
+                      </div>
                       <div class="h-video-title">${esc(v.title)}</div>
                   </div>`;
               });
               homeVids.innerHTML = vHtml || `<div class="muted">No videos yet.</div>`;
+              loadDurations();
           }
       }
       
-      // Recent Posts
       const homePosts = document.getElementById('home-recent-posts');
       if(homePosts) {
           let pHtml = "";
@@ -651,6 +654,7 @@
   onSnapshot(doc(db, "appSettings", "homeConfig"), (docSnap) => {
       if(docSnap.exists()) {
           const data = docSnap.data();
+          if(data.marquee) document.getElementById('h-marquee-text').innerText = data.marquee;
           if(data.banners && data.banners.length > 0) {
               const track = document.getElementById('carousel-track'); track.innerHTML = ""; 
               data.banners.forEach((url) => { track.innerHTML += `<div class="carousel-slide"><img src="${esc(url)}"></div>`; });
@@ -693,13 +697,9 @@
   window.toggleSearch = () => {
       const bText = document.getElementById('brand-text');
       const sInput = document.getElementById('global-search');
-      
       isSearchActive = !isSearchActive;
-      if(isSearchActive) {
-          bText.style.display = 'none'; sInput.style.display = 'block'; sInput.focus();
-      } else {
-          bText.style.display = 'flex'; sInput.style.display = 'none'; sInput.value = ''; executeSearch(); 
-      }
+      if(isSearchActive) { bText.style.display = 'none'; sInput.style.display = 'block'; sInput.focus(); } 
+      else { bText.style.display = 'flex'; sInput.style.display = 'none'; sInput.value = ''; executeSearch(); }
   };
 
   window.executeSearch = () => {
@@ -725,7 +725,7 @@
           document.getElementById('auth-form').style.display = 'block';
           document.getElementById('user-profile').style.display = 'none';
       }
-      renderHomeDashboard(); // Refresh home dashboard based on auth
+      renderHomeDashboard(); 
   }
 
   window.signup = async ()=>{ try{ await createUserWithEmailAndPassword(auth, document.getElementById("email").value.trim(), document.getElementById("password").value); toast("Created ✅"); } catch(e){ toast("Error: " + e.message); } };
@@ -828,10 +828,16 @@
           <div class="post glass" id="p-${p.id}">
             <div class="post-header"><div><h4>${esc(p.title)}</h4><span class="post-date">${formatDate(p.createdAt)}</span></div><div class="pill free">${esc(p.category)}</div></div>
             ${p.images && p.images.length > 0 ? `<div class="post-img-carousel">${p.images.map(u => `<img src="${esc(u)}">`).join("")}</div>` : ''}
-            <div style="font-size:13.5px; line-height:1.6;">${esc(p.body)}</div>
+            <div class="post-body-text">${esc(p.body)}</div>
             <div class="post-actions">
-                <button class="action-btn ${isReact ? 'liked':''}" onclick="reactPost('${p.id}'); vibe();"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> React</button>
-                <button class="action-btn" onclick="openComment('${p.id}'); vibe();"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg> Comment</button>
+                <button class="action-btn ${isReact ? 'liked':''}" onclick="reactPost('${p.id}'); vibe();">
+                    <svg class="svg-icon" style="width:20px;height:20px;" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 
+                    ${Object.keys(p.reactions||{}).length || 'React'}
+                </button>
+                <button class="action-btn" onclick="openComment('${p.id}'); vibe();">
+                    <svg class="svg-icon" style="width:20px;height:20px;" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg> 
+                    Comment
+                </button>
             </div>
           </div>
         `;
@@ -885,7 +891,10 @@
       filtered.forEach(v => {
         html += `
           <div class="glass v-list-item" onclick="openVideoDetail('${v.id}'); vibe();" data-link="${esc(v.link)}">
-              <div class="v-thumb-wrap"><img src="${esc(v.thumbnail)}"><div class="play-btn">▶</div><div class="v-duration"></div></div>
+              <div class="v-thumb-wrap">
+                  <img src="${esc(v.thumbnail)}">
+                  <div class="v-duration"></div>
+              </div>
               <div class="v-info"><div class="v-title">${esc(v.title)}</div><div style="font-size:11px; color:var(--muted)">${esc(v.category)} • ${formatDate(v.timestamp)}</div></div>
           </div>`;
       });
@@ -954,7 +963,7 @@
       document.querySelectorAll('.dynamic-dl-btn').forEach(el => el.remove());
       if (v.downloadLinks && v.downloadLinks.length > 0) {
           let dlHtml = "";
-          v.downloadLinks.forEach(dl => { dlHtml += `<button class="vd-action-btn dl-btn-unified dynamic-dl-btn" onclick="window.open('${esc(dl.url)}', '_blank'); vibe();"><div class="icon-bg"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg></div><span style="font-weight:600;">${esc(dl.title)}</span></button>`; });
+          v.downloadLinks.forEach(dl => { dlHtml += `<button class="vd-action-btn dl-btn-unified dynamic-dl-btn" onclick="window.open('${esc(dl.url)}', '_blank'); vibe();"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg><span>${esc(dl.title)}</span></button>`; });
           dlAnchor.insertAdjacentHTML('beforebegin', dlHtml);
       }
       
@@ -966,9 +975,10 @@
       if(sugList.length > 0) {
           let sugHtml = "";
           sugList.forEach(sv => {
-              sugHtml += `<div class="sug-item" onclick="openVideoDetail('${sv.id}'); vibe();"><div class="sug-thumb"><img src="${esc(sv.thumbnail)}"><div class="play-btn">▶</div></div><div class="sug-info"><div class="sug-title">${esc(sv.title)}</div><div class="sug-meta">${formatDate(sv.timestamp)}</div></div></div>`;
+              sugHtml += `<div class="sug-item" onclick="openVideoDetail('${sv.id}'); vibe();" data-link="${esc(sv.link)}"><div class="sug-thumb"><img src="${esc(sv.thumbnail)}"><div class="v-duration"></div></div><div class="sug-info"><div class="sug-title">${esc(sv.title)}</div><div class="sug-meta">${formatDate(sv.timestamp)}</div></div></div>`;
           });
           sugBox.innerHTML = sugHtml; document.getElementById('suggested-section').style.display = 'block';
+          loadDurations();
       } else { document.getElementById('suggested-section').style.display = 'none'; }
       
       const pipBtn = document.getElementById('p-btn-pip');
