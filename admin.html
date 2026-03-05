@@ -411,7 +411,7 @@
 
   window.closeModal = (id) => { document.getElementById(id).classList.remove('active'); }
 
-  // --- IMAGE UPLOAD TO IMGBB (Base64 Method) ---
+  // --- IMAGE UPLOAD TO IMGBB ---
   window.uploadImageToImgBB = (fileInput, targetInputId) => {
       const file = fileInput.files[0];
       if(!file) return;
@@ -434,6 +434,7 @@
                   body: formData
               });
               const data = await response.json();
+              
               if(data.success) {
                   targetInput.value = data.data.url;
                   showToast("Image Uploaded! ✅");
@@ -443,13 +444,14 @@
           } catch(e) {
               targetInput.value = "";
               alert("Error: " + e.message + " (Check Internet)");
-          } finally { fileInput.value = ""; }
+          } finally {
+              fileInput.value = ""; 
+          }
       };
   };
 
-  // --- REAL-TIME DATA FETCHING (100% ERROR PROOF) ---
+  // --- REAL-TIME DATA FETCHING ---
   function initRealtimeListeners() {
-      // Load Home UI once safely
       try {
           getDoc(doc(db, "appSettings", "homeConfig")).then(docSnap => {
               if(docSnap.exists()) {
@@ -461,7 +463,7 @@
                       data.banners.forEach((url, i) => bContainer.insertAdjacentHTML('beforeend', createImgInputRow(url, `banner-img-${i}`)));
                   } else { bContainer.insertAdjacentHTML('beforeend', createImgInputRow('', 'banner-img-0')); }
               }
-          }).catch(e => console.log("HomeConfig load skipped"));
+          }).catch(e => console.log(e));
       } catch(e) {}
 
       onSnapshot(collection(db, "users"), (snap) => {
@@ -569,7 +571,7 @@
   };
 
   window.deleteUserDB = async (uid) => {
-      if(confirm("Delete user Firestore Data?")) {
+      if(confirm("Delete this user's data from Firestore?")) {
           await deleteDoc(doc(db, "users", uid));
           await deleteDoc(doc(db, "paidUsers", uid));
           closeModal('modal-user');
@@ -818,6 +820,7 @@
       box.innerHTML = html || "<div class='muted' style='padding:20px; text-align:center;'>No comments yet.</div>";
   }
 
+  // --- 🔥 FIXED REPLY FUNCTION ---
   window.adminReply = async (postId, parentId, userName) => {
       const input = document.getElementById(`admin-rep-${parentId}`);
       const text = input.value.trim();
@@ -825,13 +828,19 @@
       
       try {
           await addDoc(collection(db, "comments"), {
-              postId: postId, text: `@${userName} ${text}`, 
-              uid: me.uid, email: "Admin 👑", parentId: parentId, 
+              postId: postId, 
+              text: `@${userName} ${text}`, 
+              uid: auth.currentUser.uid, 
+              email: "Admin 👑", 
+              parentId: parentId, 
               createdAt: serverTimestamp()
           });
           input.value = "";
           showToast("Replied!");
-      } catch(e) { alert("Failed to reply."); }
+      } catch(e) { 
+          console.error(e);
+          alert("Failed to reply."); 
+      }
   };
 
   // Global Delete
