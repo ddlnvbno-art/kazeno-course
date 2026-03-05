@@ -48,7 +48,7 @@
   .menu-btn { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; padding: 0; }
 
   /* Sidebar */
-  .sidebar { width: 280px; height: 100vh; background: rgba(10, 10, 15, 0.8); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; padding: 30px 20px; z-index: 99; transition: transform 0.3s ease; }
+  .sidebar { width: 280px; height: 100vh; background: rgba(10, 10, 15, 0.8); backdrop-filter: blur(30px); border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; padding: 30px 20px; z-index: 99; transition: transform 0.3s ease; }
   .brand-logo { font-size: 22px; font-weight: 800; margin-bottom: 40px; padding: 0 10px; display: flex; align-items: center; gap:10px;}
   .brand-logo::before { content:''; width:12px; height:12px; background:var(--accent); border-radius:50%; box-shadow: 0 0 10px var(--accent);}
   
@@ -125,7 +125,7 @@
   /* Modals */
   .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px);}
   .modal-bg.active { display: flex; animation: fadeIn 0.3s; }
-  .modal-content { width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto; padding: 30px; animation: scaleUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .modal-content { width: 90%; max-width: 500px; max-height: 85vh; overflow-y: auto; padding: 25px; animation: scaleUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
   @keyframes scaleUp { from { transform: scale(0.95); opacity: 0;} to { transform: scale(1); opacity: 1;} }
 
   @media(max-width: 768px) {
@@ -337,7 +337,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, setDoc, getDoc, query, orderBy, onSnapshot, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, setDoc, getDoc, query, onSnapshot, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
   import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
   const firebaseConfig = {
@@ -364,10 +364,10 @@
   function showToast(msg) {
       const t = document.getElementById('toast');
       t.innerText = msg; t.style.display = 'block';
-      setTimeout(()=> t.style.display = 'none', 2000);
+      setTimeout(()=> t.style.display = 'none', 2500);
   }
 
-  // --- 🔥 FIXED: SAFE TIME PARSER TO PREVENT CRASHES ---
+  // --- 🔥 BULLETPROOF TIME PARSER ---
   function safeTime(ts) {
       if (!ts) return 0;
       if (typeof ts === 'number') return ts; // Old Date.now() format
@@ -418,7 +418,6 @@
       const targetInput = document.getElementById(targetInputId);
       targetInput.value = "Uploading to Cloud... ⏳";
       
-      // User provided API Key
       const API_KEY = "f0d759dd374df91104867c6701e199f2"; 
       
       const reader = new FileReader();
@@ -434,51 +433,60 @@
                   body: formData
               });
               const data = await response.json();
+              
               if(data.success) {
                   targetInput.value = data.data.url;
                   showToast("Image Uploaded! ✅");
-              } else { throw new Error("Upload failed"); }
+              } else {
+                  throw new Error(data.error.message || "Upload failed");
+              }
           } catch(e) {
               targetInput.value = "";
-              alert("Error: " + e.message);
-          } finally { fileInput.value = ""; }
+              alert("Error: " + e.message + " (Check Internet)");
+          } finally {
+              fileInput.value = ""; 
+          }
       };
   };
 
-  // --- REAL-TIME DATA FETCHING ---
+  // --- REAL-TIME DATA FETCHING (SAFE ERROR HANDLING) ---
   function initRealtimeListeners() {
-      onSnapshot(collection(db, "users"), (snap) => {
-          globalUsers = []; snap.forEach(d => globalUsers.push({id: d.id, ...d.data()}));
-          updateDashboard(); 
-          let activeTab = document.querySelector('#tab-users .filter-pill.active')?.innerText || 'All';
-          renderUserList(activeTab.split(' ')[0]);
-      });
+      try {
+          onSnapshot(collection(db, "users"), (snap) => {
+              globalUsers = []; snap.forEach(d => globalUsers.push({id: d.id, ...d.data()}));
+              updateDashboard(); 
+              let activeTab = document.querySelector('#tab-users .filter-pill.active')?.innerText || 'All';
+              renderUserList(activeTab.split(' ')[0]);
+          }, (err) => console.error("Users load error"));
 
-      onSnapshot(query(collection(db, "paidUsers"), where("active", "==", true)), (snap) => {
-          globalProUsers = []; snap.forEach(d => globalProUsers.push(d.id));
-          updateDashboard(); 
-          let activeTab = document.querySelector('#tab-users .filter-pill.active')?.innerText || 'All';
-          renderUserList(activeTab.split(' ')[0]);
-      });
+          onSnapshot(query(collection(db, "paidUsers"), where("active", "==", true)), (snap) => {
+              globalProUsers = []; snap.forEach(d => globalProUsers.push(d.id));
+              updateDashboard(); 
+              let activeTab = document.querySelector('#tab-users .filter-pill.active')?.innerText || 'All';
+              renderUserList(activeTab.split(' ')[0]);
+          }, (err) => console.error("ProUsers load error. Check Rules!"));
 
-      onSnapshot(collection(db, "videos"), (snap) => {
-          globalVideos = []; snap.forEach(d => globalVideos.push({id: d.id, ...d.data()}));
-          globalVideos.sort((a,b) => safeTime(b.timestamp) - safeTime(a.timestamp)); 
-          updateDashboard(); renderVideoSection();
-      });
+          onSnapshot(collection(db, "videos"), (snap) => {
+              globalVideos = []; snap.forEach(d => globalVideos.push({id: d.id, ...d.data()}));
+              globalVideos.sort((a,b) => safeTime(b.timestamp) - safeTime(a.timestamp)); 
+              updateDashboard(); renderVideoSection();
+          }, (err) => document.getElementById('admin-vid-list').innerHTML = "Error loading videos.");
 
-      onSnapshot(collection(db, "posts"), (snap) => {
-          globalPosts = []; snap.forEach(d => globalPosts.push({id: d.id, ...d.data()}));
-          globalPosts.sort((a,b) => safeTime(b.createdAt) - safeTime(a.createdAt)); 
-          updateDashboard(); renderPostSection();
-      });
+          onSnapshot(collection(db, "posts"), (snap) => {
+              globalPosts = []; snap.forEach(d => globalPosts.push({id: d.id, ...d.data()}));
+              globalPosts.sort((a,b) => safeTime(b.createdAt) - safeTime(a.createdAt)); 
+              updateDashboard(); renderPostSection();
+          }, (err) => document.getElementById('admin-post-list').innerHTML = "Error loading posts.");
 
-      onSnapshot(collection(db, "comments"), (snap) => {
-          let comments = []; snap.forEach(d => comments.push({id: d.id, ...d.data()}));
-          comments.sort((a,b) => safeTime(b.createdAt) - safeTime(a.createdAt));
-          document.getElementById('stat-com').innerText = comments.length;
-          renderCommentsUI(comments);
-      });
+          onSnapshot(collection(db, "comments"), (snap) => {
+              let comments = []; snap.forEach(d => comments.push({id: d.id, ...d.data()}));
+              comments.sort((a,b) => safeTime(b.createdAt) - safeTime(a.createdAt));
+              document.getElementById('stat-com').innerText = comments.length;
+              renderCommentsUI(comments);
+          }, (err) => document.getElementById('admin-comment-list').innerHTML = "Error loading comments.");
+      } catch (e) {
+          console.error("Init Error", e);
+      }
   }
 
   function updateDashboard() {
@@ -551,16 +559,18 @@
 
   // --- HOME UI CONFIG ---
   async function loadHomeConfig() {
-      const docSnap = await getDoc(doc(db, "appSettings", "homeConfig"));
-      if(docSnap.exists()) {
-          const data = docSnap.data();
-          if(data.marquee) document.getElementById('home-marquee').value = data.marquee;
-          const bContainer = document.getElementById('banner-inputs');
-          bContainer.innerHTML = '';
-          if(data.banners && data.banners.length > 0) {
-              data.banners.forEach((url, i) => bContainer.insertAdjacentHTML('beforeend', createImgInputRow(url, `banner-img-${i}`)));
-          } else { bContainer.insertAdjacentHTML('beforeend', createImgInputRow('', 'banner-img-0')); }
-      }
+      try {
+          const docSnap = await getDoc(doc(db, "appSettings", "homeConfig"));
+          if(docSnap.exists()) {
+              const data = docSnap.data();
+              if(data.marquee) document.getElementById('home-marquee').value = data.marquee;
+              const bContainer = document.getElementById('banner-inputs');
+              bContainer.innerHTML = '';
+              if(data.banners && data.banners.length > 0) {
+                  data.banners.forEach((url, i) => bContainer.insertAdjacentHTML('beforeend', createImgInputRow(url, `banner-img-${i}`)));
+              } else { bContainer.insertAdjacentHTML('beforeend', createImgInputRow('', 'banner-img-0')); }
+          }
+      } catch(e) {}
   }
 
   window.addBannerField = () => document.getElementById('banner-inputs').insertAdjacentHTML('beforeend', createImgInputRow('', `banner-img-${Date.now()}`));
@@ -622,9 +632,7 @@
       let filterHtml = `<div class="filter-pill active" onclick="filterDataList('videos', 'All', this)">All</div>`;
       cats.forEach(c => filterHtml += `<div class="filter-pill" onclick="filterDataList('videos', '${esc(c)}', this)">${esc(c)}</div>`);
       document.getElementById('vid-filter-bar').innerHTML = filterHtml;
-      
-      const activeCat = document.querySelector('#vid-filter-bar .filter-pill.active')?.innerText || 'All';
-      filterDataList('videos', activeCat, null);
+      filterDataList('videos', document.querySelector('#vid-filter-bar .filter-pill.active')?.innerText || 'All', null);
   }
 
   window.openVideoModal = (id = null) => {
@@ -662,9 +670,11 @@
       };
       if(!data.title || !data.link) return alert("Title and Link required.");
 
-      if(id) await updateDoc(doc(db, "videos", id), data);
-      else { data.timestamp = Date.now(); await addDoc(collection(db, "videos"), data); }
-      closeModal('modal-video'); showToast("Saved!");
+      try {
+          if(id) await updateDoc(doc(db, "videos", id), data);
+          else { data.timestamp = Date.now(); await addDoc(collection(db, "videos"), data); }
+          closeModal('modal-video'); showToast("Saved!");
+      } catch(e) { alert("Error saving."); }
   };
 
   // --- POSTS ---
@@ -673,9 +683,7 @@
       let filterHtml = `<div class="filter-pill active" onclick="filterDataList('posts', 'All', this)">All</div>`;
       cats.forEach(c => filterHtml += `<div class="filter-pill" onclick="filterDataList('posts', '${esc(c)}', this)">${esc(c)}</div>`);
       document.getElementById('post-filter-bar').innerHTML = filterHtml;
-      
-      const activeCat = document.querySelector('#post-filter-bar .filter-pill.active')?.innerText || 'All';
-      filterDataList('posts', activeCat, null);
+      filterDataList('posts', document.querySelector('#post-filter-bar .filter-pill.active')?.innerText || 'All', null);
   }
 
   window.openPostModal = (id = null) => {
@@ -716,9 +724,11 @@
       };
       if(!data.title) return alert("Title required.");
 
-      if(id) await updateDoc(doc(db, "posts", id), data);
-      else { data.createdAt = Date.now(); await addDoc(collection(db, "posts"), data); }
-      closeModal('modal-post'); showToast("Saved!");
+      try {
+          if(id) await updateDoc(doc(db, "posts", id), data);
+          else { data.createdAt = Date.now(); await addDoc(collection(db, "posts"), data); }
+          closeModal('modal-post'); showToast("Saved!");
+      } catch(e) {}
   };
 
   // Generic List Filter
